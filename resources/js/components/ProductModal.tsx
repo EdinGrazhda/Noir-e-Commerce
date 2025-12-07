@@ -843,10 +843,10 @@ export default function ProductModal({
                                                     for (const file of files) {
                                                         if (
                                                             file.size >
-                                                            4 * 1024 * 1024
+                                                            50 * 1024 * 1024
                                                         ) {
                                                             toast.error(
-                                                                `${file.name}: Image must be less than 4MB`,
+                                                                `${file.name}: Image must be less than 50MB`,
                                                             );
                                                             continue;
                                                         }

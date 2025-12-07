@@ -60,9 +60,9 @@ export function BannerModal({
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
-            // Validate file size (8MB)
-            if (file.size > 8 * 1024 * 1024) {
-                toast.error('Image size must be less than 8MB');
+            // Validate file size (50MB)
+            if (file.size > 50 * 1024 * 1024) {
+                toast.error('Image size must be less than 50MB');
                 return;
             }
 

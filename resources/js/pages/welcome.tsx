@@ -290,31 +290,62 @@ function StorefrontContent({
         // Convert campaign products to Product type and add to the beginning
         const campaignProducts: Product[] = campaigns
             .filter((campaign: any) => campaign.product) // Only include campaigns with a product
-            .map((campaign: any) => ({
-                id: campaign.product.id,
-                name: campaign.product.name,
-                description: campaign.product.description,
-                price: parseFloat(campaign.price), // Campaign discounted price
-                originalPrice: parseFloat(campaign.product.price), // Original product price
-                image:
-                    campaign.product.image_url ||
-                    campaign.product.image ||
-                    `https://picsum.photos/seed/${campaign.product.id}/400/400`,
-                all_images: campaign.product.all_images || [],
-                stock: campaign.product.stock || 0,
-                foot_numbers: campaign.product.foot_numbers,
-                sizeStocks: campaign.product.sizeStocks || {}, // Size-specific stock quantities
-                color: campaign.product.color,
-                gender: campaign.product.gender || 'unisex',
-                categories: campaign.product.category
-                    ? [campaign.product.category]
-                    : [],
-                created_at: campaign.product.created_at,
-                hasActiveCampaign: true,
-                campaign_id: campaign.id,
-                campaign_name: campaign.name,
-                campaign_end_date: campaign.end_date,
-            }));
+            .map((campaign: any) => {
+                const raw = campaign.product || {};
+
+                // Normalize sizeStocks: prefer already structured `sizeStocks`,
+                // otherwise transform `size_stocks` (snake_case array) into the expected object.
+                let normalizedSizeStocks: Record<string, any> =
+                    raw.sizeStocks || {};
+
+                if (
+                    (!normalizedSizeStocks ||
+                        Object.keys(normalizedSizeStocks).length === 0) &&
+                    raw.size_stocks &&
+                    Array.isArray(raw.size_stocks)
+                ) {
+                    normalizedSizeStocks = raw.size_stocks.reduce(
+                        (acc: Record<string, any>, s: any) => {
+                            const sizeKey = String(s.size);
+                            acc[sizeKey] = {
+                                quantity: s.quantity,
+                                stock_status:
+                                    s.quantity === 0
+                                        ? 'out of stock'
+                                        : s.quantity <= 10
+                                          ? 'low stock'
+                                          : 'in stock',
+                            };
+                            return acc;
+                        },
+                        {},
+                    );
+                }
+
+                return {
+                    id: raw.id,
+                    name: raw.name,
+                    description: raw.description,
+                    price: parseFloat(campaign.price), // Campaign discounted price
+                    originalPrice: parseFloat(raw.price), // Original product price
+                    image:
+                        raw.image_url ||
+                        raw.image ||
+                        `https://picsum.photos/seed/${raw.id}/400/400`,
+                    all_images: raw.all_images || [],
+                    stock: raw.stock || 0,
+                    foot_numbers: raw.foot_numbers,
+                    sizeStocks: normalizedSizeStocks, // Normalized size-specific stock quantities
+                    color: raw.color,
+                    gender: raw.gender || 'unisex',
+                    categories: raw.category ? [raw.category] : [],
+                    created_at: raw.created_at,
+                    hasActiveCampaign: true,
+                    campaign_id: campaign.id,
+                    campaign_name: campaign.name,
+                    campaign_end_date: campaign.end_date,
+                } as Product;
+            });
 
         // Remove duplicates (if a campaign product is also in regular products)
         const campaignProductIds = new Set(campaignProducts.map((p) => p.id));

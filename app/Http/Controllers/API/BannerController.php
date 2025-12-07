@@ -51,7 +51,7 @@ class BannerController extends Controller
             $validated = $request->validate([
                 'header' => 'required|string|max:255',
                 'description' => 'nullable|string|max:1000',
-                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:8192', // 8MB limit
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:51200', // 50MB limit
             ]);
 
             $imagePath = null;
@@ -134,7 +134,7 @@ class BannerController extends Controller
             $validated = $request->validate([
                 'header' => 'sometimes|required|string|max:255',
                 'description' => 'nullable|string|max:1000',
-                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:8192', // 8MB limit
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:51200', // 50MB limit
                 'remove_image' => 'boolean'
             ]);
 

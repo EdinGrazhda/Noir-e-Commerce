@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Banner;
+use App\Models\Product;
 use Illuminate\Console\Command;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
@@ -13,14 +14,14 @@ class RegenerateMediaConversions extends Command
      *
      * @var string
      */
-    protected $signature = 'media:regenerate {--model=Banner : The model to regenerate conversions for}';
+    protected $signature = 'media:regenerate {--model= : The model to regenerate conversions for (Product, Banner, or all)} {--force : Force regeneration even if conversions exist}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Regenerate media conversions for banners';
+    protected $description = 'Regenerate media conversions (thumbnails, previews) for products and banners';
 
     /**
      * Execute the console command.
@@ -29,41 +30,48 @@ class RegenerateMediaConversions extends Command
     {
         $model = $this->option('model');
         
-        if ($model === 'Banner') {
+        if (!$model || $model === 'all') {
+            $this->info('Regenerating conversions for all models...');
+            $this->regenerateProductConversions();
+            $this->newLine();
+            $this->regenerateBannerConversions();
+        } elseif ($model === 'Product') {
+            $this->regenerateProductConversions();
+        } elseif ($model === 'Banner') {
             $this->regenerateBannerConversions();
         } else {
-            $this->error('Unsupported model. Use --model=Banner');
+            $this->error('Unsupported model. Use --model=Product, --model=Banner, or --model=all');
             return 1;
         }
         
         return 0;
     }
 
+    private function regenerateProductConversions()
+    {
+        $this->info('Regenerating product image conversions...');
+        $this->newLine();
+        
+        // Use Spatie's built-in regeneration
+        $this->call('media-library:regenerate', [
+            '--only-missing' => !$this->option('force'),
+        ]);
+        
+        $this->newLine();
+        $this->info('✅ Product conversions regeneration complete!');
+    }
+
     private function regenerateBannerConversions()
     {
-        $banners = Banner::all();
-        $this->info("Found {$banners->count()} banners to process...");
-        
-        $progressBar = $this->output->createProgressBar($banners->count());
-        $progressBar->start();
-        
-        foreach ($banners as $banner) {
-            $media = $banner->getMedia('banner_images');
-            
-            foreach ($media as $mediaItem) {
-                try {
-                    $mediaItem->delete();
-                    $this->line("Deleted existing conversions for banner {$banner->id}");
-                } catch (\Exception $e) {
-                    $this->line("Could not delete conversions for banner {$banner->id}: " . $e->getMessage());
-                }
-            }
-            
-            $progressBar->advance();
-        }
-        
-        $progressBar->finish();
+        $this->info('Regenerating banner image conversions...');
         $this->newLine();
-        $this->info('Media conversions regenerated successfully!');
+        
+        // Use Spatie's built-in regeneration
+        $this->call('media-library:regenerate', [
+            '--only-missing' => !$this->option('force'),
+        ]);
+        
+        $this->newLine();
+        $this->info('✅ Banner conversions regeneration complete!');
     }
 }

@@ -385,10 +385,26 @@ class OrderController extends Controller
         // Send email notification if status actually changed
         if ($previousStatus !== $newStatus) {
             try {
-                // Dispatch job to send email notification
-                SendOrderStatusUpdateEmail::dispatch($order, $previousStatus, $newStatus);
+                // Load product relationship for the email
+                $order->load('product');
+                
+                // Log attempt with mail configuration
+                Log::info("Attempting to send order status update email", [
+                    'order_id' => $order->id,
+                    'unique_id' => $order->unique_id,
+                    'customer_email' => $order->customer_email,
+                    'previous_status' => $previousStatus,
+                    'new_status' => $newStatus,
+                    'mail_driver' => config('mail.default'),
+                    'mail_from' => config('mail.from.address'),
+                ]);
+                
+                // Send email immediately (not queued) since queue worker may not be running
+                Mail::to($order->customer_email)->send(
+                    new OrderStatusUpdated($order, $previousStatus, $newStatus)
+                );
 
-                Log::info("Order status update email job dispatched", [
+                Log::info("✅ Order status update email sent successfully", [
                     'order_id' => $order->id,
                     'customer_email' => $order->customer_email,
                     'previous_status' => $previousStatus,
@@ -396,10 +412,19 @@ class OrderController extends Controller
                 ]);
             } catch (\Exception $e) {
                 // Log the error but don't fail the status update
-                Log::error("Failed to dispatch order status update email job", [
+                Log::error("❌ Failed to send order status update email", [
                     'order_id' => $order->id,
                     'customer_email' => $order->customer_email,
-                    'error' => $e->getMessage(),
+                    'previous_status' => $previousStatus,
+                    'new_status' => $newStatus,
+                    'error_message' => $e->getMessage(),
+                    'error_file' => $e->getFile(),
+                    'error_line' => $e->getLine(),
+                    'mail_driver' => config('mail.default'),
+                    'mail_host' => config('mail.mailers.smtp.host'),
+                    'mail_port' => config('mail.mailers.smtp.port'),
+                    'mail_from' => config('mail.from.address'),
+                    'trace' => $e->getTraceAsString(),
                 ]);
             }
         }

@@ -157,9 +157,9 @@ class ProductsController extends Controller
                 'name' => 'required|string|max:255|unique:products',
                 'description' => 'nullable|string',
                 'price' => 'required|numeric|min:0|max:999999.99',
-                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:4096',
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:51200',
                 'images' => 'nullable|array|max:4',
-                'images.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:4096',
+                'images.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:51200',
                 'stock' => 'nullable|integer|min:0',
                 'size_stocks' => 'nullable|string',
                 'foot_numbers' => 'nullable|string|max:255',
@@ -192,18 +192,9 @@ class ProductsController extends Controller
                 'product_id' => $request->product_id ?? null,
             ]);
 
-            // Handle multiple image uploads with Media Library (max 4)
-            if ($request->hasFile('images')) {
-                $images = $request->file('images');
-                foreach (array_slice($images, 0, 4) as $image) {
-                    $product->addMedia($image)
-                        ->toMediaCollection('images');
-                }
-            } elseif ($request->hasFile('image')) {
-                // Backward compatibility with single image upload
-                $product->addMediaFromRequest('image')
-                    ->toMediaCollection('images');
-            }
+            // NOTE: media files will be handled AFTER commit below to ensure
+            // conversions and media records are fully available when returning
+            // the response (avoids race conditions with transactions).
 
             // Handle size-specific stocks
             if ($request->has('size_stocks') && ! empty($request->size_stocks)) {
@@ -223,9 +214,22 @@ class ProductsController extends Controller
 
             DB::commit();
 
-            $product->load(['category', 'sizeStocks']);
+            // After commit, process any uploaded media so conversions are generated
+            if ($request->hasFile('images')) {
+                $images = $request->file('images');
+                foreach (array_slice($images, 0, 4) as $image) {
+                    $product->addMedia($image)
+                        ->toMediaCollection('images');
+                }
+            } elseif ($request->hasFile('image')) {
+                // Backward compatibility with single image upload
+                $product->addMediaFromRequest('image')
+                    ->toMediaCollection('images');
+            }
 
-            // Format response with sizeStocks as associative array
+            $product->load(['category', 'sizeStocks', 'media']);
+
+            // Format response with sizeStocks as associative array and include media
             $productData = $product->toArray();
             $productData['sizeStocks'] = $product->sizeStocks->mapWithKeys(function ($stock) {
                 return [$stock->size => [
@@ -233,6 +237,10 @@ class ProductsController extends Controller
                     'stock_status' => $stock->stock_status,
                 ]];
             })->toArray();
+
+            // Include media urls so frontend has immediate access
+            $productData['all_images'] = $product->all_images;
+            $productData['image_url'] = $product->image_url;
 
             return response()->json([
                 'success' => true,
@@ -329,9 +337,9 @@ class ProductsController extends Controller
                 'name' => 'sometimes|required|string|max:255|unique:products,name,'.$id,
                 'description' => 'sometimes|nullable|string',
                 'price' => 'sometimes|required|numeric|min:0|max:999999.99',
-                'image' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif,webp|max:4096',
+                'image' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif,webp|max:51200',
                 'images' => 'sometimes|nullable|array|max:4',
-                'images.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:4096',
+                'images.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:51200',
                 'delete_images' => 'sometimes|nullable|array',
                 'delete_images.*' => 'integer',
                 'stock' => 'sometimes|nullable|integer|min:0',
@@ -360,36 +368,7 @@ class ProductsController extends Controller
             }
             $product->update($updateData);
 
-            // Handle image deletions
-            if ($request->has('delete_images') && is_array($request->delete_images)) {
-                foreach ($request->delete_images as $mediaId) {
-                    $media = $product->getMedia('images')->where('id', $mediaId)->first();
-                    if ($media) {
-                        $media->delete();
-                    }
-                }
-            }
-
-            // Handle multiple image uploads (max 4 total)
-            if ($request->hasFile('images')) {
-                $currentImageCount = $product->getMedia('images')->count();
-                $remainingSlots = 4 - $currentImageCount;
-
-                if ($remainingSlots > 0) {
-                    $images = $request->file('images');
-                    foreach (array_slice($images, 0, $remainingSlots) as $image) {
-                        $product->addMedia($image)
-                            ->toMediaCollection('images');
-                    }
-                }
-            } elseif ($request->hasFile('image')) {
-                // Backward compatibility with single image upload
-                $currentImageCount = $product->getMedia('images')->count();
-                if ($currentImageCount < 4) {
-                    $product->addMediaFromRequest('image')
-                        ->toMediaCollection('images');
-                }
-            }
+            // We'll process deletions/uploads after the transaction commits.
 
             // Handle size-specific stocks update
             if ($request->has('size_stocks')) {
@@ -415,7 +394,42 @@ class ProductsController extends Controller
 
             DB::commit();
 
-            $product->load(['category', 'sizeStocks']);
+            // Process image deletions (if any) AFTER commit so deletes are final
+            if ($request->has('delete_images') && is_array($request->delete_images)) {
+                foreach ($request->delete_images as $mediaId) {
+                    $media = $product->getMedia('images')->where('id', $mediaId)->first();
+                    if ($media) {
+                        $media->delete();
+                    }
+                }
+            }
+
+            // Process uploaded images AFTER commit to ensure conversions run and
+            // media records are visible when we refresh and return the product.
+            if ($request->hasFile('images')) {
+                $currentImageCount = $product->getMedia('images')->count();
+                $remainingSlots = 4 - $currentImageCount;
+
+                if ($remainingSlots > 0) {
+                    $images = $request->file('images');
+                    foreach (array_slice($images, 0, $remainingSlots) as $image) {
+                        $product->addMedia($image)
+                            ->toMediaCollection('images');
+                    }
+                }
+            } elseif ($request->hasFile('image')) {
+                // Backward compatibility with single image upload
+                $currentImageCount = $product->getMedia('images')->count();
+                if ($currentImageCount < 4) {
+                    $product->addMediaFromRequest('image')
+                        ->toMediaCollection('images');
+                }
+            }
+
+            // Clear cached media relations and refresh the product
+            $product->unsetRelation('media');
+            $product->refresh();
+            $product->load(['category', 'sizeStocks', 'media']);
 
             // Format response with sizeStocks as associative array
             $productData = $product->toArray();
@@ -425,6 +439,10 @@ class ProductsController extends Controller
                     'stock_status' => $stock->stock_status,
                 ]];
             })->toArray();
+
+            // Force include all_images with fresh data
+            $productData['all_images'] = $product->all_images;
+            $productData['image_url'] = $product->image_url;
 
             return response()->json([
                 'success' => true,

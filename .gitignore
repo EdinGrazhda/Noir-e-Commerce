@@ -26,3 +26,9 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+
+# Security setup files
+create-token.php
+tinker-create-token.txt
+API_SECURITY_SETUP.md
+POSTMAN_TEST_DATA.md
