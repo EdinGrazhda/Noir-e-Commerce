@@ -6,8 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Campaign;
 use App\Models\Product;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class CampaignController extends Controller
 {
@@ -20,7 +20,7 @@ class CampaignController extends Controller
 
         // Search filter
         if ($request->has('search') && $request->search) {
-            $query->where('name', 'like', '%' . $request->search . '%');
+            $query->where('name', 'like', '%'.$request->search.'%');
         }
 
         // Product filter
@@ -60,7 +60,7 @@ class CampaignController extends Controller
     public function store(Request $request)
     {
         Log::info('Campaign Store Request:', $request->all());
-        
+
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -84,6 +84,7 @@ class CampaignController extends Controller
 
         if ($validator->fails()) {
             Log::error('Campaign Validation Failed:', $validator->errors()->toArray());
+
             return response()->json([
                 'message' => 'Validation failed',
                 'errors' => $validator->errors(),
@@ -94,13 +95,14 @@ class CampaignController extends Controller
             // Verify product exists and get its price for validation
             $product = Product::findOrFail($request->product_id);
             Log::info('Product found:', ['id' => $product->id, 'price' => $product->price]);
-          
+
             if ($request->price >= $product->price) {
                 Log::warning('Campaign price validation failed');
+
                 return response()->json([
                     'message' => 'Campaign price must be lower than the original product price.',
                     'errors' => [
-                        'price' => ['Campaign price must be lower than $' . $product->price],
+                        'price' => ['Campaign price must be lower than $'.$product->price],
                     ],
                 ], 422);
             }
@@ -129,8 +131,9 @@ class CampaignController extends Controller
         } catch (\Exception $e) {
             Log::error('Campaign creation error:', [
                 'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ]);
+
             return response()->json([
                 'message' => 'Error creating campaign',
                 'error' => $e->getMessage(),
@@ -191,16 +194,16 @@ class CampaignController extends Controller
 
         try {
             $campaign = Campaign::findOrFail($id);
-            
+
             // Verify product exists and get its price for validation
             $product = Product::findOrFail($request->product_id);
-            
+
             // Validate that campaign price is less than product price
             if ($request->price >= $product->price) {
                 return response()->json([
                     'message' => 'Campaign price must be lower than the original product price.',
                     'errors' => [
-                        'price' => ['Campaign price must be lower than $' . $product->price],
+                        'price' => ['Campaign price must be lower than $'.$product->price],
                     ],
                 ], 422);
             }
@@ -267,25 +270,49 @@ class CampaignController extends Controller
                 ->orderBy('start_date', 'desc')
                 ->get()
                 ->map(function ($campaign) {
-                    // Format the response to include products as an array
+                    // Convert to array to properly format sizeStocks
                     $campaignData = $campaign->toArray();
-                    // If there's a product, wrap it in an array for frontend compatibility
-                    if ($campaign->product) {
-                        $campaignData['products'] = [$campaign->product->toArray()];
-                    } else {
-                        $campaignData['products'] = [];
+
+                    // Format sizeStocks for the product if it exists
+                    if (isset($campaignData['product']['size_stocks']) && is_array($campaignData['product']['size_stocks'])) {
+                        $formattedSizeStocks = [];
+                        foreach ($campaignData['product']['size_stocks'] as $sizeStock) {
+                            $formattedSizeStocks[$sizeStock['size']] = [
+                                'quantity' => $sizeStock['quantity'],
+                                'stock_status' => $sizeStock['quantity'] === 0 ? 'out of stock' :
+                                    ($sizeStock['quantity'] <= 10 ? 'low stock' : 'in stock'),
+                            ];
+                        }
+                        $campaignData['product']['sizeStocks'] = $formattedSizeStocks;
+                        // Remove the old size_stocks array format
+                        unset($campaignData['product']['size_stocks']);
                     }
-                    unset($campaignData['product']); // Remove single product
+
+                    // Ensure sizeStocks exists even if transformation didn't happen
+                    if (! isset($campaignData['product']['sizeStocks']) && isset($campaignData['product']['size_stocks'])) {
+                        $formattedSizeStocks = [];
+                        foreach ($campaignData['product']['size_stocks'] as $sizeStock) {
+                            $formattedSizeStocks[$sizeStock['size']] = [
+                                'quantity' => $sizeStock['quantity'],
+                                'stock_status' => $sizeStock['quantity'] === 0 ? 'out of stock' :
+                                    ($sizeStock['quantity'] <= 10 ? 'low stock' : 'in stock'),
+                            ];
+                        }
+                        $campaignData['product']['sizeStocks'] = $formattedSizeStocks;
+                        unset($campaignData['product']['size_stocks']);
+                    }
+
                     return $campaignData;
                 });
 
             return response()->json([
                 'data' => $campaigns,
-                'message' => 'Active campaigns retrieved successfully'
+                'message' => 'Active campaigns retrieved successfully',
             ]);
         } catch (\Exception $e) {
-            Log::error('Error fetching active campaigns: ' . $e->getMessage());
+            Log::error('Error fetching active campaigns: '.$e->getMessage());
             Log::error($e->getTraceAsString());
+
             return response()->json([
                 'data' => [],
                 'message' => 'Error fetching active campaigns',

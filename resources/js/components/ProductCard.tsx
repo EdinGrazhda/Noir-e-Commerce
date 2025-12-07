@@ -1,10 +1,12 @@
 import { Clock, Eye, Tag } from 'lucide-react';
 import { memo, useCallback, useEffect, useState } from 'react';
+import { useImageCache } from '../hooks/useImageCache';
 import type { Product } from '../types/store';
 
 interface ProductCardProps {
     product: Product;
     onQuickView?: (product: Product) => void;
+    priority?: boolean; // Load image with high priority (for first visible products)
 }
 
 /**
@@ -12,8 +14,11 @@ interface ProductCardProps {
  * Shows image, title, price, stock badge, and Add to Cart button
  */
 export const ProductCard = memo(
-    ({ product, onQuickView }: ProductCardProps) => {
-        const [imageLoaded, setImageLoaded] = useState(false);
+    ({ product, onQuickView, priority = false }: ProductCardProps) => {
+        const { isLoaded: imageLoaded, cachedUrl } = useImageCache(
+            product.image,
+            priority,
+        );
         const [timeRemaining, setTimeRemaining] = useState<{
             days: number;
             hours: number;
@@ -75,10 +80,14 @@ export const ProductCard = memo(
         const getAvailableSizes = () => {
             if (!product.foot_numbers) return [];
 
-            const allSizes = product.foot_numbers
-                .split(',')
-                .map((size) => size.trim())
-                .filter((size) => size.length > 0);
+            const allSizes = [
+                ...new Set(
+                    product.foot_numbers
+                        .split(',')
+                        .map((size) => size.trim())
+                        .filter((size) => size.length > 0),
+                ),
+            ];
 
             // If we have size-specific stock data, filter by availability
             if (product.sizeStocks) {
@@ -115,17 +124,40 @@ export const ProductCard = memo(
                 {/* Image Container with Fixed Aspect Ratio */}
                 <div className="relative aspect-square overflow-hidden bg-gray-100">
                     {!imageLoaded && (
-                        <div
-                            className="absolute inset-0 animate-pulse bg-gray-200"
-                            aria-hidden="true"
-                        />
+                        <div className="absolute inset-0">
+                            {/* Animated gradient skeleton */}
+                            <div
+                                className="h-full w-full animate-pulse bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 bg-[length:200%_100%]"
+                                style={{
+                                    animation: 'shimmer 1.5s infinite',
+                                }}
+                                aria-hidden="true"
+                            />
+                            {/* Shoe icon placeholder */}
+                            <div className="absolute inset-0 flex items-center justify-center">
+                                <svg
+                                    className="h-12 w-12 text-gray-400 opacity-30"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={1.5}
+                                        d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
+                                    />
+                                </svg>
+                            </div>
+                        </div>
                     )}
                     <img
-                        src={product.image}
+                        src={cachedUrl}
                         alt={product.name}
-                        loading="lazy"
-                        onLoad={() => setImageLoaded(true)}
-                        className={`h-full w-full object-cover transition-transform duration-300 group-hover:scale-105 ${
+                        loading={priority ? 'eager' : 'lazy'}
+                        fetchPriority={priority ? 'high' : 'auto'}
+                        decoding={priority ? 'sync' : 'async'}
+                        className={`h-full w-full object-cover transition-all duration-300 group-hover:scale-105 ${
                             imageLoaded ? 'opacity-100' : 'opacity-0'
                         }`}
                     />

@@ -226,3 +226,13 @@ html[class*='dark'] * {
     backface-visibility: hidden;
     perspective: 1000px;
 }
+
+/* Shimmer animation for loading images */
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}

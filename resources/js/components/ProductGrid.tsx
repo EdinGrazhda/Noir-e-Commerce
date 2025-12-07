@@ -1,5 +1,6 @@
-import { memo, useCallback, useEffect } from 'react';
+import { memo, useCallback, useEffect, useMemo } from 'react';
 import { useInView } from 'react-intersection-observer';
+import { useImagePreloader } from '../hooks/useImageCache';
 import type { Product } from '../types/store';
 import { ProductCard } from './ProductCard';
 import { ProductGridSkeleton } from './Skeletons';
@@ -12,6 +13,8 @@ interface ProductGridProps {
     isFetchingNextPage: boolean;
     onQuickView: (product: Product) => void;
 }
+
+const PRIORITY_COUNT = 8; // Load first 8 images with high priority
 
 /**
  * Optimized product grid with infinite scroll and IntersectionObserver
@@ -37,6 +40,15 @@ export const ProductGrid = memo(
             },
             [onQuickView],
         );
+
+        // Preload images for upcoming products
+        const upcomingImageUrls = useMemo(() => {
+            return products
+                .slice(PRIORITY_COUNT, PRIORITY_COUNT + 12)
+                .map((p) => p.image);
+        }, [products]);
+
+        useImagePreloader(upcomingImageUrls);
 
         // Trigger next page load when sentinel is in view
         useEffect(() => {
@@ -105,11 +117,12 @@ export const ProductGrid = memo(
                     role="list"
                     aria-label="Product list"
                 >
-                    {products.map((product) => (
+                    {products.map((product, index) => (
                         <div key={product.id} role="listitem">
                             <ProductCard
                                 product={product}
                                 onQuickView={handleQuickView}
+                                priority={index < PRIORITY_COUNT}
                             />
                         </div>
                     ))}
