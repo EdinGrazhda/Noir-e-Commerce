@@ -109,7 +109,7 @@ export const ProductCard = memo(
 
         return (
             <article
-                className="group flex h-full cursor-pointer flex-col overflow-hidden rounded-lg border border-gray-200 bg-white transition-all duration-200 focus-within:ring-2 focus-within:ring-[#771E49] hover:border-[#771E49] hover:shadow-lg"
+                className="group flex h-full cursor-pointer flex-col overflow-hidden border-2 border-black bg-white transition-all duration-300 focus-within:ring-4 focus-within:ring-black hover:bg-black hover:text-white"
                 onClick={handleQuickView}
                 role="button"
                 tabIndex={0}
@@ -125,29 +125,14 @@ export const ProductCard = memo(
                 <div className="relative aspect-square overflow-hidden bg-gray-100">
                     {!imageLoaded && (
                         <div className="absolute inset-0">
-                            {/* Animated gradient skeleton */}
+                            {/* Minimalist skeleton */}
                             <div
-                                className="h-full w-full animate-pulse bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 bg-[length:200%_100%]"
-                                style={{
-                                    animation: 'shimmer 1.5s infinite',
-                                }}
+                                className="h-full w-full animate-pulse bg-gray-200"
                                 aria-hidden="true"
                             />
-                            {/* Shoe icon placeholder */}
+                            {/* Simple icon placeholder */}
                             <div className="absolute inset-0 flex items-center justify-center">
-                                <svg
-                                    className="h-12 w-12 text-gray-400 opacity-30"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={1.5}
-                                        d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
-                                    />
-                                </svg>
+                                <div className="h-16 w-16 border-4 border-black" />
                             </div>
                         </div>
                     )}
@@ -157,27 +142,27 @@ export const ProductCard = memo(
                         loading={priority ? 'eager' : 'lazy'}
                         fetchPriority={priority ? 'high' : 'auto'}
                         decoding={priority ? 'sync' : 'async'}
-                        className={`h-full w-full object-cover transition-all duration-300 group-hover:scale-105 ${
+                        className={`h-full w-full object-cover grayscale transition-all duration-500 group-hover:scale-110 group-hover:grayscale-0 ${
                             imageLoaded ? 'opacity-100' : 'opacity-0'
                         }`}
                     />
 
-                    {/* Stock Badge */}
+                    {/* Stock Badge - Minimalist */}
                     {isOutOfStock && (
-                        <div className="absolute top-2 right-2 rounded bg-gray-800 px-2 py-1 text-xs font-semibold text-white">
-                            Out of Stock
+                        <div className="absolute top-3 right-3 border-2 border-black bg-white px-3 py-1 font-black tracking-wider text-black uppercase">
+                            SOLD OUT
                         </div>
                     )}
                     {isLowStock && (
-                        <div className="absolute top-2 right-2 rounded bg-[#771E49] px-2 py-1 text-xs font-semibold text-white">
-                            Low Stock
+                        <div className="absolute top-3 right-3 border-2 border-black bg-black px-3 py-1 font-black tracking-wider text-white uppercase">
+                            LOW STOCK
                         </div>
                     )}
 
-                    {/* Campaign Badge */}
+                    {/* Campaign Badge - Minimalist */}
                     {product.hasActiveCampaign && product.originalPrice && (
-                        <div className="absolute top-2 left-2 flex items-center gap-1 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 px-3 py-1 text-xs font-bold text-white shadow-lg">
-                            <Tag size={12} />
+                        <div className="absolute top-3 left-3 flex items-center gap-1.5 border-2 border-black bg-black px-3 py-1.5 font-black tracking-wider text-white uppercase">
+                            <Tag size={14} strokeWidth={3} />
                             <span>
                                 {Math.round(
                                     ((product.originalPrice - product.price) /
@@ -188,44 +173,39 @@ export const ProductCard = memo(
                             </span>
                         </div>
                     )}
+
+                    {/* Overlay on Hover */}
+                    <div className="absolute inset-0 bg-black opacity-0 transition-opacity duration-300 group-hover:opacity-20" />
                 </div>
 
                 {/* Product Info */}
-                <div className="flex flex-1 flex-col p-2 sm:p-4">
+                <div className="flex flex-1 flex-col p-4 sm:p-5">
                     {/* Title */}
-                    <h3 className="mb-1 line-clamp-2 text-xs font-semibold text-gray-900 transition-colors group-hover:text-[#771E49] sm:mb-2 sm:text-base">
+                    <h3 className="mb-2 line-clamp-2 font-black tracking-tight text-black uppercase transition-colors group-hover:text-white sm:mb-3 sm:text-lg">
                         {product.name}
                     </h3>
 
-                    {/* Gender Badge */}
+                    {/* Gender Badge - Minimalist */}
                     {product.gender && (
-                        <div className="mb-1 sm:mb-2">
-                            <span
-                                className={`inline-block rounded-full px-1.5 py-0.5 text-[10px] font-medium sm:px-2 sm:py-1 sm:text-xs ${
-                                    product.gender === 'male'
-                                        ? 'bg-blue-100 text-blue-800'
-                                        : product.gender === 'female'
-                                          ? 'bg-pink-100 text-pink-800'
-                                          : 'bg-gray-100 text-gray-800'
-                                }`}
-                            >
+                        <div className="mb-2 sm:mb-3">
+                            <span className="inline-block border border-black px-2 py-1 text-xs font-bold tracking-wider text-black uppercase transition-all group-hover:border-white group-hover:text-white">
                                 {product.gender === 'male'
-                                    ? 'Male'
+                                    ? 'MALE'
                                     : product.gender === 'female'
-                                      ? 'Female'
-                                      : 'Unisex'}
+                                      ? 'FEMALE'
+                                      : 'UNISEX'}
                             </span>
                         </div>
                     )}
 
-                    {/* Available Sizes */}
+                    {/* Available Sizes - Minimalist */}
                     {availableSizes.length > 0 && (
-                        <div className="mb-1 sm:mb-2">
-                            <p className="mb-0.5 text-[10px] text-gray-500 sm:mb-1 sm:text-xs">
-                                Available sizes:
+                        <div className="mb-3">
+                            <p className="mb-1.5 text-xs font-bold tracking-wide text-black uppercase transition-colors group-hover:text-white">
+                                Sizes:
                             </p>
-                            <div className="flex flex-wrap gap-0.5 sm:gap-1">
-                                {availableSizes.slice(0, 4).map((size) => {
+                            <div className="flex flex-wrap gap-1.5">
+                                {availableSizes.slice(0, 5).map((size) => {
                                     const sizeStockInfo =
                                         product.sizeStocks?.[size];
                                     const sizeStock =
@@ -238,25 +218,20 @@ export const ProductCard = memo(
                                     return (
                                         <span
                                             key={size}
-                                            className={`inline-block rounded border px-1 py-0.5 text-[9px] sm:px-1.5 sm:text-xs ${
+                                            className={`inline-block border px-2 py-0.5 text-xs font-bold transition-all ${
                                                 isLowSizeStock
-                                                    ? 'border-yellow-200 bg-yellow-50 text-yellow-700'
-                                                    : 'border-gray-200 bg-gray-100 text-gray-700'
+                                                    ? 'border-black bg-black text-white group-hover:border-white group-hover:bg-white group-hover:text-black'
+                                                    : 'border-black text-black group-hover:border-white group-hover:text-white'
                                             }`}
                                             title="Available size"
                                         >
                                             {size}
-                                            {isLowSizeStock && (
-                                                <span className="ml-0.5 text-[8px] sm:ml-1 sm:text-[10px]">
-                                                    ●
-                                                </span>
-                                            )}
                                         </span>
                                     );
                                 })}
-                                {availableSizes.length > 4 && (
-                                    <span className="text-[9px] text-gray-500 sm:text-xs">
-                                        +{availableSizes.length - 4} more
+                                {availableSizes.length > 5 && (
+                                    <span className="text-xs font-medium text-black transition-colors group-hover:text-white">
+                                        +{availableSizes.length - 5}
                                     </span>
                                 )}
                             </div>
@@ -264,43 +239,41 @@ export const ProductCard = memo(
                     )}
 
                     {/* Price and Action */}
-                    <div className="mt-auto flex items-center justify-between gap-1 pt-2 sm:gap-2 sm:pt-3">
-                        <div className="flex flex-col">
+                    <div className="mt-auto pt-3 sm:pt-4">
+                        <div className="mb-3 border-t-2 border-black pt-3 transition-colors group-hover:border-white">
                             {product.hasActiveCampaign &&
                             product.originalPrice ? (
                                 <>
-                                    <span className="text-base font-bold text-green-600 sm:text-xl">
-                                        €{(product.price || 0).toFixed(2)}
-                                    </span>
-                                    <span className="text-xs text-gray-400 line-through sm:text-sm">
-                                        €
-                                        {(product.originalPrice || 0).toFixed(
-                                            2,
-                                        )}
-                                    </span>
+                                    <div className="flex items-baseline gap-2">
+                                        <span className="text-2xl font-black text-black transition-colors group-hover:text-white sm:text-3xl">
+                                            €{(product.price || 0).toFixed(2)}
+                                        </span>
+                                        <span className="text-sm font-bold text-gray-400 line-through transition-colors group-hover:text-gray-300">
+                                            €
+                                            {(
+                                                product.originalPrice || 0
+                                            ).toFixed(2)}
+                                        </span>
+                                    </div>
                                     {product.campaign_name && (
-                                        <span className="text-[10px] font-semibold text-purple-600 sm:text-xs">
+                                        <span className="mt-1 block text-xs font-bold tracking-wider text-black uppercase transition-colors group-hover:text-white">
                                             {product.campaign_name}
                                         </span>
                                     )}
                                     {timeRemaining && (
-                                        <div className="mt-0.5 flex items-center gap-0.5 text-[10px] font-medium text-gray-600 sm:mt-1 sm:gap-1 sm:text-xs">
-                                            <Clock
-                                                size={10}
-                                                className="text-purple-600 sm:h-3 sm:w-3"
-                                            />
+                                        <div className="mt-1.5 flex items-center gap-1 text-xs font-bold tracking-wide text-black uppercase transition-colors group-hover:text-white">
+                                            <Clock size={12} strokeWidth={3} />
                                             <span>
                                                 {timeRemaining.days > 0 &&
-                                                    `${timeRemaining.days}d `}
-                                                {timeRemaining.hours}h{' '}
-                                                {timeRemaining.minutes}m{' '}
-                                                {timeRemaining.seconds}s
+                                                    `${timeRemaining.days}D `}
+                                                {timeRemaining.hours}H{' '}
+                                                {timeRemaining.minutes}M
                                             </span>
                                         </div>
                                     )}
                                 </>
                             ) : (
-                                <span className="text-base font-bold text-[#771E49] sm:text-xl">
+                                <span className="text-2xl font-black text-black transition-colors group-hover:text-white sm:text-3xl">
                                     €{(product.price || 0).toFixed(2)}
                                 </span>
                             )}
@@ -308,11 +281,11 @@ export const ProductCard = memo(
 
                         <button
                             onClick={handleShowDetails}
-                            className="flex items-center gap-1 rounded-lg bg-[#771E49] px-2 py-1.5 text-xs font-semibold text-white transition-all duration-200 hover:scale-105 hover:bg-[#5a1738] focus:ring-2 focus:ring-[#771E49] focus:outline-none sm:gap-1.5 sm:px-3 sm:py-2 sm:text-sm"
+                            className="flex w-full items-center justify-center gap-2 border-2 border-black bg-black py-3 font-black tracking-widest text-white uppercase transition-all duration-300 group-hover:border-white group-hover:bg-white group-hover:text-black hover:bg-white hover:text-black focus:ring-4 focus:ring-black focus:outline-none"
                             aria-label={`View details for ${product.name}`}
                         >
-                            <Eye size={14} className="sm:h-4 sm:w-4" />
-                            <span>Details</span>
+                            <Eye size={16} strokeWidth={3} />
+                            <span>VIEW</span>
                         </button>
                     </div>
                 </div>

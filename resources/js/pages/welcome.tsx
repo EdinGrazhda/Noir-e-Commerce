@@ -386,34 +386,38 @@ function StorefrontContent({
                 onToggleFilters={handleToggleFilters}
             />
 
-            {/* Banner Carousel */}
-            <BannerCarousel />
-
-            {/* Main Layout with Sidebar */}
-            <div className="flex">
-                {/* Filter Sidebar */}
-                <FilterSidebar
-                    filters={filters}
-                    categories={categories}
-                    onFilterChange={updateFilters}
-                    onClearFilters={clearFilters}
-                    hasActiveFilters={hasActiveFilters}
-                    isOpen={isMobileFilterOpen}
-                    onClose={handleCloseFilters}
-                />
-
-                {/* Product Grid - Main Content */}
-                <main className="min-w-0 flex-1">
-                    <ProductGrid
-                        products={products}
-                        isLoading={isLoading}
-                        hasNextPage={hasNextPage ?? false}
-                        fetchNextPage={fetchNextPage}
-                        isFetchingNextPage={isFetchingNextPage}
-                        onQuickView={handleQuickView}
+            {/* Banner and Filters Row - 30% Filters (Left), 70% Banner (Right) */}
+            <div className="flex flex-col gap-4 lg:flex-row">
+                {/* Filter Sidebar - 30% Width - LEFT SIDE */}
+                <div className="w-full lg:w-[30%]">
+                    <FilterSidebar
+                        filters={filters}
+                        categories={categories}
+                        onFilterChange={updateFilters}
+                        onClearFilters={clearFilters}
+                        hasActiveFilters={hasActiveFilters}
+                        isOpen={isMobileFilterOpen}
+                        onClose={handleCloseFilters}
                     />
-                </main>
+                </div>
+
+                {/* Banner Carousel - 70% Width - RIGHT SIDE */}
+                <div className="w-full lg:w-[70%]">
+                    <BannerCarousel />
+                </div>
             </div>
+
+            {/* Product Grid - Full Width Below Banner and Filters */}
+            <main className="w-full">
+                <ProductGrid
+                    products={products}
+                    isLoading={isLoading}
+                    hasNextPage={hasNextPage ?? false}
+                    fetchNextPage={fetchNextPage}
+                    isFetchingNextPage={isFetchingNextPage}
+                    onQuickView={handleQuickView}
+                />
+            </main>
 
             {/* Footer */}
             <Footer />

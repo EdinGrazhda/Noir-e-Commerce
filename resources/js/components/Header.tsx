@@ -9,7 +9,7 @@ interface HeaderProps {
 }
 
 /**
- * Compact header with logo, search input, filter toggle (mobile), and cart badge
+ * Noir-themed minimalist header with pure black and white design
  * Memoized to prevent unnecessary re-renders
  */
 export const Header = memo(
@@ -17,66 +17,47 @@ export const Header = memo(
         const { totalItems, openCart } = useCartStore();
 
         return (
-            <header className="sticky top-0 z-50 border-b border-gray-100 bg-white shadow-sm">
-                <div className="mx-auto px-3 sm:px-6 lg:px-16 xl:px-24">
-                    <div className="flex h-14 items-center justify-between gap-2 sm:h-16 sm:gap-6 lg:gap-12">
+            <header className="sticky top-0 z-50 border-b-2 border-black bg-white">
+                <div className="mx-auto px-4 sm:px-6 lg:px-16 xl:px-24">
+                    <div className="flex h-16 items-center justify-between gap-4 sm:h-20 sm:gap-8 lg:gap-16">
                         {/* Filter Toggle (Mobile Only) */}
                         <button
                             onClick={onToggleFilters}
-                            className="relative flex-shrink-0 rounded-lg p-1.5 transition-colors hover:bg-gray-50 focus:ring-2 focus:ring-[#771E49] focus:outline-none sm:p-2 lg:hidden"
+                            className="relative flex-shrink-0 rounded-none border-2 border-black p-2 transition-all hover:bg-black hover:text-white focus:ring-2 focus:ring-black focus:outline-none sm:p-2.5 lg:hidden"
                             aria-label="Toggle filters"
                         >
                             <SlidersHorizontal
                                 size={20}
-                                className="text-[#771E49] sm:h-6 sm:w-6"
+                                className="sm:h-6 sm:w-6"
                             />
                         </button>
 
-                        {/* Logo */}
+                        {/* Logo / Brand */}
                         <div className="flex-shrink-0">
-                            <img
-                                src="/images/andshoeslogo1.png"
-                                alt="AndShoes"
-                                className="h-8 w-auto sm:h-10 lg:h-12"
-                            />
+                            <h1 className="text-2xl font-black tracking-tighter text-black uppercase sm:text-3xl lg:text-4xl">
+                                NOIR
+                            </h1>
                         </div>
 
-                        {/* Search Bar with Decorative Circles */}
-                        <div className="max-w-2xl flex-1 lg:mx-12">
-                            <div className="flex items-center gap-2 sm:gap-3">
-                                {/* Left Circles */}
-                                <div className="hidden items-center gap-1 sm:flex">
-                                    <div className="h-2 w-2 rounded-full bg-[#771f48]"></div>
-                                    <div className="h-2 w-2 rounded-full bg-[#771f48]"></div>
-                                    <div className="h-2 w-2 rounded-full bg-[#771f48]"></div>
-                                </div>
-
-                                {/* Search Input */}
-                                <div className="relative flex-1">
-                                    <Search
-                                        className="absolute top-1/2 left-2 -translate-y-1/2 text-gray-400 sm:left-3"
-                                        size={18}
-                                        aria-hidden="true"
-                                    />
-                                    <input
-                                        type="search"
-                                        value={searchValue}
-                                        onChange={(e) =>
-                                            onSearchChange(e.target.value)
-                                        }
-                                        placeholder="Search..."
-                                        className="w-full rounded-lg border-2 py-1.5 pr-2 pl-8 text-sm transition-all focus:border-[#771f48] focus:ring-2 focus:ring-[#771f48]/20 focus:outline-none sm:py-2 sm:pr-4 sm:pl-10 sm:text-base"
-                                        style={{ borderColor: '#771f48' }}
-                                        aria-label="Search products"
-                                    />
-                                </div>
-
-                                {/* Right Circles */}
-                                <div className="hidden items-center gap-1 sm:flex">
-                                    <div className="h-2 w-2 rounded-full bg-[#771f48]"></div>
-                                    <div className="h-2 w-2 rounded-full bg-[#771f48]"></div>
-                                    <div className="h-2 w-2 rounded-full bg-[#771f48]"></div>
-                                </div>
+                        {/* Search Bar - Minimalist Design */}
+                        <div className="max-w-2xl flex-1">
+                            <div className="relative">
+                                <Search
+                                    className="absolute top-1/2 left-3 -translate-y-1/2 text-black sm:left-4"
+                                    size={20}
+                                    strokeWidth={2.5}
+                                    aria-hidden="true"
+                                />
+                                <input
+                                    type="search"
+                                    value={searchValue}
+                                    onChange={(e) =>
+                                        onSearchChange(e.target.value)
+                                    }
+                                    placeholder="SEARCH PRODUCTS..."
+                                    className="w-full border-2 border-black bg-white py-2.5 pr-4 pl-10 font-medium tracking-wide text-black uppercase placeholder-gray-400 transition-all focus:bg-black focus:text-white focus:placeholder-gray-400 focus:outline-none sm:py-3 sm:pl-12 sm:text-sm"
+                                    aria-label="Search products"
+                                />
                             </div>
                         </div>
 
@@ -84,16 +65,17 @@ export const Header = memo(
                         <div className="flex-shrink-0">
                             <button
                                 onClick={openCart}
-                                className="relative rounded-lg p-1.5 transition-colors hover:bg-gray-50 focus:ring-2 focus:ring-[#771E49] focus:outline-none sm:p-2"
+                                className="relative border-2 border-black p-2 transition-all hover:bg-black hover:text-white focus:ring-2 focus:ring-black focus:outline-none sm:p-2.5"
                                 aria-label={`Shopping cart with ${totalItems} items`}
                             >
                                 <ShoppingCart
-                                    size={20}
-                                    className="text-gray-700 sm:h-6 sm:w-6"
+                                    size={22}
+                                    strokeWidth={2.5}
+                                    className="sm:h-6 sm:w-6"
                                 />
                                 {totalItems > 0 && (
-                                    <span className="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-[#771E49] text-[10px] font-bold text-white sm:-top-1 sm:-right-1 sm:h-5 sm:w-5 sm:text-xs">
-                                        {totalItems > 99 ? '99+' : totalItems}
+                                    <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center border border-white bg-black text-[10px] font-bold text-white sm:h-6 sm:w-6 sm:text-xs">
+                                        {totalItems > 99 ? '99' : totalItems}
                                     </span>
                                 )}
                             </button>

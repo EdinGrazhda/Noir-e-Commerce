@@ -1,10 +1,4 @@
-import {
-    ChevronDown,
-    ChevronUp,
-    SlidersHorizontal,
-    Sparkles,
-    X,
-} from 'lucide-react';
+import { ChevronDown, ChevronUp, SlidersHorizontal, X } from 'lucide-react';
 import { memo, useMemo, useState } from 'react';
 import type { Category, Filters } from '../types/store';
 
@@ -85,57 +79,55 @@ export const FilterSidebar = memo(
                     />
                 )}
 
-                {/* Sidebar */}
+                {/* Filter Panel - 30% Width on Left Side - Matches Banner Height */}
                 <aside
-                    className={`fixed top-16 left-0 z-40 h-[calc(100vh-4rem)] w-80 overflow-y-auto bg-gradient-to-b from-[#761f49] to-[#5a1737] shadow-2xl transition-transform duration-300 ease-in-out lg:sticky ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'} `}
+                    className={`fixed top-0 left-0 z-40 h-screen w-80 overflow-y-auto border-r-4 border-black bg-black shadow-2xl transition-transform duration-300 ease-in-out lg:relative lg:h-[32rem] lg:w-full ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'} `}
                     aria-label="Product filters"
                 >
                     {/* Mobile Header */}
-                    <div className="sticky top-0 z-10 flex items-center justify-between border-b border-white/10 bg-[#761f49]/95 px-6 py-4 backdrop-blur-sm lg:hidden">
-                        <h2 className="flex items-center gap-2 text-lg font-bold text-white">
-                            <SlidersHorizontal
-                                size={20}
-                                className="text-white"
-                            />
-                            Filters
+                    <div className="sticky top-0 z-10 flex items-center justify-between border-b-2 border-white bg-black px-4 py-4 lg:hidden">
+                        <h2 className="flex items-center gap-2 font-black tracking-tighter text-white uppercase">
+                            <SlidersHorizontal size={20} strokeWidth={3} />
+                            FILTERS
                         </h2>
                         <button
                             onClick={onClose}
-                            className="rounded-lg p-2 text-white transition-all hover:rotate-90 hover:bg-white/20 focus:ring-2 focus:ring-white/50 focus:outline-none"
+                            className="border-2 border-white p-2 text-white transition-all hover:bg-white hover:text-black focus:ring-2 focus:ring-white focus:outline-none"
                             aria-label="Close filters"
                         >
-                            <X size={20} />
+                            <X size={20} strokeWidth={3} />
                         </button>
                     </div>
 
                     {/* Desktop Header */}
-                    <div className="sticky top-0 z-10 hidden border-b border-white/10 bg-[#761f49]/95 px-6 py-5 backdrop-blur-sm lg:block">
-                        <div className="flex items-center gap-2">
-                            <Sparkles
+                    <div className="sticky top-0 z-10 hidden border-b-2 border-white bg-black px-4 py-5 lg:block">
+                        <div className="mb-2 flex items-center gap-2">
+                            <SlidersHorizontal
                                 size={20}
-                                className="animate-pulse text-yellow-300"
+                                strokeWidth={3}
+                                className="text-white"
                             />
-                            <h2 className="text-lg font-bold text-white">
-                                Filter Products
+                            <h2 className="font-black tracking-tighter text-white uppercase">
+                                FILTERS
                             </h2>
                         </div>
-                        <p className="mt-1 text-xs text-white/70">
-                            Find your perfect shoes
-                        </p>
+                        <div className="h-1 w-12 bg-white" />
                     </div>
 
-                    <div className="space-y-2 p-6">
+                    {/* Scrollable Content Container */}
+                    <div className="h-full overflow-y-auto custom-scrollbar lg:h-[calc(32rem-6rem)]">
+                        <div className="space-y-3 p-4">
                         {/* Sort By */}
-                        <div className="rounded-xl bg-white/5 p-4 backdrop-blur-sm transition-all hover:bg-white/10">
+                        <div className="border-2 border-white p-3">
                             <button
                                 onClick={() => toggleSection('sort')}
-                                className="flex w-full items-center justify-between text-sm font-semibold text-white"
+                                className="flex w-full items-center justify-between font-black tracking-tight text-white uppercase"
                             >
-                                <span>Sort By</span>
+                                <span className="text-xs">SORT BY</span>
                                 {expandedSections.sort ? (
-                                    <ChevronUp size={16} />
+                                    <ChevronUp size={16} strokeWidth={3} />
                                 ) : (
-                                    <ChevronDown size={16} />
+                                    <ChevronDown size={16} strokeWidth={3} />
                                 )}
                             </button>
                             {expandedSections.sort && (
@@ -149,7 +141,7 @@ export const FilterSidebar = memo(
                                                     .value as Filters['sortBy'],
                                             })
                                         }
-                                        className="w-full cursor-pointer rounded-lg border-0 bg-white/90 px-4 py-2.5 text-sm font-medium text-gray-800 shadow-sm transition-all hover:bg-white hover:shadow-md focus:ring-2 focus:ring-white/50 focus:outline-none"
+                                        className="w-full cursor-pointer border-2 border-black bg-white px-3 py-2 text-xs font-bold tracking-wide text-black uppercase transition-all hover:bg-gray-100 focus:ring-2 focus:ring-white focus:outline-none"
                                     >
                                         {SORT_OPTIONS.map((option) => (
                                             <option
@@ -165,16 +157,16 @@ export const FilterSidebar = memo(
                         </div>
 
                         {/* Price Range */}
-                        <div className="rounded-xl bg-white/5 p-4 backdrop-blur-sm transition-all hover:bg-white/10">
+                        <div className="border-2 border-white p-3">
                             <button
                                 onClick={() => toggleSection('price')}
-                                className="flex w-full items-center justify-between text-sm font-semibold text-white"
+                                className="flex w-full items-center justify-between font-black tracking-tight text-white uppercase"
                             >
-                                <span>Price Range</span>
+                                <span className="text-xs">PRICE</span>
                                 {expandedSections.price ? (
-                                    <ChevronUp size={16} />
+                                    <ChevronUp size={16} strokeWidth={3} />
                                 ) : (
-                                    <ChevronDown size={16} />
+                                    <ChevronDown size={16} strokeWidth={3} />
                                 )}
                             </button>
                             {expandedSections.price && (
@@ -188,14 +180,14 @@ export const FilterSidebar = memo(
                                                     priceMax: 50,
                                                 })
                                             }
-                                            className={`rounded-lg px-3 py-2 text-xs font-medium transition-all ${
+                                            className={`border-2 px-2 py-1 text-xs font-bold tracking-wide uppercase transition-all ${
                                                 filters.priceMin === 0 &&
                                                 filters.priceMax === 50
-                                                    ? 'bg-white text-[#761f49] shadow-md'
-                                                    : 'bg-white/10 text-white hover:bg-white/20'
+                                                    ? 'border-white bg-white text-black'
+                                                    : 'border-white bg-black text-white hover:bg-white hover:text-black'
                                             }`}
                                         >
-                                            Under €50
+                                            UNDER €50
                                         </button>
                                         <button
                                             onClick={() =>
@@ -204,14 +196,14 @@ export const FilterSidebar = memo(
                                                     priceMax: 100,
                                                 })
                                             }
-                                            className={`rounded-lg px-3 py-2 text-xs font-medium transition-all ${
+                                            className={`border-2 px-2 py-1 text-xs font-bold tracking-wide uppercase transition-all ${
                                                 filters.priceMin === 50 &&
                                                 filters.priceMax === 100
-                                                    ? 'bg-white text-[#761f49] shadow-md'
-                                                    : 'bg-white/10 text-white hover:bg-white/20'
+                                                    ? 'border-white bg-white text-black'
+                                                    : 'border-white bg-black text-white hover:bg-white hover:text-black'
                                             }`}
                                         >
-                                            €50 - €100
+                                            €50-€100
                                         </button>
                                         <button
                                             onClick={() =>
@@ -220,14 +212,14 @@ export const FilterSidebar = memo(
                                                     priceMax: 200,
                                                 })
                                             }
-                                            className={`rounded-lg px-3 py-2 text-xs font-medium transition-all ${
+                                            className={`border-2 px-2 py-1 text-xs font-bold tracking-wide uppercase transition-all ${
                                                 filters.priceMin === 100 &&
                                                 filters.priceMax === 200
-                                                    ? 'bg-white text-[#761f49] shadow-md'
-                                                    : 'bg-white/10 text-white hover:bg-white/20'
+                                                    ? 'border-white bg-white text-black'
+                                                    : 'border-white bg-black text-white hover:bg-white hover:text-black'
                                             }`}
                                         >
-                                            €100 - €200
+                                            €100-€200
                                         </button>
                                         <button
                                             onClick={() =>
@@ -236,11 +228,11 @@ export const FilterSidebar = memo(
                                                     priceMax: 10000,
                                                 })
                                             }
-                                            className={`rounded-lg px-3 py-2 text-xs font-medium transition-all ${
+                                            className={`border-2 px-2 py-1 text-xs font-bold tracking-wide uppercase transition-all ${
                                                 filters.priceMin === 200 &&
                                                 filters.priceMax === 10000
-                                                    ? 'bg-white text-[#761f49] shadow-md'
-                                                    : 'bg-white/10 text-white hover:bg-white/20'
+                                                    ? 'border-white bg-white text-black'
+                                                    : 'border-white bg-black text-white hover:bg-white hover:text-black'
                                             }`}
                                         >
                                             €200+
@@ -251,36 +243,36 @@ export const FilterSidebar = memo(
                         </div>
 
                         {/* Gender Filter */}
-                        <div className="rounded-xl bg-white/5 p-4 backdrop-blur-sm transition-all hover:bg-white/10">
+                        <div className="border-2 border-white p-3">
                             <button
                                 onClick={() => toggleSection('gender')}
-                                className="flex w-full items-center justify-between text-sm font-semibold text-white"
+                                className="flex w-full items-center justify-between font-black tracking-tight text-white uppercase"
                             >
-                                <span>
-                                    Gender
+                                <span className="flex items-center gap-2 text-xs">
+                                    GENDER
                                     {filters.gender &&
                                         filters.gender.length > 0 && (
-                                            <span className="ml-2 inline-flex h-5 w-5 items-center justify-center rounded-full bg-white/20 text-xs">
+                                            <span className="flex h-4 w-4 items-center justify-center border border-white bg-white text-[10px] font-black text-black">
                                                 {filters.gender.length}
                                             </span>
                                         )}
                                 </span>
                                 {expandedSections.gender ? (
-                                    <ChevronUp size={16} />
+                                    <ChevronUp size={16} strokeWidth={3} />
                                 ) : (
-                                    <ChevronDown size={16} />
+                                    <ChevronDown size={16} strokeWidth={3} />
                                 )}
                             </button>
                             {expandedSections.gender && (
-                                <div className="mt-3 space-y-1">
+                                <div className="mt-3 space-y-2">
                                     {[
-                                        { value: 'male', label: 'Male' },
-                                        { value: 'female', label: 'Female' },
-                                        { value: 'unisex', label: 'Unisex' },
+                                        { value: 'male', label: 'MALE' },
+                                        { value: 'female', label: 'FEMALE' },
+                                        { value: 'unisex', label: 'UNISEX' },
                                     ].map((genderOption) => (
                                         <label
                                             key={genderOption.value}
-                                            className="group flex cursor-pointer items-center gap-3 rounded-lg p-2.5 transition-all hover:bg-white/10"
+                                            className="group flex cursor-pointer items-center gap-2 border border-white p-2 transition-all hover:bg-white hover:text-black"
                                         >
                                             <input
                                                 type="checkbox"
@@ -309,9 +301,9 @@ export const FilterSidebar = memo(
                                                         gender: newGenders,
                                                     });
                                                 }}
-                                                className="h-4 w-4 cursor-pointer rounded border-white/30 bg-white/10 text-[#761f49] shadow-sm focus:ring-2 focus:ring-white/50 focus:ring-offset-0"
+                                                className="h-4 w-4 cursor-pointer border-2 border-white bg-black text-black focus:ring-2 focus:ring-white focus:ring-offset-0"
                                             />
-                                            <span className="text-sm text-white/90 group-hover:text-white">
+                                            <span className="text-xs font-bold tracking-wide text-white uppercase group-hover:text-black">
                                                 {genderOption.label}
                                             </span>
                                         </label>
@@ -321,31 +313,31 @@ export const FilterSidebar = memo(
                         </div>
 
                         {/* Categories */}
-                        <div className="rounded-xl bg-white/5 p-4 backdrop-blur-sm transition-all hover:bg-white/10">
+                        <div className="border-2 border-white p-3">
                             <button
                                 onClick={() => toggleSection('categories')}
-                                className="flex w-full items-center justify-between text-sm font-semibold text-white"
+                                className="flex w-full items-center justify-between font-black tracking-tight text-white uppercase"
                             >
-                                <span>
-                                    Categories
+                                <span className="flex items-center gap-2 text-xs">
+                                    CATEGORIES
                                     {filters.categories.length > 0 && (
-                                        <span className="ml-2 inline-flex h-5 w-5 items-center justify-center rounded-full bg-white/20 text-xs">
+                                        <span className="flex h-4 w-4 items-center justify-center border border-white bg-white text-[10px] font-black text-black">
                                             {filters.categories.length}
                                         </span>
                                     )}
                                 </span>
                                 {expandedSections.categories ? (
-                                    <ChevronUp size={16} />
+                                    <ChevronUp size={16} strokeWidth={3} />
                                 ) : (
-                                    <ChevronDown size={16} />
+                                    <ChevronDown size={16} strokeWidth={3} />
                                 )}
                             </button>
                             {expandedSections.categories && (
-                                <div className="custom-scrollbar mt-3 max-h-64 space-y-1 overflow-y-auto pr-2">
+                                <div className="custom-scrollbar mt-3 max-h-64 space-y-2 overflow-y-auto pr-1">
                                     {categories.map((category) => (
                                         <label
                                             key={category.id}
-                                            className="group flex cursor-pointer items-center gap-3 rounded-lg p-2.5 transition-all hover:bg-white/10"
+                                            className="group flex cursor-pointer items-center gap-2 border border-white p-2 transition-all hover:bg-white hover:text-black"
                                         >
                                             <input
                                                 type="checkbox"
@@ -357,9 +349,9 @@ export const FilterSidebar = memo(
                                                         category.id,
                                                     )
                                                 }
-                                                className="h-4 w-4 cursor-pointer rounded border-white/30 bg-white/10 text-[#761f49] shadow-sm focus:ring-2 focus:ring-white/50"
+                                                className="h-4 w-4 cursor-pointer border-2 border-white bg-black text-black focus:ring-2 focus:ring-white"
                                             />
-                                            <span className="flex-1 text-sm text-white/90 group-hover:text-white">
+                                            <span className="flex-1 text-xs font-bold tracking-wide text-white uppercase group-hover:text-black">
                                                 {category.name}
                                             </span>
                                         </label>
@@ -370,9 +362,9 @@ export const FilterSidebar = memo(
 
                         {/* Active Filter Chips */}
                         {selectedCategories.length > 0 && (
-                            <div className="rounded-xl bg-white/5 p-4 backdrop-blur-sm">
-                                <label className="mb-3 block text-sm font-semibold text-white">
-                                    Active Filters
+                            <div className="border-2 border-white p-3">
+                                <label className="mb-3 block text-xs font-black tracking-tight text-white uppercase">
+                                    ACTIVE
                                 </label>
                                 <div className="flex flex-wrap gap-2">
                                     {selectedCategories.map((category) => (
@@ -383,11 +375,11 @@ export const FilterSidebar = memo(
                                                     category.id,
                                                 )
                                             }
-                                            className="inline-flex items-center gap-2 rounded-lg bg-white px-3 py-1.5 text-sm font-medium text-[#761f49] shadow-sm transition-all hover:bg-white/90 hover:shadow-md focus:ring-2 focus:ring-white/50 focus:outline-none"
+                                            className="inline-flex items-center gap-1.5 border-2 border-white bg-white px-2 py-1 text-xs font-bold tracking-wide text-black uppercase transition-all hover:bg-black hover:text-white focus:ring-2 focus:ring-white focus:outline-none"
                                             aria-label={`Remove category filter: ${category.name}`}
                                         >
                                             <span>{category.name}</span>
-                                            <X size={14} />
+                                            <X size={12} strokeWidth={3} />
                                         </button>
                                     ))}
                                 </div>
@@ -398,28 +390,27 @@ export const FilterSidebar = memo(
                         {hasActiveFilters && (
                             <button
                                 onClick={onClearFilters}
-                                className="w-full rounded-xl bg-white/10 py-3.5 text-sm font-semibold text-white shadow-lg transition-all duration-200 hover:scale-[1.02] hover:bg-white/20 hover:shadow-xl focus:ring-2 focus:ring-white/50 focus:outline-none"
+                                className="w-full border-2 border-white bg-black py-3 text-xs font-black tracking-widest text-white uppercase transition-all duration-200 hover:bg-white hover:text-black focus:ring-2 focus:ring-white focus:outline-none"
                             >
-                                Clear All Filters
+                                CLEAR ALL
                             </button>
                         )}
+                        </div>
                     </div>
 
                     {/* Custom scrollbar styles */}
                     <style>{`
                         .custom-scrollbar::-webkit-scrollbar {
-                            width: 6px;
+                            width: 4px;
                         }
                         .custom-scrollbar::-webkit-scrollbar-track {
-                            background: rgba(255, 255, 255, 0.05);
-                            border-radius: 3px;
+                            background: #000000;
                         }
                         .custom-scrollbar::-webkit-scrollbar-thumb {
-                            background: rgba(255, 255, 255, 0.3);
-                            border-radius: 3px;
+                            background: #FFFFFF;
                         }
                         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-                            background: rgba(255, 255, 255, 0.5);
+                            background: #CCCCCC;
                         }
                     `}</style>
                 </aside>
