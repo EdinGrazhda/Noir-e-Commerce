@@ -81,13 +81,17 @@ export const FilterSidebar = memo(
 
                 {/* Filter Panel - Enhanced with smooth animations and better shadows */}
                 <aside
-                    className={`fixed top-0 left-0 z-40 h-screen w-80 overflow-hidden border-r-2 border-black bg-gradient-to-b from-black to-gray-950 shadow-2xl transition-all duration-500 ease-out lg:relative lg:h-[32rem] lg:w-full lg:shadow-lg ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'} `}
+                    className={`fixed left-0 top-0 z-40 h-screen w-80 overflow-hidden border-r-2 border-black bg-gradient-to-b from-black to-gray-950 shadow-2xl transition-all duration-500 ease-out lg:relative lg:h-[32rem] lg:w-full lg:shadow-lg ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'} `}
                     aria-label="Product filters"
                 >
                     {/* Mobile Header */}
-                    <div className="sticky top-0 z-10 flex items-center justify-between border-b border-white/20 bg-black/90 backdrop-blur-md px-5 py-4 lg:hidden">
-                        <h2 className="flex items-center gap-2 text-sm font-black tracking-tight text-white uppercase">
-                            <SlidersHorizontal size={18} strokeWidth={2.5} className="animate-pulse" />
+                    <div className="sticky top-0 z-10 flex items-center justify-between border-b border-white/20 bg-black/90 px-5 py-4 backdrop-blur-md lg:hidden">
+                        <h2 className="flex items-center gap-2 text-sm font-black uppercase tracking-tight text-white">
+                            <SlidersHorizontal
+                                size={18}
+                                strokeWidth={2.5}
+                                className="animate-pulse"
+                            />
                             FILTERS
                         </h2>
                         <button
@@ -95,19 +99,23 @@ export const FilterSidebar = memo(
                             className="group relative border border-white/30 p-2 text-white transition-all duration-300 hover:scale-110 hover:border-white hover:bg-white hover:text-black focus:outline-none focus:ring-2 focus:ring-white/50 active:scale-95"
                             aria-label="Close filters"
                         >
-                            <X size={18} strokeWidth={2.5} className="transition-transform group-hover:rotate-90" />
+                            <X
+                                size={18}
+                                strokeWidth={2.5}
+                                className="transition-transform group-hover:rotate-90"
+                            />
                         </button>
                     </div>
 
                     {/* Desktop Header */}
-                    <div className="sticky top-0 z-10 hidden border-b border-white/20 bg-black/90 backdrop-blur-md px-5 py-5 lg:block">
+                    <div className="sticky top-0 z-10 hidden border-b border-white/20 bg-black/90 px-5 py-5 backdrop-blur-md lg:block">
                         <div className="mb-3 flex items-center gap-2.5">
                             <SlidersHorizontal
                                 size={18}
                                 strokeWidth={2.5}
-                                className="text-white animate-pulse"
+                                className="animate-pulse text-white"
                             />
-                            <h2 className="text-sm font-black tracking-tight text-white uppercase">
+                            <h2 className="text-sm font-black uppercase tracking-tight text-white">
                                 FILTERS
                             </h2>
                         </div>
@@ -123,9 +131,15 @@ export const FilterSidebar = memo(
                                     onClick={() => toggleSection('sort')}
                                     className="flex w-full items-center justify-between text-white transition-all duration-200"
                                 >
-                                    <span className="text-xs font-bold tracking-wide uppercase">SORT BY</span>
+                                    <span className="text-xs font-bold uppercase tracking-wide">
+                                        SORT BY
+                                    </span>
                                     {expandedSections.sort ? (
-                                        <ChevronUp size={14} strokeWidth={2.5} className="transition-transform" />
+                                        <ChevronUp
+                                            size={14}
+                                            strokeWidth={2.5}
+                                            className="transition-transform"
+                                        />
                                     ) : (
                                         <ChevronDown
                                             size={14}
@@ -135,7 +149,7 @@ export const FilterSidebar = memo(
                                     )}
                                 </button>
                                 {expandedSections.sort && (
-                                    <div className="mt-4 animate-in fade-in slide-in-from-top-2 duration-300">
+                                    <div className="animate-in fade-in slide-in-from-top-2 mt-4 duration-300">
                                         <select
                                             id="sortBy"
                                             value={filters.sortBy}
@@ -145,7 +159,7 @@ export const FilterSidebar = memo(
                                                         .value as Filters['sortBy'],
                                                 })
                                             }
-                                            className="w-full cursor-pointer border border-white/50 bg-white px-3 py-2.5 text-xs font-semibold tracking-wide text-black uppercase shadow-sm transition-all duration-200 hover:border-white hover:shadow-md focus:border-white focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-black"
+                                            className="w-full cursor-pointer border border-white/50 bg-white px-3 py-2.5 text-xs font-semibold uppercase tracking-wide text-black shadow-sm transition-all duration-200 hover:border-white hover:shadow-md focus:border-white focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-black"
                                         >
                                             {SORT_OPTIONS.map((option) => (
                                                 <option
@@ -166,9 +180,15 @@ export const FilterSidebar = memo(
                                     onClick={() => toggleSection('price')}
                                     className="flex w-full items-center justify-between text-white transition-all duration-200"
                                 >
-                                    <span className="text-xs font-bold tracking-wide uppercase">PRICE</span>
+                                    <span className="text-xs font-bold uppercase tracking-wide">
+                                        PRICE
+                                    </span>
                                     {expandedSections.price ? (
-                                        <ChevronUp size={14} strokeWidth={2.5} className="transition-transform" />
+                                        <ChevronUp
+                                            size={14}
+                                            strokeWidth={2.5}
+                                            className="transition-transform"
+                                        />
                                     ) : (
                                         <ChevronDown
                                             size={14}
@@ -178,7 +198,7 @@ export const FilterSidebar = memo(
                                     )}
                                 </button>
                                 {expandedSections.price && (
-                                    <div className="mt-4 animate-in fade-in slide-in-from-top-2 duration-300">
+                                    <div className="animate-in fade-in slide-in-from-top-2 mt-4 duration-300">
                                         {/* Quick Select Buttons */}
                                         <div className="flex flex-wrap gap-2.5">
                                             <button
@@ -188,7 +208,7 @@ export const FilterSidebar = memo(
                                                         priceMax: 50,
                                                     })
                                                 }
-                                                className={`group relative overflow-hidden border px-3 py-2 text-xs font-semibold tracking-wide uppercase transition-all duration-300 hover:scale-105 active:scale-95 ${
+                                                className={`group relative overflow-hidden border px-3 py-2 text-xs font-semibold uppercase tracking-wide transition-all duration-300 hover:scale-105 active:scale-95 ${
                                                     filters.priceMin === 0 &&
                                                     filters.priceMax === 50
                                                         ? 'border-white bg-white text-black shadow-lg shadow-white/20'
@@ -204,7 +224,7 @@ export const FilterSidebar = memo(
                                                         priceMax: 100,
                                                     })
                                                 }
-                                                className={`group relative overflow-hidden border px-3 py-2 text-xs font-semibold tracking-wide uppercase transition-all duration-300 hover:scale-105 active:scale-95 ${
+                                                className={`group relative overflow-hidden border px-3 py-2 text-xs font-semibold uppercase tracking-wide transition-all duration-300 hover:scale-105 active:scale-95 ${
                                                     filters.priceMin === 50 &&
                                                     filters.priceMax === 100
                                                         ? 'border-white bg-white text-black shadow-lg shadow-white/20'
@@ -220,7 +240,7 @@ export const FilterSidebar = memo(
                                                         priceMax: 200,
                                                     })
                                                 }
-                                                className={`group relative overflow-hidden border px-3 py-2 text-xs font-semibold tracking-wide uppercase transition-all duration-300 hover:scale-105 active:scale-95 ${
+                                                className={`group relative overflow-hidden border px-3 py-2 text-xs font-semibold uppercase tracking-wide transition-all duration-300 hover:scale-105 active:scale-95 ${
                                                     filters.priceMin === 100 &&
                                                     filters.priceMax === 200
                                                         ? 'border-white bg-white text-black shadow-lg shadow-white/20'
@@ -236,7 +256,7 @@ export const FilterSidebar = memo(
                                                         priceMax: 10000,
                                                     })
                                                 }
-                                                className={`border-2 px-2 py-1 text-xs font-bold tracking-wide uppercase transition-all ${
+                                                className={`border-2 px-2 py-1 text-xs font-bold uppercase tracking-wide transition-all ${
                                                     filters.priceMin === 200 &&
                                                     filters.priceMax === 10000
                                                         ? 'border-white bg-white text-black shadow-lg shadow-white/20'
@@ -256,7 +276,7 @@ export const FilterSidebar = memo(
                                     onClick={() => toggleSection('gender')}
                                     className="flex w-full items-center justify-between text-white transition-all duration-200"
                                 >
-                                    <span className="flex items-center gap-2 text-xs font-bold tracking-wide uppercase">
+                                    <span className="flex items-center gap-2 text-xs font-bold uppercase tracking-wide">
                                         GENDER
                                         {filters.gender &&
                                             filters.gender.length > 0 && (
@@ -266,7 +286,11 @@ export const FilterSidebar = memo(
                                             )}
                                     </span>
                                     {expandedSections.gender ? (
-                                        <ChevronUp size={14} strokeWidth={2.5} className="transition-transform" />
+                                        <ChevronUp
+                                            size={14}
+                                            strokeWidth={2.5}
+                                            className="transition-transform"
+                                        />
                                     ) : (
                                         <ChevronDown
                                             size={14}
@@ -276,7 +300,7 @@ export const FilterSidebar = memo(
                                     )}
                                 </button>
                                 {expandedSections.gender && (
-                                    <div className="mt-4 space-y-2.5 animate-in fade-in slide-in-from-top-2 duration-300">
+                                    <div className="animate-in fade-in slide-in-from-top-2 mt-4 space-y-2.5 duration-300">
                                         {[
                                             { value: 'male', label: 'MALE' },
                                             {
@@ -322,7 +346,7 @@ export const FilterSidebar = memo(
                                                     }}
                                                     className="h-4 w-4 cursor-pointer rounded border-2 border-white bg-black text-black transition-all duration-200 checked:bg-white focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-black"
                                                 />
-                                                <span className="text-xs font-semibold tracking-wide text-white uppercase transition-colors group-hover:text-black">
+                                                <span className="text-xs font-semibold uppercase tracking-wide text-white transition-colors group-hover:text-black">
                                                     {genderOption.label}
                                                 </span>
                                             </label>
@@ -335,7 +359,7 @@ export const FilterSidebar = memo(
                             <div className="group border border-white/30 bg-black/40 p-4 backdrop-blur-sm transition-all duration-300 hover:border-white/60 hover:shadow-lg hover:shadow-white/5">
                                 <button
                                     onClick={() => toggleSection('categories')}
-                                    className="flex w-full items-center justify-between font-black tracking-tight text-white uppercase"
+                                    className="flex w-full items-center justify-between font-black uppercase tracking-tight text-white"
                                 >
                                     <span className="flex items-center gap-2 text-xs">
                                         CATEGORIES
@@ -373,7 +397,7 @@ export const FilterSidebar = memo(
                                                     }
                                                     className="h-4 w-4 cursor-pointer border-2 border-white bg-black text-black focus:ring-2 focus:ring-white"
                                                 />
-                                                <span className="flex-1 text-xs font-bold tracking-wide text-white uppercase group-hover:text-black">
+                                                <span className="flex-1 text-xs font-bold uppercase tracking-wide text-white group-hover:text-black">
                                                     {category.name}
                                                 </span>
                                             </label>
@@ -385,7 +409,7 @@ export const FilterSidebar = memo(
                             {/* Active Filter Chips */}
                             {selectedCategories.length > 0 && (
                                 <div className="border border-white/30 bg-black/40 p-4 backdrop-blur-sm">
-                                    <label className="mb-3 block text-xs font-bold tracking-wide text-white/80 uppercase">
+                                    <label className="mb-3 block text-xs font-bold uppercase tracking-wide text-white/80">
                                         ACTIVE FILTERS
                                     </label>
                                     <div className="flex flex-wrap gap-2">
@@ -397,11 +421,15 @@ export const FilterSidebar = memo(
                                                         category.id,
                                                     )
                                                 }
-                                                className="group inline-flex items-center gap-2 border border-white bg-white px-3 py-1.5 text-xs font-semibold tracking-wide text-black uppercase shadow-sm transition-all duration-200 hover:scale-105 hover:border-black hover:bg-black hover:text-white hover:shadow-md active:scale-95 focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-black"
+                                                className="group inline-flex items-center gap-2 border border-white bg-white px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-black shadow-sm transition-all duration-200 hover:scale-105 hover:border-black hover:bg-black hover:text-white hover:shadow-md focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-black active:scale-95"
                                                 aria-label={`Remove category filter: ${category.name}`}
                                             >
                                                 <span>{category.name}</span>
-                                                <X size={12} strokeWidth={2.5} className="transition-transform group-hover:rotate-90" />
+                                                <X
+                                                    size={12}
+                                                    strokeWidth={2.5}
+                                                    className="transition-transform group-hover:rotate-90"
+                                                />
                                             </button>
                                         ))}
                                     </div>
@@ -412,9 +440,11 @@ export const FilterSidebar = memo(
                             {hasActiveFilters && (
                                 <button
                                     onClick={onClearFilters}
-                                    className="group relative w-full overflow-hidden border border-white/50 bg-gradient-to-r from-black to-gray-900 py-4 text-xs font-bold tracking-widest text-white uppercase shadow-lg transition-all duration-300 hover:scale-[1.02] hover:border-white hover:from-white hover:to-gray-100 hover:text-black hover:shadow-xl active:scale-100 focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-black"
+                                    className="group relative w-full overflow-hidden border border-white/50 bg-gradient-to-r from-black to-gray-900 py-4 text-xs font-bold uppercase tracking-widest text-white shadow-lg transition-all duration-300 hover:scale-[1.02] hover:border-white hover:from-white hover:to-gray-100 hover:text-black hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-black active:scale-100"
                                 >
-                                    <span className="relative z-10">CLEAR ALL FILTERS</span>
+                                    <span className="relative z-10">
+                                        CLEAR ALL FILTERS
+                                    </span>
                                     <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/10 to-transparent transition-transform duration-500 group-hover:translate-x-full" />
                                 </button>
                             )}

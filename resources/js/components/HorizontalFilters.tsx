@@ -1,4 +1,4 @@
-import { ChevronDown, Filter, SlidersHorizontal, X } from 'lucide-react';
+import { ChevronDown, SlidersHorizontal, X } from 'lucide-react';
 import { memo, useMemo, useState } from 'react';
 import type { Category, Filters } from '../types/store';
 
@@ -42,7 +42,9 @@ export const HorizontalFilters = memo(
         onClearFilters,
         hasActiveFilters,
     }: HorizontalFiltersProps) => {
-        const [expandedSection, setExpandedSection] = useState<string | null>(null);
+        const [expandedSection, setExpandedSection] = useState<string | null>(
+            null,
+        );
 
         const toggleSection = (section: string) => {
             setExpandedSection(expandedSection === section ? null : section);
@@ -74,34 +76,41 @@ export const HorizontalFilters = memo(
             onFilterChange({ gender: newGenders });
         };
 
-        const activeFilterCount = 
-            filters.categories.length + 
-            (filters.gender?.length || 0) + 
-            (filters.priceMin !== undefined || filters.priceMax !== undefined ? 1 : 0);
+        const activeFilterCount =
+            filters.categories.length +
+            (filters.gender?.length || 0) +
+            (filters.priceMin !== undefined || filters.priceMax !== undefined
+                ? 1
+                : 0);
 
         return (
-            <div className="sticky top-0 z-30 bg-white shadow-md">
+            <div className="shadow-soft sticky top-20 z-30 bg-white transition-shadow duration-300">
                 {/* Main Filter Bar */}
-                <div className="border-b-2 border-black">
-                    <div className="mx-auto max-w-[1920px] px-4 sm:px-6 lg:px-8">
-                        <div className="flex items-center justify-between gap-4 py-4">
+                <div className="border-b border-gray-200">
+                    <div className="mx-auto max-w-[1920px] px-3 sm:px-6 lg:px-16 xl:px-24">
+                        <div className="flex items-center justify-between gap-2 py-3 sm:gap-4 sm:py-5">
                             {/* Left: Filter Buttons */}
-                            <div className="flex flex-wrap items-center gap-2">
+                            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2.5">
+                                {/* Sort Dropdown */}
                                 {/* Sort Dropdown */}
                                 <div className="relative">
                                     <button
                                         onClick={() => toggleSection('sort')}
-                                        className={`group flex items-center gap-2 border-2 px-4 py-2.5 text-sm font-bold uppercase tracking-wide transition-all duration-200 hover:scale-105 active:scale-95 ${
+                                        className={`hover:shadow-soft group flex items-center gap-1.5 border px-3 py-2 text-xs font-bold uppercase tracking-wide transition-all duration-300 sm:gap-2 sm:px-5 sm:py-2.5 sm:text-sm ${
                                             expandedSection === 'sort'
-                                                ? 'border-black bg-black text-white'
-                                                : 'border-black/30 bg-white text-black hover:border-black'
+                                                ? 'shadow-elevated border-black bg-black text-white'
+                                                : 'border-gray-300 bg-white text-black hover:border-black'
                                         }`}
                                     >
-                                        <SlidersHorizontal size={16} strokeWidth={2.5} />
+                                        <SlidersHorizontal
+                                            size={14}
+                                            strokeWidth={2}
+                                            className="sm:h-4 sm:w-4"
+                                        />
                                         <span>Sort</span>
                                         <ChevronDown
-                                            size={16}
-                                            className={`transition-transform ${expandedSection === 'sort' ? 'rotate-180' : ''}`}
+                                            size={14}
+                                            className={`transition-transform duration-300 sm:h-4 sm:w-4 ${expandedSection === 'sort' ? 'rotate-180' : ''}`}
                                         />
                                     </button>
                                 </div>
@@ -110,21 +119,22 @@ export const HorizontalFilters = memo(
                                 <div className="relative">
                                     <button
                                         onClick={() => toggleSection('price')}
-                                        className={`group flex items-center gap-2 border-2 px-4 py-2.5 text-sm font-bold uppercase tracking-wide transition-all duration-200 hover:scale-105 active:scale-95 ${
+                                        className={`hover:shadow-soft group flex items-center gap-1.5 border px-3 py-2 text-xs font-bold uppercase tracking-wide transition-all duration-300 sm:gap-2 sm:px-5 sm:py-2.5 sm:text-sm ${
                                             expandedSection === 'price'
-                                                ? 'border-black bg-black text-white'
-                                                : 'border-black/30 bg-white text-black hover:border-black'
+                                                ? 'shadow-elevated border-black bg-black text-white'
+                                                : 'border-gray-300 bg-white text-black hover:border-black'
                                         }`}
                                     >
                                         <span>Price</span>
-                                        {(filters.priceMin !== undefined || filters.priceMax !== undefined) && (
-                                            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white text-xs font-black text-black">
+                                        {(filters.priceMin !== undefined ||
+                                            filters.priceMax !== undefined) && (
+                                            <span className="flex h-4 w-4 items-center justify-center bg-black text-[10px] font-black text-white group-hover:scale-110 sm:h-5 sm:w-5 sm:text-xs">
                                                 1
                                             </span>
                                         )}
                                         <ChevronDown
-                                            size={16}
-                                            className={`transition-transform ${expandedSection === 'price' ? 'rotate-180' : ''}`}
+                                            size={14}
+                                            className={`transition-transform duration-300 sm:h-4 sm:w-4 ${expandedSection === 'price' ? 'rotate-180' : ''}`}
                                         />
                                     </button>
                                 </div>
@@ -133,21 +143,22 @@ export const HorizontalFilters = memo(
                                 <div className="relative">
                                     <button
                                         onClick={() => toggleSection('gender')}
-                                        className={`group flex items-center gap-2 border-2 px-4 py-2.5 text-sm font-bold uppercase tracking-wide transition-all duration-200 hover:scale-105 active:scale-95 ${
+                                        className={`hover:shadow-soft group flex items-center gap-1.5 border px-3 py-2 text-xs font-bold uppercase tracking-wide transition-all duration-300 sm:gap-2 sm:px-5 sm:py-2.5 sm:text-sm ${
                                             expandedSection === 'gender'
-                                                ? 'border-black bg-black text-white'
-                                                : 'border-black/30 bg-white text-black hover:border-black'
+                                                ? 'shadow-elevated border-black bg-black text-white'
+                                                : 'border-gray-300 bg-white text-black hover:border-black'
                                         }`}
                                     >
                                         <span>Gender</span>
-                                        {filters.gender && filters.gender.length > 0 && (
-                                            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white text-xs font-black text-black">
-                                                {filters.gender.length}
-                                            </span>
-                                        )}
+                                        {filters.gender &&
+                                            filters.gender.length > 0 && (
+                                                <span className="flex h-4 w-4 items-center justify-center bg-black text-[10px] font-black text-white group-hover:scale-110 sm:h-5 sm:w-5 sm:text-xs">
+                                                    {filters.gender.length}
+                                                </span>
+                                            )}
                                         <ChevronDown
-                                            size={16}
-                                            className={`transition-transform ${expandedSection === 'gender' ? 'rotate-180' : ''}`}
+                                            size={14}
+                                            className={`transition-transform duration-300 sm:h-4 sm:w-4 ${expandedSection === 'gender' ? 'rotate-180' : ''}`}
                                         />
                                     </button>
                                 </div>
@@ -155,42 +166,62 @@ export const HorizontalFilters = memo(
                                 {/* Categories Filter */}
                                 <div className="relative">
                                     <button
-                                        onClick={() => toggleSection('categories')}
-                                        className={`group flex items-center gap-2 border-2 px-4 py-2.5 text-sm font-bold uppercase tracking-wide transition-all duration-200 hover:scale-105 active:scale-95 ${
+                                        onClick={() =>
+                                            toggleSection('categories')
+                                        }
+                                        className={`hover:shadow-soft group flex items-center gap-1.5 border px-3 py-2 text-xs font-bold uppercase tracking-wide transition-all duration-300 sm:gap-2 sm:px-5 sm:py-2.5 sm:text-sm ${
                                             expandedSection === 'categories'
-                                                ? 'border-black bg-black text-white'
-                                                : 'border-black/30 bg-white text-black hover:border-black'
+                                                ? 'shadow-elevated border-black bg-black text-white'
+                                                : 'border-gray-300 bg-white text-black hover:border-black'
                                         }`}
                                     >
-                                        <span>Categories</span>
+                                        <span className="xs:inline hidden sm:inline">
+                                            Categories
+                                        </span>
+                                        <span className="xs:hidden inline sm:hidden">
+                                            Cat.
+                                        </span>
                                         {filters.categories.length > 0 && (
-                                            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white text-xs font-black text-black">
+                                            <span className="flex h-4 w-4 items-center justify-center bg-black text-[10px] font-black text-white group-hover:scale-110 sm:h-5 sm:w-5 sm:text-xs">
                                                 {filters.categories.length}
                                             </span>
                                         )}
                                         <ChevronDown
-                                            size={16}
-                                            className={`transition-transform ${expandedSection === 'categories' ? 'rotate-180' : ''}`}
+                                            size={14}
+                                            className={`transition-transform duration-300 sm:h-4 sm:w-4 ${expandedSection === 'categories' ? 'rotate-180' : ''}`}
                                         />
                                     </button>
                                 </div>
                             </div>
 
                             {/* Right: Active Filters & Clear */}
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-1.5 sm:gap-2">
                                 {hasActiveFilters && (
                                     <>
-                                        <div className="hidden items-center gap-2 sm:flex">
-                                            <span className="text-sm font-semibold text-gray-600">
-                                                {activeFilterCount} {activeFilterCount === 1 ? 'filter' : 'filters'} active
+                                        <div className="hidden items-center gap-2 lg:flex">
+                                            <span className="text-xs font-semibold text-gray-600 sm:text-sm">
+                                                {activeFilterCount}{' '}
+                                                {activeFilterCount === 1
+                                                    ? 'filter'
+                                                    : 'filters'}{' '}
+                                                active
                                             </span>
                                         </div>
                                         <button
                                             onClick={onClearFilters}
-                                            className="group flex items-center gap-2 border-2 border-red-600 bg-red-600 px-4 py-2.5 text-sm font-bold uppercase tracking-wide text-white transition-all duration-200 hover:scale-105 hover:bg-red-700 active:scale-95"
+                                            className="shadow-soft hover:shadow-elevated group flex items-center gap-1.5 border border-red-600 bg-red-600 px-3 py-2 text-xs font-bold uppercase tracking-wide text-white transition-all duration-300 hover:bg-red-700 sm:gap-2 sm:px-5 sm:py-2.5 sm:text-sm"
                                         >
-                                            <X size={16} strokeWidth={2.5} />
-                                            <span className="hidden sm:inline">Clear All</span>
+                                            <X
+                                                size={14}
+                                                strokeWidth={2}
+                                                className="sm:h-4 sm:w-4"
+                                            />
+                                            <span className="hidden sm:inline">
+                                                Clear All
+                                            </span>
+                                            <span className="inline sm:hidden">
+                                                Clear
+                                            </span>
                                         </button>
                                     </>
                                 )}
@@ -206,7 +237,9 @@ export const HorizontalFilters = memo(
                                 {selectedCategories.map((category) => (
                                     <button
                                         key={category.id}
-                                        onClick={() => handleCategoryToggle(category.id)}
+                                        onClick={() =>
+                                            handleCategoryToggle(category.id)
+                                        }
                                         className="group inline-flex items-center gap-1.5 border border-black bg-black px-3 py-1 text-xs font-semibold uppercase text-white transition-all duration-200 hover:scale-105 hover:bg-white hover:text-black active:scale-95"
                                     >
                                         <span>{category.name}</span>
@@ -220,9 +253,9 @@ export const HorizontalFilters = memo(
 
                 {/* Expandable Dropdown Sections */}
                 {expandedSection && (
-                    <div className="border-b-2 border-black bg-gradient-to-b from-gray-50 to-white">
-                        <div className="mx-auto max-w-[1920px] px-4 sm:px-6 lg:px-8">
-                            <div className="py-6">
+                    <div className="border-b border-gray-200 bg-gradient-to-b from-white to-gray-50">
+                        <div className="mx-auto max-w-[1920px] px-4 sm:px-6 lg:px-16 xl:px-24">
+                            <div className="py-8">
                                 {/* Sort Options */}
                                 {expandedSection === 'sort' && (
                                     <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -230,13 +263,16 @@ export const HorizontalFilters = memo(
                                             <button
                                                 key={option.value}
                                                 onClick={() => {
-                                                    onFilterChange({ sortBy: option.value as Filters['sortBy'] });
+                                                    onFilterChange({
+                                                        sortBy: option.value as Filters['sortBy'],
+                                                    });
                                                     setExpandedSection(null);
                                                 }}
-                                                className={`border-2 px-4 py-3 text-sm font-semibold uppercase transition-all duration-200 hover:scale-105 active:scale-95 ${
-                                                    filters.sortBy === option.value
-                                                        ? 'border-black bg-black text-white shadow-lg'
-                                                        : 'border-black/30 bg-white text-black hover:border-black'
+                                                className={`hover:shadow-soft border px-5 py-4 text-sm font-semibold uppercase transition-all duration-300 ${
+                                                    filters.sortBy ===
+                                                    option.value
+                                                        ? 'shadow-elevated border-black bg-black text-white'
+                                                        : 'border-gray-300 bg-white text-black hover:border-black'
                                                 }`}
                                             >
                                                 {option.label}
@@ -251,11 +287,19 @@ export const HorizontalFilters = memo(
                                         {PRICE_RANGES.map((range) => (
                                             <button
                                                 key={range.label}
-                                                onClick={() => handlePriceSelect(range.min, range.max)}
-                                                className={`border-2 px-4 py-3 text-sm font-semibold uppercase transition-all duration-200 hover:scale-105 active:scale-95 ${
-                                                    filters.priceMin === range.min && filters.priceMax === range.max
-                                                        ? 'border-black bg-black text-white shadow-lg'
-                                                        : 'border-black/30 bg-white text-black hover:border-black'
+                                                onClick={() =>
+                                                    handlePriceSelect(
+                                                        range.min,
+                                                        range.max,
+                                                    )
+                                                }
+                                                className={`hover:shadow-soft border px-5 py-4 text-sm font-semibold uppercase transition-all duration-300 ${
+                                                    filters.priceMin ===
+                                                        range.min &&
+                                                    filters.priceMax ===
+                                                        range.max
+                                                        ? 'shadow-elevated border-black bg-black text-white'
+                                                        : 'border-gray-300 bg-white text-black hover:border-black'
                                                 }`}
                                             >
                                                 {range.label}
@@ -270,11 +314,17 @@ export const HorizontalFilters = memo(
                                         {GENDERS.map((gender) => (
                                             <button
                                                 key={gender.value}
-                                                onClick={() => handleGenderToggle(gender.value)}
-                                                className={`border-2 px-4 py-3 text-sm font-semibold uppercase transition-all duration-200 hover:scale-105 active:scale-95 ${
-                                                    filters.gender?.includes(gender.value)
-                                                        ? 'border-black bg-black text-white shadow-lg'
-                                                        : 'border-black/30 bg-white text-black hover:border-black'
+                                                onClick={() =>
+                                                    handleGenderToggle(
+                                                        gender.value,
+                                                    )
+                                                }
+                                                className={`hover:shadow-soft border px-5 py-4 text-sm font-semibold uppercase transition-all duration-300 ${
+                                                    filters.gender?.includes(
+                                                        gender.value,
+                                                    )
+                                                        ? 'shadow-elevated border-black bg-black text-white'
+                                                        : 'border-gray-300 bg-white text-black hover:border-black'
                                                 }`}
                                             >
                                                 {gender.label}
@@ -289,11 +339,17 @@ export const HorizontalFilters = memo(
                                         {categories.map((category) => (
                                             <button
                                                 key={category.id}
-                                                onClick={() => handleCategoryToggle(category.id)}
-                                                className={`border-2 px-4 py-3 text-sm font-semibold uppercase transition-all duration-200 hover:scale-105 active:scale-95 ${
-                                                    filters.categories.includes(category.id)
-                                                        ? 'border-black bg-black text-white shadow-lg'
-                                                        : 'border-black/30 bg-white text-black hover:border-black'
+                                                onClick={() =>
+                                                    handleCategoryToggle(
+                                                        category.id,
+                                                    )
+                                                }
+                                                className={`hover:shadow-soft border px-5 py-4 text-sm font-semibold uppercase transition-all duration-300 ${
+                                                    filters.categories.includes(
+                                                        category.id,
+                                                    )
+                                                        ? 'shadow-elevated border-black bg-black text-white'
+                                                        : 'border-gray-300 bg-white text-black hover:border-black'
                                                 }`}
                                             >
                                                 {category.name}

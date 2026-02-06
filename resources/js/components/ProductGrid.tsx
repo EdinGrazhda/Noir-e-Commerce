@@ -74,8 +74,8 @@ export const ProductGrid = memo(
                         {/* Animated Icon */}
                         <div className="relative mx-auto mb-8 flex h-40 w-40 items-center justify-center">
                             <div className="absolute inset-0 animate-pulse rounded-full border-4 border-black opacity-20" />
-                            <div className="absolute inset-4 animate-pulse rounded-full border-2 border-black opacity-40 animation-delay-150" />
-                            <div className="relative flex h-24 w-24 items-center justify-center rounded-full border-4 border-black bg-white shadow-2xl transition-transform duration-500 group-hover:scale-110 group-hover:rotate-12">
+                            <div className="animation-delay-150 absolute inset-4 animate-pulse rounded-full border-2 border-black opacity-40" />
+                            <div className="relative flex h-24 w-24 items-center justify-center rounded-full border-4 border-black bg-white shadow-2xl transition-transform duration-500 group-hover:rotate-12 group-hover:scale-110">
                                 <svg
                                     className="h-12 w-12 text-black transition-transform duration-300 group-hover:scale-110"
                                     fill="none"
@@ -92,20 +92,22 @@ export const ProductGrid = memo(
                                 </svg>
                             </div>
                         </div>
-                        
+
                         {/* Text Content */}
                         <h2 className="mb-3 text-4xl font-black uppercase tracking-tight text-black">
                             NO PRODUCTS FOUND
                         </h2>
                         <div className="mx-auto mb-6 h-1 w-24 bg-black" />
                         <p className="mb-8 text-lg text-gray-700">
-                            We couldn't find any items matching your criteria.<br />
-                            Try adjusting your filters or exploring different categories.
+                            We couldn't find any items matching your criteria.
+                            <br />
+                            Try adjusting your filters or exploring different
+                            categories.
                         </p>
-                        
+
                         {/* Action Button */}
                         <button
-                            onClick={() => window.location.href = '/'}
+                            onClick={() => (window.location.href = '/')}
                             className="group inline-flex items-center gap-3 border-2 border-black bg-black px-8 py-4 font-bold uppercase tracking-wide text-white shadow-lg transition-all duration-300 hover:scale-105 hover:bg-white hover:text-black hover:shadow-2xl active:scale-95"
                         >
                             <span>Explore All Products</span>
@@ -129,62 +131,74 @@ export const ProductGrid = memo(
         }
 
         return (
-            <div id="products" className="px-4 py-8 sm:px-6 lg:px-8">
-                {/* Results Count */}
-                <div className="mb-6">
-                    <p className="text-gray-600">
-                        Showing{' '}
-                        <span className="font-semibold text-gray-900">
-                            {products.length}
-                        </span>{' '}
-                        products
-                    </p>
-                </div>
-
-                {/* Product Grid */}
-                <div
-                    className="grid grid-cols-2 gap-3 sm:gap-6 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5"
-                    role="list"
-                    aria-label="Product list"
-                >
-                    {products.map((product, index) => (
-                        <div key={product.id} role="listitem">
-                            <ProductCard
-                                product={product}
-                                onQuickView={handleQuickView}
-                                priority={index < PRIORITY_COUNT}
-                            />
-                        </div>
-                    ))}
-                </div>
-
-                {/* Loading More Indicator */}
-                {hasNextPage && (
-                    <div
-                        ref={loadMoreRef}
-                        className="mt-12 flex justify-center"
-                    >
-                        {isFetchingNextPage ? (
-                            <div className="flex items-center gap-3 text-[#771E49]">
-                                <div className="h-6 w-6 animate-spin rounded-full border-3 border-[#771E49] border-t-transparent" />
-                                <span className="font-medium">
-                                    Loading more products...
-                                </span>
-                            </div>
-                        ) : (
-                            <div className="h-20" aria-hidden="true" />
-                        )}
-                    </div>
-                )}
-
-                {/* End of Results */}
-                {!hasNextPage && products.length > 0 && (
-                    <div className="mt-12 text-center">
-                        <p className="text-sm text-gray-500">
-                            You've reached the end of the catalog
+            <div
+                id="products"
+                className="bg-white px-4 pb-12 pt-20 sm:px-6 lg:px-16 xl:px-24"
+            >
+                <div className="mx-auto max-w-[1920px]">
+                    {/* Results Count - Refined Typography */}
+                    <div className="mb-8 border-b border-gray-200 pb-6">
+                        <p className="text-sm font-medium uppercase tracking-wide text-gray-600">
+                            Showing{' '}
+                            <span className="font-bold text-black">
+                                {products.length}
+                            </span>{' '}
+                            {products.length === 1 ? 'Product' : 'Products'}
                         </p>
                     </div>
-                )}
+
+                    {/* Premium Product Grid - Intentional Spacing */}
+                    <div
+                        className="grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-3 lg:gap-8 xl:grid-cols-4 2xl:grid-cols-5"
+                        role="list"
+                        aria-label="Product catalog"
+                    >
+                        {products.map((product, index) => (
+                            <div
+                                key={product.id}
+                                role="listitem"
+                                className="fade-in"
+                                style={{
+                                    animationDelay: `${Math.min(index * 0.05, 1)}s`,
+                                }}
+                            >
+                                <ProductCard
+                                    product={product}
+                                    onQuickView={handleQuickView}
+                                    priority={index < PRIORITY_COUNT}
+                                />
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Loading More - Refined */}
+                    {hasNextPage && (
+                        <div
+                            ref={loadMoreRef}
+                            className="mt-16 flex justify-center"
+                        >
+                            {isFetchingNextPage ? (
+                                <div className="flex items-center gap-3 text-gray-900">
+                                    <div className="h-5 w-5 animate-spin rounded-full border-2 border-black border-t-transparent" />
+                                    <span className="text-sm font-medium uppercase tracking-wide">
+                                        Loading more products
+                                    </span>
+                                </div>
+                            ) : (
+                                <div className="h-24" aria-hidden="true" />
+                            )}
+                        </div>
+                    )}
+
+                    {/* End of Catalog - Subtle */}
+                    {!hasNextPage && products.length > 0 && (
+                        <div className="mt-16 border-t border-gray-200 pt-8 text-center">
+                            <p className="text-xs font-medium uppercase tracking-wider text-gray-400">
+                                End of Catalog
+                            </p>
+                        </div>
+                    )}
+                </div>
             </div>
         );
     },

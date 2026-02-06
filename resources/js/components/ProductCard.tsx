@@ -6,12 +6,12 @@ import type { Product } from '../types/store';
 interface ProductCardProps {
     product: Product;
     onQuickView?: (product: Product) => void;
-    priority?: boolean; // Load image with high priority (for first visible products)
+    priority?: boolean;
 }
 
 /**
- * Optimized product card with lazy-loaded images and memoization
- * Shows image, title, price, stock badge, and Add to Cart button
+ * Premium product card - Luxury e-commerce design
+ * Focus: Visual hierarchy, intentional spacing, refined hover states
  */
 export const ProductCard = memo(
     ({ product, onQuickView, priority = false }: ProductCardProps) => {
@@ -26,7 +26,6 @@ export const ProductCard = memo(
             seconds: number;
         } | null>(null);
 
-        // Calculate countdown timer for campaign
         useEffect(() => {
             if (!product.campaign_end_date) {
                 setTimeRemaining(null);
@@ -76,7 +75,6 @@ export const ProductCard = memo(
         const isLowStock = product.stock === 'low stock';
         const isOutOfStock = product.stock === 'out of stock';
 
-        // Parse available sizes and check stock
         const getAvailableSizes = () => {
             if (!product.foot_numbers) return [];
 
@@ -89,7 +87,6 @@ export const ProductCard = memo(
                 ),
             ];
 
-            // If we have size-specific stock data, filter by availability
             if (product.sizeStocks) {
                 return allSizes.filter((size) => {
                     const sizeStockInfo = product.sizeStocks![size];
@@ -101,7 +98,6 @@ export const ProductCard = memo(
                 });
             }
 
-            // Otherwise, show all sizes if product is in stock
             return isOutOfStock ? [] : allSizes;
         };
 
@@ -109,7 +105,7 @@ export const ProductCard = memo(
 
         return (
             <article
-                className="group flex h-full cursor-pointer flex-col overflow-hidden border-2 border-black bg-white transition-all duration-300 focus-within:ring-4 focus-within:ring-black hover:bg-black hover:text-white"
+                className="group relative flex h-full cursor-pointer flex-col overflow-hidden bg-white transition-all duration-500 focus-within:shadow-2xl focus-within:outline-none focus-within:ring-2 focus-within:ring-black focus-within:ring-offset-4 hover:-translate-y-1 hover:shadow-2xl"
                 onClick={handleQuickView}
                 role="button"
                 tabIndex={0}
@@ -120,19 +116,20 @@ export const ProductCard = memo(
                     }
                 }}
                 aria-label={`${product.name} - €${(product.price || 0).toFixed(2)}`}
+                style={{
+                    willChange: 'transform, box-shadow',
+                }}
             >
-                {/* Image Container with Fixed Aspect Ratio */}
-                <div className="relative aspect-square overflow-hidden bg-gray-100">
+                {/* Subtle Border - Appears on Hover */}
+                <div className="absolute inset-0 border border-gray-200 transition-all duration-500 group-hover:border-black" />
+
+                {/* Image Container */}
+                <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100">
                     {!imageLoaded && (
                         <div className="absolute inset-0">
-                            {/* Minimalist skeleton */}
-                            <div
-                                className="h-full w-full animate-pulse bg-gray-200"
-                                aria-hidden="true"
-                            />
-                            {/* Simple icon placeholder */}
+                            <div className="h-full w-full animate-pulse bg-gradient-to-br from-gray-100 via-gray-50 to-gray-100" />
                             <div className="absolute inset-0 flex items-center justify-center">
-                                <div className="h-16 w-16 border-4 border-black" />
+                                <div className="h-20 w-20 animate-pulse border-2 border-gray-300" />
                             </div>
                         </div>
                     )}
@@ -142,70 +139,135 @@ export const ProductCard = memo(
                         loading={priority ? 'eager' : 'lazy'}
                         fetchPriority={priority ? 'high' : 'auto'}
                         decoding={priority ? 'sync' : 'async'}
-                        className={`h-full w-full object-cover grayscale transition-all duration-500 group-hover:scale-110 group-hover:grayscale-0 ${
+                        className={`h-full w-full object-cover transition-all duration-700 ease-out group-hover:scale-105 ${
                             imageLoaded ? 'opacity-100' : 'opacity-0'
                         }`}
+                        style={{
+                            filter: 'grayscale(30%)',
+                            willChange: 'transform, filter',
+                        }}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.filter = 'grayscale(0%)';
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.filter = 'grayscale(30%)';
+                        }}
                     />
 
-                    {/* Stock Badge - Minimalist */}
+                    {/* Stock Badge */}
                     {isOutOfStock && (
-                        <div className="absolute top-3 right-3 border-2 border-black bg-white px-3 py-1 font-black tracking-wider text-black uppercase">
-                            SOLD OUT
+                        <div className="absolute right-4 top-4 bg-white px-4 py-2 shadow-lg backdrop-blur-sm">
+                            <span className="text-xs font-black uppercase tracking-wider">
+                                Sold Out
+                            </span>
                         </div>
                     )}
                     {isLowStock && (
-                        <div className="absolute top-3 right-3 border-2 border-black bg-black px-3 py-1 font-black tracking-wider text-white uppercase">
-                            LOW STOCK
+                        <div className="absolute right-4 top-4 bg-black px-4 py-2 shadow-lg">
+                            <span className="text-xs font-black uppercase tracking-wider text-white">
+                                Low Stock
+                            </span>
                         </div>
                     )}
 
-                    {/* Campaign Badge - Minimalist */}
+                    {/* Campaign Badge */}
                     {product.hasActiveCampaign && product.originalPrice && (
-                        <div className="absolute top-3 left-3 flex items-center gap-1.5 border-2 border-black bg-black px-3 py-1.5 font-black tracking-wider text-white uppercase">
-                            <Tag size={14} strokeWidth={3} />
-                            <span>
+                        <div className="absolute left-4 top-4 flex items-center gap-2 bg-black px-4 py-2 shadow-lg">
+                            <Tag
+                                size={14}
+                                strokeWidth={3}
+                                className="text-white"
+                            />
+                            <span className="text-xs font-black uppercase tracking-wider text-white">
                                 {Math.round(
                                     ((product.originalPrice - product.price) /
                                         product.originalPrice) *
                                         100,
                                 )}
-                                % OFF
+                                % Off
                             </span>
                         </div>
                     )}
 
-                    {/* Overlay on Hover */}
-                    <div className="absolute inset-0 bg-black opacity-0 transition-opacity duration-300 group-hover:opacity-20" />
+                    {/* Quick View Overlay - Subtle Fade */}
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-all duration-500 group-hover:bg-black/40 group-hover:opacity-100">
+                        <button
+                            onClick={handleShowDetails}
+                            className="translate-y-4 border-2 border-white bg-white px-8 py-3 font-bold tracking-wide text-black opacity-0 transition-all duration-500 hover:bg-black hover:text-white group-hover:translate-y-0 group-hover:opacity-100"
+                            aria-label={`Quick view ${product.name}`}
+                        >
+                            Quick View
+                        </button>
+                    </div>
                 </div>
 
-                {/* Product Info */}
-                <div className="flex flex-1 flex-col p-4 sm:p-5">
-                    {/* Title */}
-                    <h3 className="mb-2 line-clamp-2 font-black tracking-tight text-black uppercase transition-colors group-hover:text-white sm:mb-3 sm:text-lg">
+                {/* Product Info - Premium Spacing */}
+                <div className="flex flex-1 flex-col p-4">
+                    {/* Gender Badge - Refined */}
+                    {product.gender && (
+                        <div className="mb-2">
+                            <span className="inline-block border border-gray-300 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-widest text-gray-500 transition-colors group-hover:border-black group-hover:text-black">
+                                {product.gender === 'male'
+                                    ? 'Men'
+                                    : product.gender === 'female'
+                                      ? 'Women'
+                                      : 'Unisex'}
+                            </span>
+                        </div>
+                    )}
+
+                    {/* Title - Better Typography */}
+                    <h3 className="mb-3 line-clamp-2 min-h-[2.75rem] text-base font-bold leading-snug tracking-tight text-black transition-colors group-hover:text-black">
                         {product.name}
                     </h3>
 
-                    {/* Gender Badge - Minimalist */}
-                    {product.gender && (
-                        <div className="mb-2 sm:mb-3">
-                            <span className="inline-block border border-black px-2 py-1 text-xs font-bold tracking-wider text-black uppercase transition-all group-hover:border-white group-hover:text-white">
-                                {product.gender === 'male'
-                                    ? 'MALE'
-                                    : product.gender === 'female'
-                                      ? 'FEMALE'
-                                      : 'UNISEX'}
+                    {/* Price Section - Enhanced Hierarchy */}
+                    <div className="mb-3 border-t border-gray-200 pt-3">
+                        {product.hasActiveCampaign && product.originalPrice ? (
+                            <div className="space-y-1.5">
+                                <div className="flex items-baseline gap-2">
+                                    <span className="text-xl font-black tracking-tight text-black">
+                                        €{(product.price || 0).toFixed(2)}
+                                    </span>
+                                    <span className="text-sm font-medium text-gray-400 line-through">
+                                        €
+                                        {(product.originalPrice || 0).toFixed(
+                                            2,
+                                        )}
+                                    </span>
+                                </div>
+                                {product.campaign_name && (
+                                    <span className="block text-xs font-semibold uppercase tracking-wider text-gray-600">
+                                        {product.campaign_name}
+                                    </span>
+                                )}
+                                {timeRemaining && (
+                                    <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-gray-700">
+                                        <Clock size={12} strokeWidth={2.5} />
+                                        <span>
+                                            {timeRemaining.days > 0 &&
+                                                `${timeRemaining.days}d `}
+                                            {timeRemaining.hours}h{' '}
+                                            {timeRemaining.minutes}m
+                                        </span>
+                                    </div>
+                                )}
+                            </div>
+                        ) : (
+                            <span className="text-xl font-black tracking-tight text-black">
+                                €{(product.price || 0).toFixed(2)}
                             </span>
-                        </div>
-                    )}
+                        )}
+                    </div>
 
-                    {/* Available Sizes - Minimalist */}
+                    {/* Available Sizes - Clean Design */}
                     {availableSizes.length > 0 && (
                         <div className="mb-3">
-                            <p className="mb-1.5 text-xs font-bold tracking-wide text-black uppercase transition-colors group-hover:text-white">
-                                Sizes:
+                            <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+                                Available Sizes
                             </p>
-                            <div className="flex flex-wrap gap-1.5">
-                                {availableSizes.slice(0, 5).map((size) => {
+                            <div className="flex flex-wrap gap-2">
+                                {availableSizes.slice(0, 6).map((size) => {
                                     const sizeStockInfo =
                                         product.sizeStocks?.[size];
                                     const sizeStock =
@@ -218,76 +280,39 @@ export const ProductCard = memo(
                                     return (
                                         <span
                                             key={size}
-                                            className={`inline-block border px-2 py-0.5 text-xs font-bold transition-all ${
+                                            className={`inline-flex h-8 min-w-[2rem] items-center justify-center border px-2.5 text-xs font-semibold transition-all duration-300 ${
                                                 isLowSizeStock
-                                                    ? 'border-black bg-black text-white group-hover:border-white group-hover:bg-white group-hover:text-black'
-                                                    : 'border-black text-black group-hover:border-white group-hover:text-white'
+                                                    ? 'border-black bg-black text-white'
+                                                    : 'border-gray-300 bg-white text-gray-700 hover:border-black'
                                             }`}
-                                            title="Available size"
+                                            title={
+                                                isLowSizeStock
+                                                    ? `Only ${sizeStock} left`
+                                                    : 'Available'
+                                            }
                                         >
                                             {size}
                                         </span>
                                     );
                                 })}
-                                {availableSizes.length > 5 && (
-                                    <span className="text-xs font-medium text-black transition-colors group-hover:text-white">
-                                        +{availableSizes.length - 5}
+                                {availableSizes.length > 6 && (
+                                    <span className="flex h-8 items-center text-xs font-medium text-gray-500">
+                                        +{availableSizes.length - 6}
                                     </span>
                                 )}
                             </div>
                         </div>
                     )}
 
-                    {/* Price and Action */}
-                    <div className="mt-auto pt-3 sm:pt-4">
-                        <div className="mb-3 border-t-2 border-black pt-3 transition-colors group-hover:border-white">
-                            {product.hasActiveCampaign &&
-                            product.originalPrice ? (
-                                <>
-                                    <div className="flex items-baseline gap-2">
-                                        <span className="text-2xl font-black text-black transition-colors group-hover:text-white sm:text-3xl">
-                                            €{(product.price || 0).toFixed(2)}
-                                        </span>
-                                        <span className="text-sm font-bold text-gray-400 line-through transition-colors group-hover:text-gray-300">
-                                            €
-                                            {(
-                                                product.originalPrice || 0
-                                            ).toFixed(2)}
-                                        </span>
-                                    </div>
-                                    {product.campaign_name && (
-                                        <span className="mt-1 block text-xs font-bold tracking-wider text-black uppercase transition-colors group-hover:text-white">
-                                            {product.campaign_name}
-                                        </span>
-                                    )}
-                                    {timeRemaining && (
-                                        <div className="mt-1.5 flex items-center gap-1 text-xs font-bold tracking-wide text-black uppercase transition-colors group-hover:text-white">
-                                            <Clock size={12} strokeWidth={3} />
-                                            <span>
-                                                {timeRemaining.days > 0 &&
-                                                    `${timeRemaining.days}D `}
-                                                {timeRemaining.hours}H{' '}
-                                                {timeRemaining.minutes}M
-                                            </span>
-                                        </div>
-                                    )}
-                                </>
-                            ) : (
-                                <span className="text-2xl font-black text-black transition-colors group-hover:text-white sm:text-3xl">
-                                    €{(product.price || 0).toFixed(2)}
-                                </span>
-                            )}
-                        </div>
-
-                        <button
-                            onClick={handleShowDetails}
-                            className="flex w-full items-center justify-center gap-2 border-2 border-black bg-black py-3 font-black tracking-widest text-white uppercase transition-all duration-300 group-hover:border-white group-hover:bg-white group-hover:text-black hover:bg-white hover:text-black focus:ring-4 focus:ring-black focus:outline-none"
-                            aria-label={`View details for ${product.name}`}
-                        >
-                            <Eye size={16} strokeWidth={3} />
-                            <span>VIEW</span>
-                        </button>
-                    </div>
+                    {/* CTA Button - Refined */}
+                    <button
+                        onClick={handleShowDetails}
+                        className="mt-auto flex w-full items-center justify-center gap-2 border-2 border-black bg-black py-2.5 font-bold uppercase tracking-wider text-white transition-all duration-300 hover:bg-white hover:text-black focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2"
+                        aria-label={`View details for ${product.name}`}
+                    >
+                        <Eye size={18} strokeWidth={2.5} />
+                        <span>View Details</span>
+                    </button>
                 </div>
             </article>
         );
