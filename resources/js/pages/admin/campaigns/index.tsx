@@ -193,13 +193,13 @@ export default function Campaigns({
             <Head title="Campaigns" />
 
             {/* Main Container with proper spacing */}
-            <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-gray-50">
+            <div className="min-h-screen bg-white">
                 <div className="mx-auto max-w-7xl px-6 py-8 lg:px-8">
                     {/* Header Section */}
                     <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                         <div className="space-y-1">
                             <div className="flex items-center gap-3">
-                                <div className="rounded-xl bg-gradient-to-r from-purple-500 to-indigo-600 p-2 shadow-lg">
+                                <div className="bg-black p-2 shadow-sm">
                                     <Tag className="h-5 w-5 text-white" />
                                 </div>
                                 <div>
@@ -215,7 +215,7 @@ export default function Campaigns({
                         </div>
                         <button
                             onClick={handleCreateCampaign}
-                            className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-purple-500 to-indigo-600 px-6 py-3 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl focus:ring-4 focus:ring-purple-300 focus:ring-offset-2 focus:outline-none"
+                            className="inline-flex items-center gap-2 border-2 border-black bg-black px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-300 hover:bg-gray-100 hover:text-black focus:ring-1 focus:ring-black focus:ring-offset-2 focus:outline-none"
                         >
                             <Plus className="h-5 w-5" />
                             Create New Campaign
@@ -223,11 +223,11 @@ export default function Campaigns({
                     </div>
 
                     {/* Smart Filters Section */}
-                    <div className="mb-6 overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-xl">
-                        <div className="border-b border-gray-100 bg-gradient-to-r from-slate-50 to-white px-6 py-4">
+                    <div className="mb-6 overflow-hidden border border-gray-100 bg-white shadow-sm">
+                        <div className="border-b border-gray-100 bg-gray-50 px-6 py-4">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-3">
-                                    <div className="rounded-lg bg-gradient-to-r from-blue-500 to-indigo-600 p-2 shadow-lg">
+                                    <div className="border border-gray-300 bg-white p-2 shadow-sm">
                                         <Filter className="h-4 w-4 text-white" />
                                     </div>
                                     <h3 className="text-base font-bold text-gray-900">
@@ -236,7 +236,7 @@ export default function Campaigns({
                                 </div>
                                 <button
                                     onClick={clearFilters}
-                                    className="inline-flex items-center gap-2 rounded-lg bg-gray-100 px-4 py-2 text-xs font-semibold text-gray-700 transition-all duration-200 hover:scale-105 hover:bg-gray-200 hover:text-gray-900"
+                                    className="inline-flex items-center gap-2 bg-gray-100 px-4 py-2 text-xs font-semibold text-gray-700 transition-all duration-200 hover:bg-gray-200 hover:text-gray-900"
                                 >
                                     <X className="h-3 w-3" />
                                     Clear All
@@ -260,7 +260,7 @@ export default function Campaigns({
                                                 setSearchTerm(e.target.value)
                                             }
                                             placeholder="Type to search..."
-                                            className="w-full rounded-xl border-2 border-gray-200 bg-gray-50/50 py-2.5 pr-3 pl-10 text-sm font-medium transition-all duration-300 focus:border-purple-400 focus:bg-white focus:ring-4 focus:ring-purple-100 focus:outline-none"
+                                            className="w-full border-2 border-gray-200 bg-gray-50/50 py-2.5 pr-3 pl-10 text-sm font-medium transition-all duration-300 focus:border-gray-300 focus:bg-white focus:ring-1 focus:ring-black focus:outline-none"
                                         />
                                     </div>
                                 </div>
@@ -275,7 +275,7 @@ export default function Campaigns({
                                         onChange={(e) =>
                                             setSelectedProduct(e.target.value)
                                         }
-                                        className="w-full rounded-xl border-2 border-gray-200 bg-gray-50/50 px-4 py-2.5 text-sm font-medium transition-all duration-300 focus:border-purple-400 focus:bg-white focus:ring-4 focus:ring-purple-100 focus:outline-none"
+                                        className="w-full border-2 border-gray-200 bg-gray-50/50 px-4 py-2.5 text-sm font-medium transition-all duration-300 focus:border-gray-300 focus:bg-white focus:ring-1 focus:ring-black focus:outline-none"
                                     >
                                         <option value="">All Products</option>
                                         {products.map((product) => (
@@ -299,7 +299,7 @@ export default function Campaigns({
                                         onChange={(e) =>
                                             setSelectedStatus(e.target.value)
                                         }
-                                        className="w-full rounded-xl border-2 border-gray-200 bg-gray-50/50 px-4 py-2.5 text-sm font-medium transition-all duration-300 focus:border-purple-400 focus:bg-white focus:ring-4 focus:ring-purple-100 focus:outline-none"
+                                        className="w-full border-2 border-gray-200 bg-gray-50/50 px-4 py-2.5 text-sm font-medium transition-all duration-300 focus:border-gray-300 focus:bg-white focus:ring-1 focus:ring-black focus:outline-none"
                                     >
                                         <option value="">All Status</option>
                                         <option value="1">Active</option>
@@ -311,11 +311,11 @@ export default function Campaigns({
                     </div>
 
                     {/* Campaigns Table Section */}
-                    <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-xl">
-                        <div className="border-b border-gray-100 bg-gradient-to-r from-slate-50 to-white px-6 py-4">
+                    <div className="overflow-hidden border border-gray-100 bg-white shadow-sm">
+                        <div className="border-b border-gray-100 bg-gray-50 px-6 py-4">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-3">
-                                    <div className="rounded-lg bg-gradient-to-r from-purple-500 to-indigo-600 p-2 shadow-lg">
+                                    <div className="bg-black p-2 shadow-sm">
                                         <Tag className="h-4 w-4 text-white" />
                                     </div>
                                     <h3 className="text-base font-bold text-gray-900">
@@ -338,7 +338,7 @@ export default function Campaigns({
                                 {/* Desktop Table View - Hidden on mobile */}
                                 <div className="hidden overflow-x-auto lg:block">
                                     <table className="w-full divide-y divide-gray-200">
-                                        <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
+                                        <thead className="bg-gray-100">
                                             <tr>
                                                 <th className="px-4 py-4 text-left text-xs font-bold tracking-wider text-gray-700 uppercase">
                                                     Campaign
@@ -380,12 +380,12 @@ export default function Campaigns({
                                                     return (
                                                         <tr
                                                             key={campaign.id}
-                                                            className="transition-all duration-200 hover:bg-gradient-to-r hover:from-purple-50/50 hover:to-indigo-50/50"
+                                                            className="transition-all duration-200 hover:bg-gray-50"
                                                         >
                                                             <td className="px-4 py-4">
                                                                 <div className="flex items-center gap-3">
                                                                     <div
-                                                                        className="h-12 w-12 flex-shrink-0 rounded-xl shadow-lg"
+                                                                        className="h-12 w-12 flex-shrink-0 shadow-sm"
                                                                         style={{
                                                                             backgroundColor:
                                                                                 campaign.banner_color ||
@@ -440,7 +440,7 @@ export default function Campaigns({
                                                             <td className="px-4 py-4">
                                                                 <div className="space-y-1">
                                                                     <div className="flex items-center gap-2">
-                                                                        <span className="text-sm font-bold text-purple-600">
+                                                                        <span className="text-sm font-bold text-white">
                                                                             $
                                                                             {(
                                                                                 Number(
@@ -452,7 +452,7 @@ export default function Campaigns({
                                                                             )}
                                                                         </span>
                                                                         {campaign.product && (
-                                                                            <span className="rounded-full bg-red-100 px-2 py-0.5 text-xs font-bold text-red-600">
+                                                                            <span className="bg-red-100 px-2 py-0.5 text-xs font-bold text-black">
                                                                                 -
                                                                                 {
                                                                                     discount
@@ -501,11 +501,11 @@ export default function Campaigns({
                                                             </td>
                                                             <td className="px-4 py-4">
                                                                 {campaign.is_active ? (
-                                                                    <span className="inline-flex rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-800">
+                                                                    <span className="inline-flex bg-black px-3 py-1 text-xs font-semibold text-green-800">
                                                                         Active
                                                                     </span>
                                                                 ) : (
-                                                                    <span className="inline-flex rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-800">
+                                                                    <span className="inline-flex bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-800">
                                                                         Inactive
                                                                     </span>
                                                                 )}
@@ -518,7 +518,7 @@ export default function Campaigns({
                                                                                 campaign,
                                                                             )
                                                                         }
-                                                                        className="rounded-lg bg-gradient-to-r from-blue-500 to-indigo-600 px-4 py-2 text-xs font-semibold text-white transition-all duration-200 hover:scale-105 hover:shadow-lg focus:ring-4 focus:ring-blue-300 focus:outline-none"
+                                                                        className="border border-black bg-white px-4 py-2 text-xs font-semibold text-black transition-all duration-200 hover:bg-black hover:text-white focus:ring-1 focus:ring-black focus:outline-none"
                                                                     >
                                                                         Edit
                                                                     </button>
@@ -528,7 +528,7 @@ export default function Campaigns({
                                                                                 campaign,
                                                                             )
                                                                         }
-                                                                        className="rounded-lg bg-gradient-to-r from-red-500 to-red-600 px-4 py-2 text-xs font-semibold text-white transition-all duration-200 hover:scale-105 hover:shadow-lg focus:ring-4 focus:ring-red-300 focus:outline-none"
+                                                                        className="bg-black px-4 py-2 text-xs font-semibold text-white transition-all duration-200 hover:shadow-sm focus:ring-1 focus:ring-black focus:outline-none"
                                                                     >
                                                                         Delete
                                                                     </button>
@@ -557,7 +557,7 @@ export default function Campaigns({
                                         return (
                                             <div
                                                 key={campaign.id}
-                                                className="overflow-hidden rounded-2xl border border-gray-200 bg-gradient-to-br from-white to-gray-50 shadow-lg transition-all duration-300 hover:scale-[1.02] hover:shadow-xl"
+                                                className="overflow-hidden border border-black bg-white shadow-sm transition-all duration-300 hover:shadow-md"
                                             >
                                                 {/* Campaign Header */}
                                                 <div
@@ -568,7 +568,7 @@ export default function Campaigns({
                                                 >
                                                     <div className="flex items-start justify-between">
                                                         <div className="flex items-center gap-3">
-                                                            <div className="rounded-xl bg-white/20 p-2.5 backdrop-blur-sm">
+                                                            <div className="bg-white/20 p-2.5 backdrop-blur-sm">
                                                                 <Tag className="h-6 w-6 text-white" />
                                                             </div>
                                                             <div>
@@ -587,11 +587,11 @@ export default function Campaigns({
                                                             </div>
                                                         </div>
                                                         {campaign.is_active ? (
-                                                            <span className="inline-flex rounded-full bg-green-500 px-3 py-1 text-xs font-semibold text-white shadow-lg">
+                                                            <span className="inline-flex bg-green-500 px-3 py-1 text-xs font-semibold text-white shadow-sm">
                                                                 Active
                                                             </span>
                                                         ) : (
-                                                            <span className="inline-flex rounded-full bg-gray-500 px-3 py-1 text-xs font-semibold text-white shadow-lg">
+                                                            <span className="inline-flex bg-gray-500 px-3 py-1 text-xs font-semibold text-white shadow-sm">
                                                                 Inactive
                                                             </span>
                                                         )}
@@ -601,7 +601,7 @@ export default function Campaigns({
                                                 {/* Campaign Details */}
                                                 <div className="space-y-4 p-4">
                                                     {/* Product Info */}
-                                                    <div className="rounded-xl bg-gradient-to-r from-purple-50 to-indigo-50 p-3">
+                                                    <div className="border border-black bg-white p-3">
                                                         <div className="mb-1 text-xs font-semibold text-gray-500 uppercase">
                                                             Product
                                                         </div>
@@ -632,12 +632,12 @@ export default function Campaigns({
                                                     </div>
 
                                                     {/* Price Info */}
-                                                    <div className="rounded-xl bg-gradient-to-r from-rose-50 to-pink-50 p-3">
+                                                    <div className="border border-black bg-white p-3">
                                                         <div className="mb-1 text-xs font-semibold text-gray-500 uppercase">
                                                             Pricing
                                                         </div>
                                                         <div className="flex items-center gap-2">
-                                                            <span className="text-lg font-bold text-purple-600">
+                                                            <span className="text-lg font-bold text-white">
                                                                 $
                                                                 {(
                                                                     Number(
@@ -647,7 +647,7 @@ export default function Campaigns({
                                                             </span>
                                                             {campaign.product && (
                                                                 <>
-                                                                    <span className="rounded-full bg-red-500 px-2.5 py-1 text-xs font-bold text-white shadow-md">
+                                                                    <span className="bg-red-500 px-2.5 py-1 text-xs font-bold text-white shadow-md">
                                                                         -
                                                                         {
                                                                             discount
@@ -673,13 +673,13 @@ export default function Campaigns({
                                                     </div>
 
                                                     {/* Date Range */}
-                                                    <div className="rounded-xl bg-gradient-to-r from-blue-50 to-cyan-50 p-3">
+                                                    <div className="border border-black bg-white p-3">
                                                         <div className="mb-2 text-xs font-semibold text-gray-500 uppercase">
                                                             Duration
                                                         </div>
                                                         <div className="space-y-2">
                                                             <div className="flex items-center gap-2 text-sm">
-                                                                <Calendar className="h-4 w-4 text-blue-500" />
+                                                                <Calendar className="h-4 w-4 text-black" />
                                                                 <span className="font-medium text-gray-700">
                                                                     Start:
                                                                 </span>
@@ -690,7 +690,7 @@ export default function Campaigns({
                                                                 </span>
                                                             </div>
                                                             <div className="flex items-center gap-2 text-sm">
-                                                                <Calendar className="h-4 w-4 text-blue-500" />
+                                                                <Calendar className="h-4 w-4 text-black" />
                                                                 <span className="font-medium text-gray-700">
                                                                     End:
                                                                 </span>
@@ -713,7 +713,7 @@ export default function Campaigns({
                                                                     campaign,
                                                                 )
                                                             }
-                                                            className="flex-1 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg transition-all duration-200 hover:scale-105 hover:shadow-xl focus:ring-4 focus:ring-blue-300 focus:outline-none"
+                                                            className="flex-1 border border-black bg-white px-4 py-2.5 text-sm font-semibold text-black shadow-sm transition-all duration-200 hover:bg-black hover:text-white focus:ring-1 focus:ring-black focus:outline-none"
                                                         >
                                                             Edit Campaign
                                                         </button>
@@ -723,7 +723,7 @@ export default function Campaigns({
                                                                     campaign,
                                                                 )
                                                             }
-                                                            className="flex-1 rounded-xl bg-gradient-to-r from-red-500 to-red-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg transition-all duration-200 hover:scale-105 hover:shadow-xl focus:ring-4 focus:ring-red-300 focus:outline-none"
+                                                            className="flex-1 bg-black px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:shadow-sm focus:ring-1 focus:ring-black focus:outline-none"
                                                         >
                                                             Delete
                                                         </button>
@@ -736,8 +736,8 @@ export default function Campaigns({
                             </>
                         ) : (
                             <div className="flex flex-col items-center justify-center py-16 text-center">
-                                <div className="mb-4 rounded-full bg-purple-100 p-4">
-                                    <Tag className="h-10 w-10 text-purple-500" />
+                                <div className="mb-4 bg-black p-4">
+                                    <Tag className="h-10 w-10 text-white" />
                                 </div>
                                 <h3 className="mb-2 text-lg font-bold text-gray-900">
                                     No campaigns found
@@ -749,7 +749,7 @@ export default function Campaigns({
                                 </p>
                                 <button
                                     onClick={handleCreateCampaign}
-                                    className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-purple-500 to-indigo-600 px-6 py-3 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl focus:ring-4 focus:ring-purple-300 focus:ring-offset-2 focus:outline-none"
+                                    className="inline-flex items-center gap-2 border-2 border-black bg-black px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-300 hover:bg-gray-100 hover:text-black focus:ring-1 focus:ring-black focus:ring-offset-2 focus:outline-none"
                                 >
                                     <Plus className="h-5 w-5" />
                                     Create First Campaign
@@ -780,7 +780,7 @@ export default function Campaigns({
                                                         },
                                                     )
                                                 }
-                                                className="relative inline-flex items-center rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 transition-colors duration-200 hover:bg-gray-50"
+                                                className="relative inline-flex items-center border border-gray-300 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 transition-colors duration-200 hover:bg-gray-50"
                                             >
                                                 Previous
                                             </button>
@@ -801,10 +801,10 @@ export default function Campaigns({
                                                         },
                                                     )
                                                 }
-                                                className={`relative inline-flex items-center rounded-lg border px-3 py-1.5 text-xs font-medium transition-all duration-200 ${
+                                                className={`relative inline-flex items-center border px-3 py-1.5 text-xs font-medium transition-all duration-200 ${
                                                     page ===
                                                     pagination.current_page
-                                                        ? 'scale-105 border-purple-500 bg-gradient-to-r from-purple-500 to-indigo-600 text-white shadow-lg'
+                                                        ? 'border-black bg-black text-white shadow-sm'
                                                         : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50'
                                                 }`}
                                             >
@@ -826,7 +826,7 @@ export default function Campaigns({
                                                         },
                                                     )
                                                 }
-                                                className="relative inline-flex items-center rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 transition-colors duration-200 hover:bg-gray-50"
+                                                className="relative inline-flex items-center border border-gray-300 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 transition-colors duration-200 hover:bg-gray-50"
                                             >
                                                 Next
                                             </button>
@@ -855,16 +855,16 @@ export default function Campaigns({
             {/* Delete Confirmation Modal */}
             {showDeleteModal && selectedCampaign && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
-                    <div className="w-full max-w-md overflow-hidden rounded-3xl border border-gray-100 bg-white shadow-2xl">
-                        <div className="bg-gradient-to-r from-red-500 to-pink-500 px-8 py-6">
+                    <div className="w-full max-w-md overflow-hidden border-2 border-black bg-white shadow-sm">
+                        <div className="bg-black px-8 py-6">
                             <h3 className="text-xl font-bold text-white">
                                 Confirm Deletion
                             </h3>
                         </div>
                         <div className="p-8">
                             <div className="mb-8 flex items-center gap-4">
-                                <div className="rounded-full bg-red-100 p-4">
-                                    <Tag className="h-8 w-8 text-red-600" />
+                                <div className="bg-red-100 p-4">
+                                    <Tag className="h-8 w-8 text-black" />
                                 </div>
                                 <div>
                                     <p className="text-lg font-semibold text-gray-900">
@@ -881,14 +881,14 @@ export default function Campaigns({
                                         setShowDeleteModal(false);
                                         setSelectedCampaign(null);
                                     }}
-                                    className="flex-1 rounded-2xl border-2 border-gray-300 bg-white px-6 py-4 text-sm font-semibold text-gray-700 transition-all duration-200 hover:border-gray-400 hover:bg-gray-50 focus:ring-4 focus:ring-gray-200 focus:outline-none"
+                                    className="flex-1 border-2 border-gray-300 bg-white px-6 py-4 text-sm font-semibold text-gray-700 transition-all duration-200 hover:border-gray-400 hover:bg-gray-50 focus:ring-4 focus:ring-gray-200 focus:outline-none"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     onClick={confirmDelete}
                                     disabled={isLoading}
-                                    className="flex-1 rounded-2xl bg-gradient-to-r from-red-500 to-red-600 px-6 py-4 text-sm font-semibold text-white transition-all duration-200 hover:from-red-600 hover:to-red-700 focus:ring-4 focus:ring-red-300 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                                    className="flex-1 bg-black px-6 py-4 text-sm font-semibold text-white transition-all duration-200 hover:bg-gray-100 hover:text-black focus:ring-1 focus:ring-black focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                                 >
                                     {isLoading
                                         ? 'Deleting...'

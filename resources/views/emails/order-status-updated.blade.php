@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Status Update - AndShoes</title>
+    <title>Order Status Update - NOIR eCommerce</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
@@ -16,7 +16,7 @@
         }
         .email-container {
             background-color: white;
-            border-radius: 12px;
+            border-radius: 0;
             padding: 40px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
         }
@@ -29,9 +29,11 @@
         .logo {
             font-size: 32px;
             font-weight: bold;
-            color: #771E49;
+            color: #000000;
             margin-bottom: 10px;
             text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
         .tagline {
             color: #64748b;
@@ -39,10 +41,10 @@
             margin: 0;
         }
         .status-update-section {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(180deg, #1a1a1a 0%, #2d2d2d 100%);
             color: white;
             padding: 30px;
-            border-radius: 12px;
+            border-radius: 0;
             text-align: center;
             margin-bottom: 30px;
         }
@@ -62,18 +64,18 @@
         }
         .status-badge {
             padding: 8px 16px;
-            border-radius: 20px;
+            border-radius: 0;
             font-weight: bold;
             font-size: 14px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
-        .status-pending { background-color: #fbbf24; color: #92400e; }
-        .status-confirmed { background-color: #34d399; color: #065f46; }
-        .status-processing { background-color: #60a5fa; color: #1e40af; }
-        .status-shipped { background-color: #a78bfa; color: #5b21b6; }
-        .status-delivered { background-color: #10b981; color: #064e3b; }
-        .status-cancelled { background-color: #f87171; color: #991b1b; }
+        .status-pending { background-color: #f5f5f5; color: #666666; border: 1px solid #d0d0d0; }
+        .status-confirmed { background-color: #1a1a1a; color: #ffffff; }
+        .status-processing { background-color: #2d2d2d; color: #ffffff; }
+        .status-shipped { background-color: #000000; color: #ffffff; }
+        .status-delivered { background-color: #000000; color: #ffffff; }
+        .status-cancelled { background-color: #f5f5f5; color: #1a1a1a; border: 1px solid #d0d0d0; }
         .arrow {
             color: white;
             font-size: 20px;
@@ -81,7 +83,7 @@
         }
         .order-details {
             background-color: #f8fafc;
-            border-radius: 8px;
+            border-radius: 0;
             padding: 25px;
             margin: 30px 0;
         }
@@ -116,7 +118,7 @@
         .status-message {
             padding: 20px;
             margin: 20px 0;
-            border-radius: 8px;
+            border-radius: 0;
             border-left: 4px solid #10b981;
             background-color: #f0fdf4;
         }
@@ -141,14 +143,14 @@
             color: #166534;
         }
         .status-message.cancelled {
-            border-left-color: #ef4444;
-            background-color: #fef2f2;
-            color: #dc2626;
+            border-left-color: #1a1a1a;
+            background-color: #f5f5f5;
+            color: #1a1a1a;
         }
         .next-steps {
             background-color: #fff7ed;
             border: 1px solid #fed7aa;
-            border-radius: 8px;
+            border-radius: 0;
             padding: 20px;
             margin: 25px 0;
         }
@@ -178,10 +180,10 @@
             margin: 20px 0;
         }
         .social-links a {
-            color: #771E49;
+            color: #000000;
             text-decoration: none;
             margin: 0 10px;
-            font-weight: 500;
+            font-weight: 600;
         }
         @media (max-width: 600px) {
             body {
@@ -203,7 +205,7 @@
     <div class="email-container">
         <!-- Header -->
         <div class="header">
-            <div class="logo">AndShoes</div>
+            <div class="logo">NOIR eCommerce</div>
             <p class="tagline">Premium Footwear Collection</p>
         </div>
 
@@ -226,17 +228,17 @@
         <!-- Status-specific Message -->
         @if($newStatus === 'confirmed')
             <div class="status-message confirmed">
-                <h4>🎉 Great News! Your Order is Confirmed</h4>
+                <h4>Great News! Your Order is Confirmed</h4>
                 <p>Thank you for your purchase! We've received your payment and confirmed your order. Our team is now preparing your items for shipment.</p>
             </div>
         @elseif($newStatus === 'processing')
             <div class="status-message processing">
-                <h4>📦 Your Order is Being Processed</h4>
+                <h4>Your Order is Being Processed</h4>
                 <p>We're carefully preparing your order for shipment. This includes quality checks and packaging to ensure your items arrive in perfect condition.</p>
             </div>
         @elseif($newStatus === 'shipped')
             <div class="status-message shipped">
-                <h4>🚚 Your Order Has Been Shipped!</h4>
+                <h4>Your Order Has Been Shipped!</h4>
                 <p>Exciting news! Your order is on its way to you. You should receive it within the next few business days depending on your location.</p>
             </div>
         @elseif($newStatus === 'delivered')
@@ -253,7 +255,7 @@
 
         <!-- Order Details -->
         <div class="order-details">
-            <h3>📋 Order Details</h3>
+            <h3>Order Details</h3>
             <div class="detail-row">
                 <span class="detail-label">Order ID:</span>
                 <span class="detail-value">#{{ $order->id }}</span>
@@ -298,28 +300,28 @@
         <!-- Next Steps -->
         @if($newStatus === 'confirmed')
             <div class="next-steps">
-                <h4>📋 What happens next?</h4>
+                <h4>What happens next?</h4>
                 <p>• We'll process your order within 1-2 business days</p>
                 <p>• You'll receive a shipping notification when your order is dispatched</p>
                 <p>• Track your order status anytime on our website</p>
             </div>
         @elseif($newStatus === 'processing')
             <div class="next-steps">
-                <h4>📋 What happens next?</h4>
+                <h4>What happens next?</h4>
                 <p>• Your order will be packaged and prepared for shipping</p>
                 <p>• You'll receive a shipping notification once it's dispatched</p>
                 <p>• Expected processing time: 1-2 business days</p>
             </div>
         @elseif($newStatus === 'shipped')
             <div class="next-steps">
-                <h4>📋 Delivery Information</h4>
+                <h4>Delivery Information</h4>
                 <p>• Estimated delivery: 2-5 business days (depending on location)</p>
                 <p>• Make sure someone is available to receive the package</p>
                 <p>• Contact us if you don't receive it within the expected timeframe</p>
             </div>
         @elseif($newStatus === 'delivered')
             <div class="next-steps">
-                <h4>📋 Enjoy Your Purchase!</h4>
+                <h4>Enjoy Your Purchase!</h4>
                 <p>• We hope you love your new shoes!</p>
                 <p>• If you have any issues, contact our support within 14 days</p>
                 <p>• Consider leaving a review to help other customers</p>
@@ -328,17 +330,17 @@
 
         <!-- Footer -->
         <div class="footer">
-            <p>Thank you for choosing <strong>AndShoes</strong>!</p>
+            <p>Thank you for choosing <strong>NOIR eCommerce</strong>!</p>
             <p>If you have any questions, feel free to contact our customer service.</p>
             
             <div class="social-links">
-                <a href="mailto:info@andshoes-ks.com">📧 Support</a>
-                <a href="https://andshoes-ks.com/">🌐 Visit Website</a>
+                <a href="mailto:support@noir-ecommerce.com">Support</a>
+                <a href="{{ config('app.url') }}">Visit Website</a>
             </div>
             
             <p style="font-size: 12px; color: #9ca3af; margin-top: 20px;">
                 This email was sent to {{ $order->customer_email }} regarding order #{{ $order->id }}.
-                <br>© {{ date('Y') }} AndShoes. All rights reserved.
+                <br>© {{ date('Y') }} NOIR eCommerce. All rights reserved.
             </p>
         </div>
     </div>

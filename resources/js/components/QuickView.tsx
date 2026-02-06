@@ -1,5 +1,5 @@
 import { Minus, Plus, ShoppingCart, Star, X } from 'lucide-react';
-import { memo, useCallback, useState } from 'react';
+import { memo, useCallback, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useCartStore } from '../store/cartStore';
 import type { Product } from '../types/store';
@@ -18,6 +18,15 @@ export const QuickView = memo(({ product, onClose }: QuickViewProps) => {
     const [selectedSize, setSelectedSize] = useState<string | null>(null);
     const [selectedImageIndex, setSelectedImageIndex] = useState(0);
     const addItem = useCartStore((state) => state.addItem);
+
+    // Reset state when product changes or modal opens
+    useEffect(() => {
+        if (product) {
+            setQuantity(1);
+            setSelectedSize(null);
+            setSelectedImageIndex(0);
+        }
+    }, [product?.id]);
 
     const handleBackdropClick = useCallback(
         (e: React.MouseEvent) => {
@@ -103,36 +112,36 @@ export const QuickView = memo(({ product, onClose }: QuickViewProps) => {
 
     return (
         <div
-            className="fixed inset-0 z-50 flex animate-in items-center justify-center bg-black/60 p-4 duration-200 fade-in"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm transition-all duration-500 fade-in"
             onClick={handleBackdropClick}
             role="dialog"
             aria-labelledby="quick-view-title"
             aria-modal="true"
         >
-            <div className="max-h-[90vh] w-full max-w-4xl animate-in overflow-y-auto rounded-xl bg-white shadow-2xl duration-300 zoom-in-95">
+            <div className="shadow-premium transition-noir max-h-[90vh] w-full max-w-5xl animate-in overflow-y-auto bg-white zoom-in-95">
                 {/* Header */}
-                <div className="sticky top-0 z-10 flex items-center justify-between border-b border-gray-200 bg-white px-6 py-4">
+                <div className="shadow-soft sticky top-0 z-10 flex items-center justify-between border-b border-gray-200 bg-gradient-to-b from-gray-50 to-white px-8 py-6">
                     <h2
                         id="quick-view-title"
-                        className="text-2xl font-bold text-gray-900"
+                        className="font-sans text-2xl font-bold tracking-wide text-black uppercase"
                     >
                         Quick View
                     </h2>
                     <button
                         onClick={onClose}
-                        className="rounded-lg p-2 transition-colors hover:bg-gray-100 focus:ring-2 focus:ring-[#771E49] focus:outline-none"
+                        className="transition-noir p-2 text-black hover:bg-black hover:text-white focus:ring-2 focus:ring-black focus:outline-none"
                         aria-label="Close quick view"
                     >
-                        <X size={24} />
+                        <X size={22} strokeWidth={2} />
                     </button>
                 </div>
 
                 {/* Content */}
-                <div className="grid gap-8 p-6 md:grid-cols-2">
+                <div className="grid gap-10 p-8 md:grid-cols-2">
                     {/* Image Gallery */}
-                    <div className="space-y-3">
+                    <div className="space-y-4">
                         {/* Main Image */}
-                        <div className="aspect-square overflow-hidden rounded-lg bg-gray-100">
+                        <div className="shadow-soft aspect-square overflow-hidden bg-gradient-to-br from-gray-50 to-white">
                             <img
                                 src={
                                     (product as any).all_images?.[
@@ -140,13 +149,13 @@ export const QuickView = memo(({ product, onClose }: QuickViewProps) => {
                                     ]?.url || product.image
                                 }
                                 alt={product.name}
-                                className="h-full w-full object-cover"
+                                className="transition-noir h-full w-full object-cover hover:scale-105"
                             />
                         </div>
 
                         {/* Thumbnail Gallery */}
                         {(product as any).all_images?.length > 1 && (
-                            <div className="grid grid-cols-4 gap-2">
+                            <div className="grid grid-cols-4 gap-3">
                                 {(product as any).all_images.map(
                                     (img: any, index: number) => (
                                         <button
@@ -154,10 +163,10 @@ export const QuickView = memo(({ product, onClose }: QuickViewProps) => {
                                             onClick={() =>
                                                 setSelectedImageIndex(index)
                                             }
-                                            className={`aspect-square overflow-hidden rounded-lg border-2 transition-all ${
+                                            className={`transition-noir aspect-square overflow-hidden border-2 ${
                                                 selectedImageIndex === index
-                                                    ? 'border-[#771E49] ring-2 ring-[#771E49]/20'
-                                                    : 'border-gray-200 hover:border-gray-300'
+                                                    ? 'shadow-elevated scale-105 border-black'
+                                                    : 'hover:shadow-soft border-gray-200 hover:border-gray-400'
                                             }`}
                                         >
                                             <img
@@ -175,54 +184,55 @@ export const QuickView = memo(({ product, onClose }: QuickViewProps) => {
                     {/* Details */}
                     <div className="flex flex-col">
                         {/* Title */}
-                        <h3 className="mb-4 text-3xl font-bold text-gray-900">
+                        <h3 className="mb-4 font-sans text-3xl font-bold tracking-wide text-black uppercase">
                             {product.name}
                         </h3>
 
                         {/* Rating */}
                         {product.rating && (
                             <div
-                                className="mb-4 flex items-center gap-2"
+                                className="mb-5 flex items-center gap-2"
                                 aria-label={`Rating: ${product.rating} out of 5 stars`}
                             >
                                 <div className="flex gap-1">
                                     {Array.from({ length: 5 }).map((_, i) => (
                                         <Star
                                             key={i}
-                                            size={20}
+                                            size={18}
                                             className={
                                                 i <
                                                 Math.floor(product.rating || 0)
-                                                    ? 'fill-[#771E49] text-[#771E49]'
+                                                    ? 'fill-black text-black'
                                                     : 'fill-gray-200 text-gray-200'
                                             }
                                             aria-hidden="true"
+                                            strokeWidth={1.5}
                                         />
                                     ))}
                                 </div>
-                                <span className="text-gray-600">
+                                <span className="text-sm font-medium text-gray-600">
                                     ({product.rating.toFixed(1)})
                                 </span>
                             </div>
                         )}
 
                         {/* Price */}
-                        <div className="mb-6 text-4xl font-bold text-[#771E49]">
+                        <div className="mb-6 font-sans text-4xl font-bold text-black">
                             €{(product.price || 0).toFixed(2)}
                         </div>
 
                         {/* Description */}
-                        <p className="mb-6 leading-relaxed text-gray-600">
+                        <p className="mb-6 leading-relaxed text-gray-700">
                             {product.description}
                         </p>
 
                         {/* Color */}
                         {product.color && (
                             <div className="mb-6">
-                                <span className="mb-2 block text-sm font-semibold text-gray-700">
+                                <span className="mb-2 block font-sans text-xs font-bold tracking-wider text-gray-600 uppercase">
                                     Color:
                                 </span>
-                                <span className="inline-flex items-center gap-2 rounded-full bg-gray-100 px-4 py-2 text-sm font-medium text-gray-900">
+                                <span className="shadow-soft inline-flex items-center gap-2 border border-gray-300 bg-white px-4 py-2 font-sans text-sm font-semibold tracking-wide text-black uppercase">
                                     {product.color}
                                 </span>
                             </div>
@@ -232,14 +242,14 @@ export const QuickView = memo(({ product, onClose }: QuickViewProps) => {
                         {product.categories &&
                             product.categories.length > 0 && (
                                 <div className="mb-6">
-                                    <span className="mb-2 block text-sm font-semibold text-gray-700">
+                                    <span className="mb-2 block font-sans text-xs font-bold tracking-wider text-gray-600 uppercase">
                                         Categories:
                                     </span>
                                     <div className="flex flex-wrap gap-2">
                                         {product.categories.map((category) => (
                                             <span
                                                 key={category.id}
-                                                className="rounded-full bg-gray-100 px-3 py-1 text-sm text-gray-700"
+                                                className="shadow-soft border border-gray-300 bg-white px-3 py-1.5 font-sans text-xs font-semibold tracking-wide text-black uppercase"
                                             >
                                                 {category.name}
                                             </span>
@@ -251,15 +261,15 @@ export const QuickView = memo(({ product, onClose }: QuickViewProps) => {
                         {/* Stock Status */}
                         <div className="mb-6">
                             {isOutOfStock ? (
-                                <span className="font-semibold text-red-600">
+                                <span className="inline-block border border-red-200 bg-red-50 px-4 py-2 font-sans text-xs font-bold tracking-wider text-red-700 uppercase">
                                     Out of Stock
                                 </span>
                             ) : product.stock === 'low stock' ? (
-                                <span className="font-semibold text-[#771E49]">
+                                <span className="inline-block border border-orange-200 bg-orange-50 px-4 py-2 font-sans text-xs font-bold tracking-wider text-orange-700 uppercase">
                                     Low Stock
                                 </span>
                             ) : (
-                                <span className="font-semibold text-green-600">
+                                <span className="inline-block border border-green-200 bg-green-50 px-4 py-2 font-sans text-xs font-bold tracking-wider text-green-700 uppercase">
                                     In Stock
                                 </span>
                             )}
@@ -271,42 +281,40 @@ export const QuickView = memo(({ product, onClose }: QuickViewProps) => {
                                 Object.keys(product.sizeStocks).length >
                                     0)) && (
                             <div className="mb-6">
-                                <h4 className="mb-3 text-sm font-semibold text-gray-700">
+                                <h4 className="mb-3 font-sans text-xs font-bold tracking-wider text-gray-600 uppercase">
                                     {product.sizeStocks &&
                                     Object.keys(product.sizeStocks).length > 0
                                         ? 'Select Size (EU):'
                                         : 'Available Sizes (EU):'}
                                 </h4>
-                                <div className="grid grid-cols-4 gap-2">
+                                <div className="grid grid-cols-5 gap-2">
                                     {sizeInfo.map((sizeItem) => (
                                         <button
                                             key={sizeItem.size}
                                             onClick={() =>
                                                 setSelectedSize(sizeItem.size)
                                             }
-                                            className={`relative rounded-lg border p-3 text-center transition-all ${
+                                            className={`transition-noir relative border p-3 text-center font-mono text-sm font-bold ${
                                                 selectedSize === sizeItem.size
-                                                    ? 'border-[#771E49] bg-[#771E49] text-white'
-                                                    : 'cursor-pointer border-gray-300 bg-white hover:border-[#771E49] hover:bg-[#771E49]/5'
+                                                    ? 'shadow-elevated scale-105 border-black bg-black text-white'
+                                                    : 'hover:shadow-soft cursor-pointer border-gray-300 bg-white text-black hover:border-black'
                                             }`}
                                         >
-                                            <span className="text-sm font-medium">
-                                                {sizeItem.size}
-                                            </span>
+                                            <span>{sizeItem.size}</span>
                                         </button>
                                     ))}
                                 </div>
                                 {selectedSize && (
-                                    <p className="mt-2 text-sm text-[#771E49]">
-                                        Selected size: EU {selectedSize}
+                                    <p className="mt-3 font-sans text-xs font-semibold tracking-wider text-black uppercase">
+                                        Selected: EU {selectedSize}
                                     </p>
                                 )}
                                 {product.sizeStocks &&
                                     Object.keys(product.sizeStocks).length >
                                         0 &&
                                     !selectedSize && (
-                                        <p className="mt-2 text-sm text-orange-600">
-                                            Please select a size to continue
+                                        <p className="mt-3 font-sans text-xs font-semibold tracking-wider text-orange-600 uppercase">
+                                            Please select a size
                                         </p>
                                     )}
                             </div>
@@ -317,7 +325,7 @@ export const QuickView = memo(({ product, onClose }: QuickViewProps) => {
                             <div className="mb-6">
                                 <label
                                     htmlFor="quantity"
-                                    className="mb-2 block text-sm font-semibold text-gray-700"
+                                    className="mb-3 block font-sans text-xs font-bold tracking-wider text-gray-600 uppercase"
                                 >
                                     Quantity:
                                 </label>
@@ -328,10 +336,10 @@ export const QuickView = memo(({ product, onClose }: QuickViewProps) => {
                                                 Math.max(1, q - 1),
                                             )
                                         }
-                                        className="rounded-lg border border-gray-300 p-2 text-gray-700 transition-colors hover:bg-gray-50 focus:ring-2 focus:ring-[#771E49] focus:outline-none"
+                                        className="transition-noir flex h-10 w-10 items-center justify-center border border-gray-300 bg-white hover:border-black hover:bg-black hover:text-white focus:ring-2 focus:ring-black focus:outline-none"
                                         aria-label="Decrease quantity"
                                     >
-                                        <Minus size={20} />
+                                        <Minus size={16} strokeWidth={2.5} />
                                     </button>
                                     <input
                                         id="quantity"
@@ -350,7 +358,7 @@ export const QuickView = memo(({ product, onClose }: QuickViewProps) => {
                                                 ),
                                             )
                                         }
-                                        className="w-20 rounded-lg border border-gray-300 py-2 text-center focus:ring-2 focus:ring-[#771E49] focus:outline-none"
+                                        className="shadow-soft w-20 border border-gray-300 bg-white py-2 text-center font-mono text-sm font-bold focus:border-black focus:ring-2 focus:ring-black focus:outline-none"
                                         aria-label="Product quantity"
                                     />
                                     <button
@@ -360,10 +368,10 @@ export const QuickView = memo(({ product, onClose }: QuickViewProps) => {
                                             )
                                         }
                                         disabled={quantity >= maxQuantity}
-                                        className="rounded-lg border border-gray-300 p-2 text-gray-700 transition-colors hover:bg-gray-50 focus:ring-2 focus:ring-[#771E49] focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                                        className="transition-noir flex h-10 w-10 items-center justify-center border border-gray-300 bg-white hover:border-black hover:bg-black hover:text-white focus:ring-2 focus:ring-black focus:outline-none disabled:cursor-not-allowed disabled:opacity-40"
                                         aria-label="Increase quantity"
                                     >
-                                        <Plus size={20} />
+                                        <Plus size={16} strokeWidth={2.5} />
                                     </button>
                                 </div>
                             </div>
@@ -383,7 +391,7 @@ export const QuickView = memo(({ product, onClose }: QuickViewProps) => {
                                     product.sizeStocks[selectedSize]
                                         .quantity === 0)
                             }
-                            className={`flex w-full items-center justify-center gap-2 rounded-lg py-4 text-lg font-semibold transition-all duration-200 focus:ring-2 focus:ring-[#771E49] focus:ring-offset-2 focus:outline-none ${
+                            className={`shadow-soft transition-noir flex w-full items-center justify-center gap-3 py-5 font-sans text-sm font-bold tracking-widest uppercase focus:ring-2 focus:ring-black focus:ring-offset-2 focus:outline-none ${
                                 isOutOfStock ||
                                 (!!product.sizeStocks &&
                                     Object.keys(product.sizeStocks).length >
@@ -393,12 +401,12 @@ export const QuickView = memo(({ product, onClose }: QuickViewProps) => {
                                     !!product.sizeStocks?.[selectedSize] &&
                                     product.sizeStocks[selectedSize]
                                         .quantity === 0)
-                                    ? 'cursor-not-allowed bg-gray-200 text-gray-400'
-                                    : 'bg-[#771E49] text-white hover:scale-[1.02] hover:bg-[#5a1738]'
+                                    ? 'cursor-not-allowed border border-gray-300 bg-gray-100 text-gray-400'
+                                    : 'hover:shadow-elevated bg-black text-white hover:-translate-y-0.5 active:translate-y-0'
                             }`}
                             aria-label={`Add ${quantity} ${product.name} to cart`}
                         >
-                            <ShoppingCart size={24} />
+                            <ShoppingCart size={20} strokeWidth={2.5} />
                             {isOutOfStock ||
                             (selectedSize &&
                                 product.sizeStocks?.[selectedSize]?.quantity ===
@@ -408,7 +416,7 @@ export const QuickView = memo(({ product, onClose }: QuickViewProps) => {
                                     Object.keys(product.sizeStocks).length >
                                         0 &&
                                     !selectedSize
-                                  ? 'Select Size'
+                                  ? 'Select Size First'
                                   : 'Add to Cart'}
                         </button>
                     </div>

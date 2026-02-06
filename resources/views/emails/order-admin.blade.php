@@ -6,68 +6,75 @@
     <title>New Order Notification</title>
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
             line-height: 1.6;
-            color: #333;
-            background-color: #f4f4f4;
+            color: #1a1a1a;
+            background-color: #f5f5f5;
             margin: 0;
             padding: 0;
         }
         .container {
             max-width: 650px;
-            margin: 20px auto;
-            background: #fff;
-            border-radius: 12px;
+            margin: 30px auto;
+            background: #ffffff;
+            border-radius: 0;
             overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
         }
         .header {
-            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
-            color: #fff;
-            padding: 35px 30px;
+            background: linear-gradient(180deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: #ffffff;
+            padding: 40px 30px;
             text-align: center;
+            border-bottom: 3px solid #000000;
         }
         .header h1 {
-            margin: 0 0 10px 0;
-            font-size: 32px;
+            margin: 0 0 12px 0;
+            font-size: 28px;
             font-weight: 700;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
         }
         .alert-badge {
             display: inline-block;
-            background: rgba(255, 255, 255, 0.95);
-            color: #dc3545;
+            background: #ffffff;
+            color: #000000;
             padding: 8px 24px;
-            border-radius: 25px;
+            border-radius: 0;
             font-weight: 700;
-            font-size: 14px;
-            letter-spacing: 0.5px;
+            font-size: 12px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
         }
         .content {
-            padding: 35px 30px;
+            padding: 40px 30px;
         }
         .alert-message {
-            background: #fff3cd;
-            border-left: 5px solid #ffc107;
+            background: #f8f8f8;
+            border-left: 3px solid #000000;
             padding: 18px 20px;
-            border-radius: 8px;
+            border-radius: 0;
             margin: 20px 0;
             font-size: 15px;
         }
         .alert-message strong {
-            color: #856404;
+            color: #000000;
+            font-weight: 700;
         }
         .order-summary {
-            background: #f8f9fa;
-            border-left: 4px solid #771f48;
-            padding: 20px;
-            border-radius: 8px;
-            margin: 25px 0;
+            background: #fafafa;
+            border-left: 3px solid #000000;
+            padding: 25px;
+            border-radius: 0;
+            margin: 30px 0;
         }
         .order-summary h3 {
-            color: #771f48;
-            margin: 0 0 15px 0;
+            color: #000000;
+            margin: 0 0 18px 0;
             font-size: 16px;
-            font-weight: 600;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
         .info-grid {
             display: grid;
@@ -89,14 +96,14 @@
         }
         .product-card {
             background: #fff;
-            border: 2px solid #771f48;
-            border-radius: 12px;
+            border: 2px solid #000000;
+            border-radius: 0;
             padding: 0;
             margin: 25px 0;
             overflow: hidden;
         }
         .card-header {
-            background: linear-gradient(135deg, #771f48 0%, #9d2a5f 100%);
+            background: linear-gradient(135deg, #000000 0%, #2d2d2d 100%);
             color: white;
             padding: 15px 20px;
             font-size: 16px;
@@ -138,7 +145,7 @@
             background: linear-gradient(135deg, #28a745 0%, #20883c 100%);
             color: white;
             padding: 20px;
-            border-radius: 12px;
+            border-radius: 0;
             margin: 25px 0;
             text-align: center;
         }
@@ -154,13 +161,13 @@
         }
         .customer-box {
             background: #f8f9fa;
-            border-left: 4px solid #771f48;
+            border-left: 4px solid #000000;
             padding: 20px;
-            border-radius: 8px;
+            border-radius: 0;
             margin: 25px 0;
         }
         .customer-box h3 {
-            color: #771f48;
+            color: #000000;
             margin: 0 0 15px 0;
             font-size: 16px;
             font-weight: 600;
@@ -183,17 +190,17 @@
             color: #333;
         }
         .customer-value a {
-            color: #771f48;
+            color: #000000;
             text-decoration: none;
             font-weight: 600;
         }
         .action-button {
             display: inline-block;
-            background: linear-gradient(135deg, #771f48 0%, #9d2a5f 100%);
+            background: linear-gradient(135deg, #000000 0%, #2d2d2d 100%);
             color: #fff !important;
             padding: 14px 35px;
             text-decoration: none;
-            border-radius: 8px;
+            border-radius: 0;
             margin: 25px 0;
             font-weight: 600;
             font-size: 15px;
@@ -209,7 +216,7 @@
         .status-badge {
             display: inline-block;
             padding: 6px 16px;
-            border-radius: 20px;
+            border-radius: 0;
             font-size: 13px;
             font-weight: 700;
         }
@@ -230,17 +237,17 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🔔 New Order Alert!</h1>
+            <h1>New Order Alert!</h1>
             <div class="alert-badge">ACTION REQUIRED</div>
         </div>
 
         <div class="content">
             <div class="alert-message">
-                <strong>⚠️ New Order Alert!</strong> A customer has just placed an order. Please review and process it promptly.
+                <strong>New Order Alert!</strong> A customer has just placed an order. Please review and process it promptly.
             </div>
 
             <div class="order-summary">
-                <h3>📋 Order Information</h3>
+                <h3>Order Information</h3>
                 <div class="info-grid">
                     <div class="info-row">
                         <span class="label">Order Number:</span>
@@ -267,7 +274,7 @@
 
             <div class="product-card">
                 <div class="card-header">
-                    📦 Product Details
+                    Product Details
                 </div>
                 <div class="product-content">
                     <div class="product-info">
@@ -304,7 +311,7 @@
             </div>
 
             <div class="customer-box">
-                <h3>👤 Customer Information</h3>
+                <h3>Customer Information</h3>
                 <div class="customer-grid">
                     <div class="customer-row">
                         <span class="customer-label">Full Name:</span>
@@ -345,18 +352,18 @@
 
             <div style="text-align: center;">
                 <a href="{{ config('app.url') }}/admin/orders" class="action-button">
-                    🎯 View in Admin Panel
+                    View in Admin Panel
                 </a>
             </div>
 
-            <p style="margin-top: 25px; padding: 18px 20px; background: #fff3cd; border-radius: 8px; border-left: 5px solid #ffc107;">
-                <strong>⚡ Action Required:</strong> Please process this order and update the customer with shipping information as soon as possible.
+            <p style="margin-top: 25px; padding: 18px 20px; background: #fff3cd; border-radius: 0; border-left: 5px solid #ffc107;">
+                <strong>Action Required:</strong> Please process this order and update the customer with shipping information as soon as possible.
             </p>
         </div>
 
         <div class="footer">
             <p style="margin: 0 0 10px 0; font-weight: 600;">
-                <strong style="color: #771f48;">AndShoes</strong> Admin Panel
+                <strong style="color: #000000;">NOIR eCommerce</strong> Admin Panel
             </p>
             <p style="margin: 10px 0; font-size: 13px;">
                 Order Management System

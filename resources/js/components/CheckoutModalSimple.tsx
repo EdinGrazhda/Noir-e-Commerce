@@ -1,5 +1,5 @@
 import { Check, Package, X } from 'lucide-react';
-import { memo, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useCartStore } from '../store/cartStore';
 import { useCheckoutStore } from '../store/checkoutStore';
@@ -36,6 +36,22 @@ export const CheckoutModal = memo(({ isOpen, onClose }: CheckoutModalProps) => {
         city: '',
         country: '',
     });
+
+    // Reset state when modal opens
+    useEffect(() => {
+        if (isOpen) {
+            setCurrentStep(1);
+            setCustomerInfo({
+                full_name: '',
+                email: '',
+                phone: '',
+                address: '',
+                city: '',
+                country: '',
+            });
+            setOrderProgress({ current: 0, total: 0 });
+        }
+    }, [isOpen]);
 
     const formatPrice = (price: number): string => {
         return price.toFixed(2);
@@ -232,30 +248,27 @@ export const CheckoutModal = memo(({ isOpen, onClose }: CheckoutModalProps) => {
     return (
         <>
             {/* Backdrop */}
-            <div className="fixed inset-0 z-50 bg-black/40" />
+            <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm transition-all duration-500" />
 
             {/* Modal */}
             <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-                <div className="relative max-h-[90vh] w-full max-w-2xl overflow-hidden rounded-xl bg-white shadow-2xl">
+                <div className="shadow-premium transition-noir relative w-full max-w-3xl bg-white">
                     {/* Header */}
-                    <div
-                        className="flex items-center justify-between px-6 py-4"
-                        style={{ backgroundColor: '#771f48' }}
-                    >
-                        <h2 className="text-xl font-bold text-white">
+                    <div className="flex items-center justify-between border-b border-gray-200 bg-gradient-to-b from-gray-50 to-white px-6 py-4">
+                        <h2 className="font-sans text-xl font-bold tracking-wide text-black uppercase">
                             Checkout ({items.length}{' '}
                             {items.length === 1 ? 'item' : 'items'})
                         </h2>
                         <button
                             onClick={handleClose}
-                            className="rounded-lg p-1.5 text-white/80 transition-colors hover:bg-white/10 hover:text-white"
+                            className="transition-noir p-2 text-black hover:bg-black hover:text-white"
                         >
-                            <X className="h-5 w-5" />
+                            <X className="h-5 w-5" strokeWidth={2} />
                         </button>
                     </div>
 
                     {/* Steps Indicator */}
-                    <div className="border-b border-gray-200 bg-gray-50 px-6 py-4">
+                    <div className="border-b border-gray-200 bg-gradient-to-r from-gray-50 to-white px-6 py-4">
                         <div className="flex items-center justify-between">
                             {[
                                 { num: 1, label: 'Info' },
@@ -268,38 +281,32 @@ export const CheckoutModal = memo(({ isOpen, onClose }: CheckoutModalProps) => {
                                 >
                                     <div className="flex flex-1 flex-col items-center">
                                         <div
-                                            className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold transition-colors ${
+                                            className={`transition-noir flex h-10 w-10 items-center justify-center border-2 font-sans text-sm font-bold ${
                                                 currentStep >= step.num
-                                                    ? 'text-white'
-                                                    : 'bg-gray-300 text-gray-600'
+                                                    ? 'shadow-soft border-black bg-black text-white'
+                                                    : 'border-gray-300 bg-white text-gray-400'
                                             }`}
-                                            style={
-                                                currentStep >= step.num
-                                                    ? {
-                                                          backgroundColor:
-                                                              '#771f48',
-                                                      }
-                                                    : {}
-                                            }
                                         >
                                             {currentStep > step.num ? (
-                                                <Check className="h-4 w-4" />
+                                                <Check
+                                                    className="h-4 w-4"
+                                                    strokeWidth={3}
+                                                />
                                             ) : (
                                                 step.num
                                             )}
                                         </div>
-                                        <span className="mt-1 text-xs font-medium text-gray-600">
+                                        <span className="mt-2 font-sans text-xs font-semibold tracking-wider text-gray-600 uppercase">
                                             {step.label}
                                         </span>
                                     </div>
                                     {index < 2 && (
                                         <div
-                                            className="flex-1 border-t-2 border-gray-300"
-                                            style={
+                                            className={`transition-noir flex-1 border-t-2 ${
                                                 currentStep > step.num
-                                                    ? { borderColor: '#771f48' }
-                                                    : {}
-                                            }
+                                                    ? 'border-black'
+                                                    : 'border-gray-300'
+                                            }`}
                                         />
                                     )}
                                 </div>
@@ -308,20 +315,17 @@ export const CheckoutModal = memo(({ isOpen, onClose }: CheckoutModalProps) => {
                     </div>
 
                     {/* Content */}
-                    <div className="max-h-[calc(90vh-200px)] overflow-y-auto p-6">
+                    <div className="p-6">
                         {/* Step 1: Customer Information */}
                         {currentStep === 1 && (
-                            <div className="space-y-5">
-                                <h3
-                                    className="text-base font-bold"
-                                    style={{ color: '#771f48' }}
-                                >
+                            <div className="space-y-4">
+                                <h3 className="font-sans text-base font-bold tracking-wide text-black uppercase">
                                     Customer Information
                                 </h3>
 
                                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700">
+                                        <label className="block font-sans text-xs font-bold tracking-wider text-gray-600 uppercase">
                                             Full Name *
                                         </label>
                                         <input
@@ -333,13 +337,13 @@ export const CheckoutModal = memo(({ isOpen, onClose }: CheckoutModalProps) => {
                                                     full_name: e.target.value,
                                                 })
                                             }
-                                            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-pink-500 focus:ring-pink-500 focus:outline-none"
+                                            className="shadow-soft transition-noir mt-2 block w-full border border-gray-300 bg-white px-4 py-3 font-sans text-sm focus:border-black focus:ring-2 focus:ring-black focus:outline-none"
                                             placeholder="Enter your full name"
                                         />
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700">
+                                        <label className="block font-sans text-xs font-bold tracking-wider text-gray-600 uppercase">
                                             Email *
                                         </label>
                                         <input
@@ -351,13 +355,13 @@ export const CheckoutModal = memo(({ isOpen, onClose }: CheckoutModalProps) => {
                                                     email: e.target.value,
                                                 })
                                             }
-                                            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-pink-500 focus:ring-pink-500 focus:outline-none"
+                                            className="shadow-soft transition-noir mt-2 block w-full border border-gray-300 bg-white px-4 py-3 font-sans text-sm focus:border-black focus:ring-2 focus:ring-black focus:outline-none"
                                             placeholder="Enter your email"
                                         />
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700">
+                                        <label className="block font-sans text-xs font-bold tracking-wider text-gray-600 uppercase">
                                             Phone *
                                         </label>
                                         <input
@@ -369,13 +373,13 @@ export const CheckoutModal = memo(({ isOpen, onClose }: CheckoutModalProps) => {
                                                     phone: e.target.value,
                                                 })
                                             }
-                                            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-pink-500 focus:ring-pink-500 focus:outline-none"
+                                            className="shadow-soft transition-noir mt-2 block w-full border border-gray-300 bg-white px-4 py-3 font-sans text-sm focus:border-black focus:ring-2 focus:ring-black focus:outline-none"
                                             placeholder="Enter your phone number"
                                         />
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700">
+                                        <label className="block font-sans text-xs font-bold tracking-wider text-gray-600 uppercase">
                                             Country *
                                         </label>
                                         <select
@@ -387,7 +391,7 @@ export const CheckoutModal = memo(({ isOpen, onClose }: CheckoutModalProps) => {
                                                         .value as any,
                                                 })
                                             }
-                                            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-pink-500 focus:ring-pink-500 focus:outline-none"
+                                            className="shadow-soft transition-noir mt-2 block w-full border border-gray-300 bg-white px-4 py-3 font-sans text-sm focus:border-black focus:ring-2 focus:ring-black focus:outline-none"
                                         >
                                             <option value="">
                                                 Select country
@@ -405,7 +409,7 @@ export const CheckoutModal = memo(({ isOpen, onClose }: CheckoutModalProps) => {
                                     </div>
 
                                     <div className="md:col-span-2">
-                                        <label className="block text-sm font-medium text-gray-700">
+                                        <label className="block font-sans text-xs font-bold tracking-wider text-gray-600 uppercase">
                                             Address *
                                         </label>
                                         <input
@@ -417,13 +421,13 @@ export const CheckoutModal = memo(({ isOpen, onClose }: CheckoutModalProps) => {
                                                     address: e.target.value,
                                                 })
                                             }
-                                            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-pink-500 focus:ring-pink-500 focus:outline-none"
+                                            className="shadow-soft transition-noir mt-2 block w-full border border-gray-300 bg-white px-4 py-3 font-sans text-sm focus:border-black focus:ring-2 focus:ring-black focus:outline-none"
                                             placeholder="Enter your address"
                                         />
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700">
+                                        <label className="block font-sans text-xs font-bold tracking-wider text-gray-600 uppercase">
                                             City *
                                         </label>
                                         <input
@@ -435,7 +439,7 @@ export const CheckoutModal = memo(({ isOpen, onClose }: CheckoutModalProps) => {
                                                     city: e.target.value,
                                                 })
                                             }
-                                            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-pink-500 focus:ring-pink-500 focus:outline-none"
+                                            className="shadow-soft transition-noir mt-2 block w-full border border-gray-300 bg-white px-4 py-3 font-sans text-sm focus:border-black focus:ring-2 focus:ring-black focus:outline-none"
                                             placeholder="Enter your city"
                                         />
                                     </div>
@@ -445,25 +449,22 @@ export const CheckoutModal = memo(({ isOpen, onClose }: CheckoutModalProps) => {
 
                         {/* Step 2: Order Review */}
                         {currentStep === 2 && (
-                            <div className="space-y-5">
-                                <h3
-                                    className="text-base font-bold"
-                                    style={{ color: '#771f48' }}
-                                >
+                            <div className="space-y-4">
+                                <h3 className="font-sans text-base font-bold tracking-wide text-black uppercase">
                                     Review Your Order ({items.length}{' '}
                                     {items.length === 1 ? 'item' : 'items'})
                                 </h3>
 
                                 {/* Items List */}
-                                <div className="space-y-3">
+                                <div className="space-y-4">
                                     {items.map((item, index) => (
                                         <div
                                             key={`${item.product.id}-${index}`}
-                                            className="rounded-lg border-2 border-gray-100 bg-gray-50 p-4 transition-colors hover:border-[#771f48]/20"
+                                            className="shadow-soft transition-noir hover:shadow-elevated border border-gray-200 bg-gradient-to-br from-white to-gray-50 p-5"
                                         >
                                             <div className="flex gap-4">
                                                 {item.product.image && (
-                                                    <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-lg bg-gray-100">
+                                                    <div className="shadow-soft h-20 w-20 flex-shrink-0 overflow-hidden bg-gray-100">
                                                         <img
                                                             src={
                                                                 item.product
@@ -478,10 +479,10 @@ export const CheckoutModal = memo(({ isOpen, onClose }: CheckoutModalProps) => {
                                                     </div>
                                                 )}
                                                 <div className="flex-1">
-                                                    <h4 className="font-semibold text-gray-900">
+                                                    <h4 className="font-sans text-base font-bold tracking-wide text-black uppercase">
                                                         {item.product.name}
                                                     </h4>
-                                                    <div className="mt-1 text-sm text-gray-600">
+                                                    <div className="mt-2 font-sans text-xs font-semibold tracking-wider text-gray-600 uppercase">
                                                         {item.selectedSize && (
                                                             <span>
                                                                 Size:{' '}
@@ -500,8 +501,8 @@ export const CheckoutModal = memo(({ isOpen, onClose }: CheckoutModalProps) => {
                                                             </span>
                                                         )}
                                                     </div>
-                                                    <div className="mt-1 flex items-center justify-between">
-                                                        <span className="text-sm text-gray-600">
+                                                    <div className="mt-3 flex items-center justify-between">
+                                                        <span className="font-sans text-xs font-semibold tracking-wider text-gray-600 uppercase">
                                                             €
                                                             {formatPrice(
                                                                 item.product
@@ -509,12 +510,7 @@ export const CheckoutModal = memo(({ isOpen, onClose }: CheckoutModalProps) => {
                                                             )}{' '}
                                                             × {item.quantity}
                                                         </span>
-                                                        <span
-                                                            className="text-lg font-bold"
-                                                            style={{
-                                                                color: '#771f48',
-                                                            }}
-                                                        >
+                                                        <span className="font-sans text-xl font-bold text-black">
                                                             €
                                                             {formatPrice(
                                                                 item.product
@@ -530,52 +526,40 @@ export const CheckoutModal = memo(({ isOpen, onClose }: CheckoutModalProps) => {
                                 </div>
 
                                 {/* Order Summary */}
-                                <div
-                                    className="rounded-lg border-2 p-5"
-                                    style={{
-                                        borderColor: '#771f48',
-                                        backgroundColor: '#fff5f8',
-                                    }}
-                                >
-                                    <h4
-                                        className="mb-4 font-bold"
-                                        style={{ color: '#771f48' }}
-                                    >
+                                <div className="shadow-soft border-2 border-black bg-gradient-to-br from-gray-50 to-white p-6">
+                                    <h4 className="mb-5 font-sans text-base font-bold tracking-wide text-black uppercase">
                                         Order Summary
                                     </h4>
                                     <div className="space-y-3">
-                                        <div className="flex justify-between text-sm">
-                                            <span className="text-gray-600">
+                                        <div className="flex justify-between">
+                                            <span className="font-sans text-sm font-semibold tracking-wider text-gray-600 uppercase">
                                                 Subtotal:
                                             </span>
-                                            <span className="font-semibold">
+                                            <span className="font-sans text-base font-bold text-black">
                                                 €{formatPrice(subtotal)}
                                             </span>
                                         </div>
-                                        <div className="flex justify-between text-sm">
-                                            <span className="text-gray-600">
+                                        <div className="flex justify-between">
+                                            <span className="font-sans text-sm font-semibold tracking-wider text-gray-600 uppercase">
                                                 Shipping:
                                             </span>
                                             <span
-                                                className="font-semibold"
-                                                style={{
-                                                    color:
-                                                        shippingFee === 0
-                                                            ? '#10b981'
-                                                            : '#000',
-                                                }}
+                                                className={`font-sans text-base font-bold ${
+                                                    shippingFee === 0
+                                                        ? 'text-green-700'
+                                                        : 'text-black'
+                                                }`}
                                             >
                                                 {shippingFee === 0
                                                     ? 'Free'
                                                     : `€${formatPrice(shippingFee)}`}
                                             </span>
                                         </div>
-                                        <div
-                                            className="flex justify-between border-t-2 pt-3 text-lg font-bold"
-                                            style={{ borderColor: '#771f48' }}
-                                        >
-                                            <span>Total:</span>
-                                            <span style={{ color: '#771f48' }}>
+                                        <div className="flex justify-between border-t-2 border-black pt-4">
+                                            <span className="font-sans text-base font-bold tracking-wider text-black uppercase">
+                                                Total:
+                                            </span>
+                                            <span className="font-sans text-2xl font-bold text-black">
                                                 €{formatPrice(totalAmount)}
                                             </span>
                                         </div>
@@ -586,39 +570,30 @@ export const CheckoutModal = memo(({ isOpen, onClose }: CheckoutModalProps) => {
 
                         {/* Step 3: Confirmation */}
                         {currentStep === 3 && (
-                            <div className="space-y-5 text-center">
+                            <div className="space-y-4 text-center">
                                 <div className="flex justify-center">
-                                    <div
-                                        className="rounded-full p-3"
-                                        style={{ backgroundColor: '#771f48' }}
-                                    >
-                                        <Package className="h-8 w-8 text-white" />
+                                    <div className="shadow-elevated flex h-16 w-16 items-center justify-center border-2 border-black bg-black">
+                                        <Package
+                                            className="h-8 w-8 text-white"
+                                            strokeWidth={2}
+                                        />
                                     </div>
                                 </div>
-                                <h3
-                                    className="text-lg font-bold"
-                                    style={{ color: '#771f48' }}
-                                >
+                                <h3 className="font-sans text-base font-bold tracking-wide text-black uppercase">
                                     Ready to Place Order
                                 </h3>
-                                <p className="text-gray-600">
+                                <p className="text-gray-700">
                                     Please confirm your order to proceed with
                                     checkout.
                                 </p>
-                                <div
-                                    className="rounded-lg border-2 p-5 text-left"
-                                    style={{
-                                        borderColor: '#771f48',
-                                        backgroundColor: '#fff5f8',
-                                    }}
-                                >
-                                    <p className="font-semibold text-yellow-800">
+                                <div className="shadow-soft border-2 border-black bg-gradient-to-br from-gray-50 to-white p-6 text-left">
+                                    <p className="font-sans text-xs font-bold tracking-wider text-gray-700 uppercase">
                                         Payment Method:
                                     </p>
-                                    <p className="text-yellow-700">
+                                    <p className="mt-2 font-sans text-base font-bold text-black">
                                         Cash on Delivery (COD)
                                     </p>
-                                    <p className="mt-2 text-yellow-600">
+                                    <p className="mt-3 text-sm text-gray-600">
                                         You will pay when you receive your
                                         order.
                                     </p>
@@ -628,32 +603,28 @@ export const CheckoutModal = memo(({ isOpen, onClose }: CheckoutModalProps) => {
                     </div>
 
                     {/* Footer */}
-                    <div className="border-t border-gray-200 bg-gray-50 px-6 py-4">
+                    <div className="shadow-elevated border-t border-gray-200 bg-gradient-to-t from-gray-50 to-white px-6 py-4">
                         <div className="flex items-center justify-between">
                             <div>
                                 {currentStep > 1 && (
                                     <button
                                         onClick={handlePrevStep}
-                                        className="rounded-lg border-2 border-gray-300 bg-white px-5 py-2.5 font-medium text-gray-700 transition-colors hover:bg-gray-50"
+                                        className="transition-noir border border-gray-300 bg-white px-6 py-3 font-sans text-xs font-semibold tracking-widest uppercase hover:border-black hover:bg-black hover:text-white"
                                     >
                                         ← Previous
                                     </button>
                                 )}
                             </div>
 
-                            <div className="flex items-center gap-4">
-                                <div
-                                    className="text-lg font-bold"
-                                    style={{ color: '#771f48' }}
-                                >
+                            <div className="flex items-center gap-5">
+                                <div className="font-sans text-lg font-bold text-black">
                                     Total: €{formatPrice(totalAmount)}
                                 </div>
 
                                 {currentStep < 3 ? (
                                     <button
                                         onClick={handleNextStep}
-                                        className="rounded-lg px-6 py-2.5 font-semibold text-white transition-all hover:opacity-90"
-                                        style={{ backgroundColor: '#771f48' }}
+                                        className="shadow-soft transition-noir hover:shadow-elevated bg-black px-8 py-3 font-sans text-xs font-semibold tracking-widest text-white uppercase hover:-translate-y-0.5"
                                     >
                                         Next →
                                     </button>
@@ -661,8 +632,7 @@ export const CheckoutModal = memo(({ isOpen, onClose }: CheckoutModalProps) => {
                                     <button
                                         onClick={handleSubmitOrder}
                                         disabled={isLoading}
-                                        className="rounded-lg px-6 py-2.5 font-semibold text-white transition-all hover:opacity-90 disabled:opacity-50"
-                                        style={{ backgroundColor: '#771f48' }}
+                                        className="shadow-soft transition-noir hover:shadow-elevated bg-black px-8 py-3 font-sans text-xs font-semibold tracking-widest text-white uppercase hover:-translate-y-0.5 disabled:opacity-50"
                                     >
                                         {isLoading
                                             ? `Placing Orders... (${orderProgress.total} items)`

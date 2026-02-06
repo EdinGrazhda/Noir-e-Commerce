@@ -26,12 +26,12 @@ class TestAdminEmail extends Command
         
         $this->info("Using order ID: {$order->id}");
         $this->info("Order Number: {$order->order_number}");
-        $this->info("Sending to admin: and.shoes22@gmail.com");
+        $this->info("Sending to admin: " . config('mail.admin_email'));
         
         try {
-            Mail::to('and.shoes22@gmail.com')->send(new OrderNotificationAdmin($order));
+            Mail::to(config('mail.admin_email'))->send(new OrderNotificationAdmin($order));
             $this->info('✓ Admin email sent successfully!');
-            $this->info('Check the admin inbox: and.shoes22@gmail.com');
+            $this->info('Check the admin inbox: ' . config('mail.admin_email'));
             return 0;
         } catch (\Exception $e) {
             $this->error('✗ Failed to send admin email');

@@ -304,11 +304,11 @@ class OrderController extends Controller
                         // Send multi-order email with all related orders
                         $totalAmount = $recentOrders->sum('total_amount');
                         Mail::to($order->customer_email)->send(new \App\Mail\MultiOrderPlaced($recentOrders, $totalAmount));
-                        Mail::to('and.shoes22@gmail.com')->send(new \App\Mail\MultiOrderNotificationAdmin($recentOrders, $totalAmount));
+                        Mail::to(config('mail.admin_email'))->send(new \App\Mail\MultiOrderNotificationAdmin($recentOrders, $totalAmount));
                     } else {
                         // Send single order email
                         Mail::to($order->customer_email)->send(new OrderPlaced($order));
-                        Mail::to('and.shoes22@gmail.com')->send(new OrderNotificationAdmin($order));
+                        Mail::to(config('mail.admin_email'))->send(new OrderNotificationAdmin($order));
                     }
                     
                     Log::info('Order emails sent successfully', [
@@ -517,7 +517,7 @@ class OrderController extends Controller
                 // Multiple orders - send grouped email
                 $totalAmount = $recentOrders->sum('total_amount');
                 Mail::to($order->customer_email)->send(new \App\Mail\MultiOrderPlaced($recentOrders, $totalAmount));
-                Mail::to('and.shoes22@gmail.com')->send(new \App\Mail\MultiOrderNotificationAdmin($recentOrders, $totalAmount));
+                Mail::to(config('mail.admin_email'))->send(new \App\Mail\MultiOrderNotificationAdmin($recentOrders, $totalAmount));
                 
                 Log::info('Batched order emails sent', [
                     'order_count' => $recentOrders->count(),
@@ -526,7 +526,7 @@ class OrderController extends Controller
             } else {
                 // Single order - send regular email
                 Mail::to($order->customer_email)->send(new OrderPlaced($order));
-                Mail::to('and.shoes22@gmail.com')->send(new OrderNotificationAdmin($order));
+                Mail::to(config('mail.admin_email'))->send(new OrderNotificationAdmin($order));
                 
                 Log::info('Single order email sent', [
                     'order_id' => $order->id,

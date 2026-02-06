@@ -113,4 +113,16 @@ return [
         'name' => env('MAIL_FROM_NAME', 'AndShoes'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Admin Email Address
+    |--------------------------------------------------------------------------
+    |
+    | This is the email address where admin notifications (like new orders)
+    | will be sent. This can be configured in your .env file.
+    |
+    */
+
+    'admin_email' => env('ADMIN_EMAIL', 'admin@example.com'),
+
 ];

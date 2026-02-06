@@ -6,158 +6,180 @@
     <title>Order Confirmation</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
             line-height: 1.6;
-            color: #333;
-            background-color: #f4f4f4;
+            color: #1a1a1a;
+            background-color: #f5f5f5;
             margin: 0;
             padding: 0;
         }
         .container {
             max-width: 650px;
-            margin: 20px auto;
-            background: #fff;
-            border-radius: 8px;
+            margin: 30px auto;
+            background: #ffffff;
+            border-radius: 0;
             overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
         }
         .header {
-            background: linear-gradient(135deg, #771f48 0%, #5a1737 100%);
-            color: #fff;
-            padding: 30px;
+            background: linear-gradient(180deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: #ffffff;
+            padding: 40px 30px;
             text-align: center;
+            border-bottom: 3px solid #000000;
         }
         .header h1 {
-            margin: 0 0 10px 0;
+            margin: 0 0 8px 0;
             font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
         }
         .header p {
             margin: 0;
             opacity: 0.9;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+            font-weight: 300;
         }
         .content {
-            padding: 30px;
+            padding: 40px 30px;
         }
         .success-message {
-            background: #e8f5e9;
-            border-left: 4px solid #4caf50;
-            padding: 15px;
-            margin-bottom: 25px;
-            border-radius: 4px;
+            background: #f8f8f8;
+            border-left: 3px solid #000000;
+            padding: 16px 20px;
+            margin-bottom: 30px;
+            border-radius: 0;
         }
-        .success-message p {
-            margin: 0;
-            color: #2e7d32;
-            font-size: 16px;
+        .success-message strong {
+            color: #000000;
+            font-weight: 600;
+            display: block;
+            margin-bottom: 4px;
         }
         .customer-info {
-            background: #f9f9f9;
-            padding: 20px;
-            border-radius: 6px;
-            margin: 20px 0;
+            background: #fafafa;
+            padding: 25px;
+            border-radius: 0;
+            margin: 25px 0;
+            border: 1px solid #e5e5e5;
         }
         .customer-info h2 {
-            color: #771f48;
+            color: #000000;
             margin-top: 0;
-            font-size: 18px;
-            border-bottom: 2px solid #771f48;
-            padding-bottom: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 2px solid #000000;
+            padding-bottom: 12px;
+            margin-bottom: 20px;
         }
         .info-row {
             display: flex;
             justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid #e0e0e0;
+            padding: 12px 0;
+            border-bottom: 1px solid #e5e5e5;
         }
         .info-row:last-child {
             border-bottom: none;
         }
         .label {
-            font-weight: bold;
-            color: #666;
+            font-weight: 600;
+            color: #666666;
+            font-size: 14px;
         }
         .value {
-            color: #333;
+            color: #1a1a1a;
+            font-weight: 500;
+            font-size: 14px;
         }
         .product-card {
-            background: #fff;
-            border: 2px solid #771f48;
-            border-radius: 12px;
+            background: #ffffff;
+            border: 2px solid #000000;
+            border-radius: 0;
             padding: 0;
-            margin: 25px 0;
+            margin: 30px 0;
             overflow: hidden;
         }
         .card-header {
-            background: linear-gradient(135deg, #771f48 0%, #9d2a5f 100%);
+            background: #000000;
             color: white;
-            padding: 15px 20px;
-            font-size: 16px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            padding: 16px 25px;
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
         .product-content {
-            padding: 20px;
+            padding: 25px;
         }
         .product-info {
             width: 100%;
         }
         .product-name {
-            font-size: 18px;
-            font-weight: 600;
-            color: #333;
-            margin: 0 0 12px 0;
+            font-size: 20px;
+            font-weight: 700;
+            color: #000000;
+            margin: 0 0 16px 0;
+            letter-spacing: -0.3px;
         }
         .product-specs {
             display: grid;
-            gap: 8px;
+            gap: 10px;
         }
         .spec-row {
             display: flex;
             font-size: 14px;
+            padding: 8px 0;
         }
         .spec-label {
             font-weight: 600;
-            color: #666;
-            width: 100px;
+            color: #666666;
+            width: 110px;
             flex-shrink: 0;
         }
         .spec-value {
-            color: #333;
+            color: #1a1a1a;
+            font-weight: 500;
         }
         .summary-box {
-            background: linear-gradient(135deg, #771f48 0%, #9d2a5f 100%);
+            background: #1a1a1a;
             color: white;
-            padding: 20px;
-            border-radius: 12px;
-            margin: 25px 0;
+            padding: 25px;
+            border-radius: 0;
+            margin: 30px 0;
         }
         .summary-row {
             display: flex;
             justify-content: space-between;
-            padding: 8px 0;
-            font-size: 16px;
+            padding: 10px 0;
+            font-size: 15px;
+            font-weight: 500;
         }
         .summary-total {
-            border-top: 2px solid rgba(255, 255, 255, 0.3);
-            margin-top: 10px;
-            padding-top: 15px;
-            font-size: 20px;
-            font-weight: bold;
+            border-top: 2px solid rgba(255, 255, 255, 0.2);
+            margin-top: 12px;
+            padding-top: 16px;
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
         }
         .shipping-box {
-            background: #f8f9fa;
-            border-left: 4px solid #771f48;
-            padding: 20px;
-            border-radius: 8px;
-            margin: 25px 0;
+            background: #fafafa;
+            border-left: 3px solid #000000;
+            padding: 25px;
+            border-radius: 0;
+            margin: 30px 0;
         }
         .shipping-box h3 {
-            color: #771f48;
-            margin: 0 0 15px 0;
+            color: #000000;
+            margin: 0 0 18px 0;
             font-size: 16px;
-            font-weight: 600;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
         .shipping-grid {
             display: grid;
@@ -166,58 +188,83 @@
         .shipping-row {
             display: flex;
             font-size: 14px;
+            padding: 8px 0;
         }
         .shipping-label {
             font-weight: 600;
-            color: #666;
-            width: 100px;
+            color: #666666;
+            width: 110px;
             flex-shrink: 0;
         }
         .shipping-value {
-            color: #333;
+            color: #1a1a1a;
+            font-weight: 500;
         }
         .footer {
-            background: #f9f9f9;
-            padding: 20px;
+            background: #1a1a1a;
+            padding: 30px;
             text-align: center;
-            color: #666;
-            font-size: 14px;
+            color: #ffffff;
+            font-size: 13px;
         }
         .footer a {
-            color: #761f49;
+            color: #ffffff;
             text-decoration: none;
+            font-weight: 600;
+        }
+        .footer a:hover {
+            text-decoration: underline;
         }
         .status-badge {
             display: inline-block;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: bold;
+            padding: 6px 16px;
+            border-radius: 0;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         .status-pending {
-            background: #fef3cd;
-            color: #856404;
+            background: #f5f5f5;
+            color: #666666;
+            border: 1px solid #d0d0d0;
         }
         .status-processing {
-            background: #d1ecf1;
-            color: #0c5460;
+            background: #1a1a1a;
+            color: #ffffff;
         }
         .status-completed {
-            background: #d4edda;
-            color: #155724;
+            background: #000000;
+            color: #ffffff;
+        }
+        .info-box {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f8f8;
+            border-radius: 0;
+            border-left: 3px solid #000000;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .info-box strong {
+            display: block;
+            margin-bottom: 8px;
+            color: #000000;
+            font-weight: 700;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>🎉 Order Confirmed!</h1>
-            <p style="margin: 10px 0 0 0; font-size: 16px;">Thank you for your purchase</p>
+            <h1>Order Confirmed</h1>
+            <p>Thank you for your purchase</p>
         </div>
 
         <div class="content">
             <div class="success-message">
-                <strong>✓ Order Confirmed!</strong> Your order has been received and is being processed.
+                <strong>✓ Order Confirmed!</strong>
+                Your order has been received and is being processed.
             </div>
 
             <div class="customer-info">
@@ -242,7 +289,7 @@
 
             <div class="product-card">
                 <div class="card-header">
-                    📦 Your Product
+                    Your Product
                 </div>
                 <div class="product-content">
                     <div class="product-info">
@@ -251,7 +298,7 @@
                             @if($order->product_size)
                             <div class="spec-row">
                                 <span class="spec-label">Size:</span>
-                                <span class="spec-value">{{ $order->product_size }}</span>
+                                <span class="spec-value">{{ strtoupper($order->product_size) }}</span>
                             </div>
                             @endif
                             @if($order->product_color)
@@ -285,7 +332,7 @@
             </div>
 
             <div class="shipping-box">
-                <h3>🚚 Shipping Information</h3>
+                <h3>Shipping Information</h3>
                 <div class="shipping-grid">
                     <div class="shipping-row">
                         <span class="shipping-label">Name:</span>
@@ -314,20 +361,20 @@
                 </div>
             </div>
 
-            <p style="margin-top: 30px; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #771f48;">
-                <strong>📧 What's Next?</strong><br>
+            <div class="info-box">
+                <strong>What's Next?</strong>
                 We'll send you another email with tracking information once your order ships. 
                 If you have any questions, feel free to contact us at any time.
-            </p>
+            </div>
         </div>
 
         <div class="footer">
-            <p style="margin: 0 0 10px 0; font-weight: 600;">Thank you for shopping with <strong style="color: #771f48;">AndShoes</strong></p>
-            <p style="margin: 10px 0;">
+            <p style="margin: 0 0 12px 0; font-weight: 700; font-size: 16px; letter-spacing: 2px; text-transform: uppercase;">NOIR eCommerce</p>
+            <p style="margin: 12px 0;">
                 Need help? Contact us at 
-                <a href="mailto:info@andshoes-ks.com" style="color: #771f48; font-weight: 600;">info@andshoes-ks.com</a>
+                <a href="mailto:support@noir-ecommerce.com">support@noir-ecommerce.com</a>
             </p>
-            <p style="margin-top: 20px; font-size: 12px; color: #999;">
+            <p style="margin-top: 20px; font-size: 11px; opacity: 0.7;">
                 This is an automated email. Please do not reply directly to this message.
             </p>
         </div>

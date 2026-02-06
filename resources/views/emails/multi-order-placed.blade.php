@@ -17,12 +17,12 @@
             max-width: 650px;
             margin: 20px auto;
             background: #fff;
-            border-radius: 8px;
+            border-radius: 0;
             overflow: hidden;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         .header {
-            background: linear-gradient(135deg, #771f48 0%, #5a1737 100%);
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
             color: #fff;
             padding: 30px;
             text-align: center;
@@ -43,7 +43,7 @@
             border-left: 4px solid #4caf50;
             padding: 15px;
             margin-bottom: 25px;
-            border-radius: 4px;
+            border-radius: 0;
         }
         .success-message p {
             margin: 0;
@@ -53,14 +53,14 @@
         .customer-info {
             background: #f9f9f9;
             padding: 20px;
-            border-radius: 6px;
+            border-radius: 0;
             margin: 20px 0;
         }
         .customer-info h2 {
-            color: #771f48;
+            color: #000000;
             margin-top: 0;
             font-size: 18px;
-            border-bottom: 2px solid #771f48;
+            border-bottom: 2px solid #000000;
             padding-bottom: 10px;
         }
         .info-row {
@@ -79,14 +79,14 @@
             margin: 25px 0;
         }
         .products-section h2 {
-            color: #771f48;
+            color: #000000;
             font-size: 20px;
             margin-bottom: 15px;
         }
         .product-card {
             background: #fff;
-            border: 2px solid #771f48;
-            border-radius: 6px;
+            border: 2px solid #000000;
+            border-radius: 0;
             padding: 15px;
             margin-bottom: 15px;
             display: flex;
@@ -96,7 +96,7 @@
             width: 100px;
             height: 100px;
             object-fit: cover;
-            border-radius: 4px;
+            border-radius: 0;
             flex-shrink: 0;
         }
         .product-details {
@@ -129,13 +129,13 @@
         .product-price {
             font-size: 16px;
             font-weight: bold;
-            color: #771f48;
+            color: #000000;
             margin-top: 8px;
         }
         .summary-box {
             background: #f9f9f9;
-            border: 2px solid #771f48;
-            border-radius: 6px;
+            border: 2px solid #000000;
+            border-radius: 0;
             padding: 20px;
             margin: 25px 0;
         }
@@ -146,19 +146,19 @@
             font-size: 15px;
         }
         .summary-row.total {
-            border-top: 2px solid #771f48;
+            border-top: 2px solid #000000;
             margin-top: 10px;
             padding-top: 15px;
             font-size: 20px;
             font-weight: bold;
-            color: #771f48;
+            color: #000000;
         }
         .payment-info {
             background: #fff8e1;
             border-left: 4px solid #ffc107;
             padding: 15px;
             margin: 20px 0;
-            border-radius: 4px;
+            border-radius: 0;
         }
         .payment-info h3 {
             margin-top: 0;
@@ -177,7 +177,7 @@
             font-size: 14px;
         }
         .footer a {
-            color: #771f48;
+            color: #000000;
             text-decoration: none;
             font-weight: bold;
         }
@@ -190,7 +190,7 @@
         .social-links a {
             display: inline-block;
             margin: 0 8px;
-            color: #771f48;
+            color: #000000;
             text-decoration: none;
         }
     </style>
@@ -207,12 +207,12 @@
         <div class="content">
             <!-- Success Message -->
             <div class="success-message">
-                <p>🎉 Your order has been successfully placed! We're preparing {{ count($orders) }} {{ count($orders) === 1 ? 'item' : 'items' }} for delivery.</p>
+                <p>Your order has been successfully placed! We're preparing {{ count($orders) }} {{ count($orders) === 1 ? 'item' : 'items' }} for delivery.</p>
             </div>
 
             <!-- Customer Information -->
             <div class="customer-info">
-                <h2>📋 Delivery Information</h2>
+                <h2>Delivery Information</h2>
                 <div class="info-row">
                     <span class="label">Name:</span>
                     <span class="value">{{ $customerInfo['name'] }}</span>
@@ -237,7 +237,7 @@
 
             <!-- Products -->
             <div class="products-section">
-                <h2>📦 Your Items ({{ count($orders) }})</h2>
+                <h2>Your Items ({{ count($orders) }})</h2>
                 
                 @foreach($orders as $order)
                 <div class="product-card">
@@ -302,7 +302,7 @@
             </div>
 
             <!-- Next Steps -->
-            <div style="background: #e3f2fd; padding: 15px; border-radius: 6px; margin: 20px 0;">
+            <div style="background: #e3f2fd; padding: 15px; border-radius: 0; margin: 20px 0;">
                 <h3 style="color: #1976d2; margin-top: 0; font-size: 16px;">📌 What's Next?</h3>
                 <ol style="margin: 10px 0; padding-left: 20px; color: #666;">
                     <li>We'll prepare your items for delivery</li>
@@ -315,8 +315,8 @@
 
         <!-- Footer -->
         <div class="footer">
-            <p><strong>AndShoes</strong> - Premium Footwear Collection</p>
-            <p>Questions? Contact us at <a href="mailto:info@andshoes-ks.com">info@andshoes-ks.com</a></p>
+            <p><strong>NOIR eCommerce</strong> - Premium Footwear Collection</p>
+            <p>Questions? Contact us at <a href="mailto:support@noir-ecommerce.com">support@noir-ecommerce.com</a></p>
             <p style="margin-top: 15px; font-size: 12px; color: #999;">
                 This is an automated message. Please do not reply directly to this email.
             </p>

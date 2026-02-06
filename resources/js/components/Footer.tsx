@@ -73,14 +73,14 @@ export function Footer() {
                             </li>
                             <li>
                                 <a
-                                    href="mailto:info@andshoes-ks.com"
+                                    href="mailto:support@noir-ecommerce.com"
                                     className="flex items-center gap-2 transition-colors hover:text-white"
                                 >
                                     <Mail
                                         className="h-4 w-4"
                                         strokeWidth={2.5}
                                     />
-                                    info@andshoes-ks.com
+                                    support@noir-ecommerce.com
                                 </a>
                             </li>
                         </ul>

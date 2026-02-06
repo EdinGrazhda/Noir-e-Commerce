@@ -17,12 +17,12 @@
             max-width: 700px;
             margin: 20px auto;
             background: #fff;
-            border-radius: 8px;
+            border-radius: 0;
             overflow: hidden;
             box-shadow: 0 2px 8px rgba(0,0,0,0.15);
         }
         .header {
-            background: linear-gradient(135deg, #771f48 0%, #5a1737 100%);
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
             color: #fff;
             padding: 25px 30px;
         }
@@ -50,7 +50,7 @@
             border-left: 4px solid #2196f3;
             padding: 20px;
             margin: 20px 0;
-            border-radius: 4px;
+            border-radius: 0;
         }
         .customer-section h2 {
             margin-top: 0;
@@ -79,18 +79,18 @@
             margin: 25px 0;
         }
         .section-title {
-            background: #771f48;
+            background: #000000;
             color: white;
             padding: 12px 15px;
             margin: 0 0 15px 0;
-            border-radius: 4px;
+            border-radius: 0;
             font-size: 16px;
             font-weight: bold;
         }
         .product-card {
             background: #fafafa;
             border: 2px solid #ddd;
-            border-radius: 6px;
+            border-radius: 0;
             padding: 15px;
             margin-bottom: 12px;
             display: flex;
@@ -100,9 +100,9 @@
             width: 90px;
             height: 90px;
             object-fit: cover;
-            border-radius: 4px;
+            border-radius: 0;
             flex-shrink: 0;
-            border: 2px solid #771f48;
+            border: 2px solid #000000;
         }
         .product-details {
             flex: 1;
@@ -116,21 +116,21 @@
         .product-name {
             font-size: 16px;
             font-weight: bold;
-            color: #771f48;
+            color: #000000;
             margin: 0;
         }
         .order-number {
-            background: #771f48;
+            background: #000000;
             color: white;
             padding: 4px 10px;
-            border-radius: 4px;
+            border-radius: 0;
             font-size: 12px;
             font-weight: bold;
         }
         .product-specs {
             background: white;
             padding: 10px;
-            border-radius: 4px;
+            border-radius: 0;
             margin: 8px 0;
             font-size: 13px;
         }
@@ -146,13 +146,13 @@
         .product-price {
             font-size: 15px;
             font-weight: bold;
-            color: #771f48;
+            color: #000000;
             margin-top: 8px;
         }
         .summary-box {
             background: #fff8e1;
             border: 3px solid #ffc107;
-            border-radius: 6px;
+            border-radius: 0;
             padding: 20px;
             margin: 25px 0;
         }
@@ -168,12 +168,12 @@
             padding-top: 12px;
             font-size: 22px;
             font-weight: bold;
-            color: #771f48;
+            color: #000000;
         }
         .action-section {
             background: #e8f5e9;
             border: 2px solid #4caf50;
-            border-radius: 6px;
+            border-radius: 0;
             padding: 20px;
             margin: 25px 0;
             text-align: center;
@@ -184,10 +184,10 @@
         }
         .action-button {
             display: inline-block;
-            background: #771f48;
+            background: #000000;
             color: white;
             padding: 12px 30px;
-            border-radius: 6px;
+            border-radius: 0;
             text-decoration: none;
             font-weight: bold;
             margin-top: 10px;
@@ -198,7 +198,7 @@
             text-align: center;
             color: #666;
             font-size: 13px;
-            border-top: 3px solid #771f48;
+            border-top: 3px solid #000000;
         }
     </style>
 </head>
@@ -206,19 +206,19 @@
     <div class="container">
         <!-- Header -->
         <div class="header">
-            <h1>🔔 New Multi-Item Order Received</h1>
+            <h1>New Multi-Item Order Received</h1>
             <p>{{ now()->format('F j, Y - H:i:s') }}</p>
         </div>
 
         <div class="alert">
-            ⚠️ ACTION REQUIRED: {{ count($orders) }} items ordered - Total: €{{ number_format($totalAmount, 2) }}
+            ACTION REQUIRED: {{ count($orders) }} items ordered - Total: €{{ number_format($totalAmount, 2) }}
         </div>
 
         <!-- Content -->
         <div class="content">
             <!-- Customer Information -->
             <div class="customer-section">
-                <h2>👤 Customer Information</h2>
+                <h2>Customer Information</h2>
                 <div class="info-grid">
                     <div class="info-item">
                         <div class="info-label">Full Name</div>
@@ -245,7 +245,7 @@
 
             <!-- Products -->
             <div class="products-section">
-                <div class="section-title">📦 Order Items ({{ count($orders) }} products)</div>
+                <div class="section-title">Order Items ({{ count($orders) }} products)</div>
                 
                 @foreach($orders as $order)
                 <div class="product-card">
@@ -313,7 +313,7 @@
             </div>
 
             <!-- Payment Info -->
-            <div style="background: #fff3e0; border-left: 4px solid #ff9800; padding: 15px; border-radius: 4px; margin: 20px 0;">
+            <div style="background: #fff3e0; border-left: 4px solid #ff9800; padding: 15px; border-radius: 0; margin: 20px 0;">
                 <h3 style="margin-top: 0; color: #f57c00; font-size: 15px;">💰 Payment Method</h3>
                 <p style="margin: 5px 0; color: #666;"><strong>Cash on Delivery (COD)</strong></p>
                 <p style="margin: 5px 0; color: #666;">Customer will pay €{{ number_format($totalAmount, 2) }} upon delivery</p>
@@ -321,7 +321,7 @@
 
             <!-- Action Required -->
             <div class="action-section">
-                <h3>⚡ Next Steps</h3>
+                <h3>Next Steps</h3>
                 <ol style="text-align: left; color: #666; margin: 15px 0;">
                     <li>Prepare {{ count($orders) }} items for packaging</li>
                     <li>Verify product availability and quality</li>
@@ -335,7 +335,7 @@
 
         <!-- Footer -->
         <div class="footer">
-            <p><strong>AndShoes Admin Panel</strong></p>
+            <p><strong>NOIR eCommerce Admin Panel</strong></p>
             <p>This is an automated admin notification</p>
             <p style="margin-top: 10px; font-size: 12px; color: #999;">
                 Generated at {{ now()->format('Y-m-d H:i:s') }}

@@ -13,7 +13,7 @@ import {
     User,
     X,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 
 interface Category {
@@ -76,6 +76,22 @@ export default function Checkout({ product }: CheckoutPageProps) {
         city: '',
         country: '',
     });
+
+    // Reset form when modal opens
+    useEffect(() => {
+        if (showModal) {
+            setCurrentStep(1);
+            setSelectedSize('');
+            setCustomerInfo({
+                full_name: '',
+                email: '',
+                phone: '',
+                address: '',
+                city: '',
+                country: '',
+            });
+        }
+    }, [showModal]);
 
     // Determine available sizes based on sizeStocks or foot_numbers
     const availableSizes = product.sizeStocks
@@ -801,6 +817,7 @@ export default function Checkout({ product }: CheckoutPageProps) {
                                                                                 {
                                                                                     stockQty
                                                                                 }
+
                                                                                 )
                                                                             </span>
                                                                         )}

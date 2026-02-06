@@ -299,19 +299,19 @@ export default function Orders({
     const getStatusColor = (status: string) => {
         switch (status) {
             case 'pending':
-                return 'bg-yellow-100 text-yellow-800';
+                return 'bg-gray-100 text-gray-800 border border-gray-300';
             case 'confirmed':
-                return 'bg-blue-100 text-blue-800';
+                return 'bg-gray-200 text-gray-900 border border-gray-400';
             case 'processing':
-                return 'bg-purple-100 text-purple-800';
+                return 'bg-black text-white border border-gray-900';
             case 'shipped':
-                return 'bg-indigo-100 text-indigo-800';
+                return 'bg-black text-white border border-black';
             case 'delivered':
-                return 'bg-green-100 text-green-800';
+                return 'bg-black text-white border border-black';
             case 'cancelled':
-                return 'bg-red-100 text-red-800';
+                return 'bg-white text-black border border-black';
             default:
-                return 'bg-gray-100 text-gray-800';
+                return 'bg-gray-100 text-gray-800 border border-gray-300';
         }
     };
 
@@ -333,20 +333,20 @@ export default function Orders({
             <Head title="Orders" />
 
             {/* Main Container */}
-            <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-gray-50">
+            <div className="min-h-screen bg-white">
                 <div className="mx-auto max-w-7xl px-6 py-8 lg:px-8">
                     {/* Header Section */}
                     <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                         <div className="space-y-1">
                             <div className="flex items-center gap-3">
-                                <div className="rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 p-2 shadow-lg">
+                                <div className="border-2 border-black bg-black p-2">
                                     <ShoppingCart className="h-5 w-5 text-white" />
                                 </div>
                                 <div>
-                                    <h1 className="text-2xl font-bold tracking-tight text-gray-900 lg:text-3xl">
+                                    <h1 className="text-2xl font-black tracking-tighter text-black uppercase lg:text-3xl">
                                         Orders
                                     </h1>
-                                    <p className="mt-1 text-sm text-gray-600">
+                                    <p className="mt-1 text-sm font-medium text-gray-600">
                                         Manage and track customer orders
                                     </p>
                                 </div>
@@ -355,20 +355,20 @@ export default function Orders({
                     </div>
 
                     {/* Smart Filters Section */}
-                    <div className="mb-6 overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-xl">
-                        <div className="border-b border-gray-100 bg-gradient-to-r from-slate-50 to-white px-6 py-4">
+                    <div className="mb-6 overflow-hidden border border-gray-200 bg-white shadow-sm">
+                        <div className="border-b border-gray-200 bg-gray-50 px-6 py-4">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-3">
-                                    <div className="rounded-lg bg-gradient-to-r from-emerald-500 to-teal-600 p-2 shadow-lg">
+                                    <div className="border border-black bg-black p-2">
                                         <Filter className="h-4 w-4 text-white" />
                                     </div>
-                                    <h3 className="text-base font-bold text-gray-900">
-                                        Smart Filters
+                                    <h3 className="text-base font-bold tracking-wide text-black uppercase">
+                                        Filters
                                     </h3>
                                 </div>
                                 <button
                                     onClick={clearFilters}
-                                    className="inline-flex items-center gap-2 rounded-lg bg-gray-100 px-4 py-2 text-xs font-semibold text-gray-700 transition-all duration-200 hover:scale-105 hover:bg-gray-200 hover:text-gray-900"
+                                    className="inline-flex items-center gap-2 border border-gray-300 bg-white px-4 py-2 text-xs font-bold tracking-wide text-black uppercase transition-all duration-200 hover:bg-black hover:text-white"
                                 >
                                     <X className="h-3 w-3" />
                                     Clear All
@@ -380,7 +380,7 @@ export default function Orders({
                             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
                                 {/* Search */}
                                 <div className="space-y-2">
-                                    <label className="text-xs font-semibold tracking-wide text-gray-700">
+                                    <label className="text-xs font-bold tracking-wide text-black uppercase">
                                         Search Orders
                                     </label>
                                     <div className="relative">
@@ -392,14 +392,14 @@ export default function Orders({
                                                 setSearchTerm(e.target.value)
                                             }
                                             placeholder="Order ID, Customer..."
-                                            className="w-full rounded-xl border-2 border-gray-200 bg-gray-50/50 py-2.5 pr-3 pl-10 text-sm font-medium transition-all duration-300 focus:border-emerald-400 focus:bg-white focus:ring-4 focus:ring-emerald-100 focus:outline-none"
+                                            className="w-full border border-gray-300 bg-white py-2.5 pr-3 pl-10 text-sm font-medium transition-all duration-300 focus:border-black focus:ring-1 focus:ring-black focus:outline-none"
                                         />
                                     </div>
                                 </div>
 
                                 {/* Status Filter */}
                                 <div className="space-y-2">
-                                    <label className="text-xs font-semibold tracking-wide text-gray-700">
+                                    <label className="text-xs font-bold tracking-wide text-black uppercase">
                                         Order Status
                                     </label>
                                     <select
@@ -407,7 +407,7 @@ export default function Orders({
                                         onChange={(e) =>
                                             setSelectedStatus(e.target.value)
                                         }
-                                        className="w-full rounded-xl border-2 border-gray-200 bg-gray-50/50 px-4 py-2.5 text-sm font-medium transition-all duration-300 focus:border-emerald-400 focus:bg-white focus:ring-4 focus:ring-emerald-100 focus:outline-none"
+                                        className="w-full border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium transition-all duration-300 focus:border-black focus:ring-1 focus:ring-black focus:outline-none"
                                     >
                                         <option value="">All Statuses</option>
                                         <option value="pending">Pending</option>
@@ -429,7 +429,7 @@ export default function Orders({
 
                                 {/* Country Filter */}
                                 <div className="space-y-2">
-                                    <label className="text-xs font-semibold tracking-wide text-gray-700">
+                                    <label className="text-xs font-bold tracking-wide text-black uppercase">
                                         Country
                                     </label>
                                     <select
@@ -437,7 +437,7 @@ export default function Orders({
                                         onChange={(e) =>
                                             setSelectedCountry(e.target.value)
                                         }
-                                        className="w-full rounded-xl border-2 border-gray-200 bg-gray-50/50 px-4 py-2.5 text-sm font-medium transition-all duration-300 focus:border-emerald-400 focus:bg-white focus:ring-4 focus:ring-emerald-100 focus:outline-none"
+                                        className="w-full border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium transition-all duration-300 focus:border-black focus:ring-1 focus:ring-black focus:outline-none"
                                     >
                                         <option value="">All Countries</option>
                                         <option value="albania">Albania</option>
@@ -452,17 +452,16 @@ export default function Orders({
                     </div>
 
                     {/* Orders Table Section */}
-                    <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-xl">
-                        <div className="border-b border-gray-100 bg-gradient-to-r from-slate-50 to-white px-6 py-4">
+                    <div className="overflow-hidden border border-gray-200 bg-white shadow-sm">
+                        <div className="border-b border-gray-200 bg-gray-50 px-6 py-4">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-3">
-                                    <div className="rounded-lg bg-gradient-to-r from-purple-500 to-violet-600 p-2 shadow-lg">
+                                    <div className="border border-black bg-black p-2">
                                         <ShoppingCart className="h-4 w-4 text-white" />
                                     </div>
-                                    <h3 className="text-base font-bold text-gray-900">
+                                    <h3 className="text-base font-bold tracking-wide text-black uppercase">
                                         Orders List (
-                                        {pagination?.total || orders.length}{' '}
-                                        orders)
+                                        {pagination?.total || orders.length} )
                                     </h3>
                                 </div>
                                 <div className="text-xs font-medium text-gray-600">
@@ -478,27 +477,27 @@ export default function Orders({
                                 {/* Desktop Table View - Hidden on mobile */}
                                 <div className="hidden lg:block">
                                     <table className="w-full divide-y divide-gray-200">
-                                        <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
+                                        <thead className="bg-gray-100">
                                             <tr>
-                                                <th className="px-4 py-3 text-left text-xs font-bold tracking-wider text-gray-700 uppercase">
+                                                <th className="px-4 py-3 text-left text-xs font-bold tracking-wider text-black uppercase">
                                                     Order ID
                                                 </th>
-                                                <th className="px-4 py-3 text-left text-xs font-bold tracking-wider text-gray-700 uppercase">
+                                                <th className="px-4 py-3 text-left text-xs font-bold tracking-wider text-black uppercase">
                                                     Customer
                                                 </th>
-                                                <th className="px-4 py-3 text-left text-xs font-bold tracking-wider text-gray-700 uppercase">
+                                                <th className="px-4 py-3 text-left text-xs font-bold tracking-wider text-black uppercase">
                                                     Product
                                                 </th>
-                                                <th className="px-4 py-3 text-left text-xs font-bold tracking-wider text-gray-700 uppercase">
+                                                <th className="px-4 py-3 text-left text-xs font-bold tracking-wider text-black uppercase">
                                                     Total
                                                 </th>
-                                                <th className="px-4 py-3 text-left text-xs font-bold tracking-wider text-gray-700 uppercase">
+                                                <th className="px-4 py-3 text-left text-xs font-bold tracking-wider text-black uppercase">
                                                     Status
                                                 </th>
-                                                <th className="px-4 py-3 text-left text-xs font-bold tracking-wider text-gray-700 uppercase">
+                                                <th className="px-4 py-3 text-left text-xs font-bold tracking-wider text-black uppercase">
                                                     Date
                                                 </th>
-                                                <th className="w-48 px-4 py-3 text-center text-xs font-bold tracking-wider text-gray-700 uppercase">
+                                                <th className="w-48 px-4 py-3 text-center text-xs font-bold tracking-wider text-black uppercase">
                                                     Actions
                                                 </th>
                                             </tr>
@@ -507,7 +506,7 @@ export default function Orders({
                                             {orders.map((order, index) => (
                                                 <tr
                                                     key={order.id}
-                                                    className={`transition-all duration-300 hover:bg-gradient-to-r hover:from-gray-50 hover:to-white hover:shadow-lg ${
+                                                    className={`transition-all duration-300 hover:bg-gray-50 ${
                                                         index % 2 === 0
                                                             ? 'bg-white'
                                                             : 'bg-gray-50/30'
@@ -516,10 +515,10 @@ export default function Orders({
                                                     {/* Order ID */}
                                                     <td className="px-4 py-3 whitespace-nowrap">
                                                         <div className="flex items-center gap-2">
-                                                            <div className="rounded-lg bg-gradient-to-r from-emerald-100 to-teal-100 p-1.5">
-                                                                <Hash className="h-3 w-3 text-emerald-600" />
+                                                            <div className="border border-black bg-black p-1.5">
+                                                                <Hash className="h-3 w-3 text-white" />
                                                             </div>
-                                                            <span className="text-xs font-bold text-gray-900">
+                                                            <span className="text-xs font-bold text-black">
                                                                 {
                                                                     order.unique_id
                                                                 }
@@ -530,16 +529,16 @@ export default function Orders({
                                                     {/* Customer */}
                                                     <td className="px-4 py-3">
                                                         <div className="flex items-center gap-2">
-                                                            <div className="rounded-xl bg-gradient-to-r from-blue-100 to-indigo-100 p-1.5">
-                                                                <User className="h-4 w-4 text-blue-600" />
+                                                            <div className="border border-gray-300 bg-white p-1.5">
+                                                                <User className="h-4 w-4 text-black" />
                                                             </div>
                                                             <div>
-                                                                <div className="text-xs font-bold text-gray-900">
+                                                                <div className="text-xs font-bold text-black">
                                                                     {
                                                                         order.customer_full_name
                                                                     }
                                                                 </div>
-                                                                <div className="text-xs text-gray-500">
+                                                                <div className="text-xs text-gray-600">
                                                                     {
                                                                         order.customer_email
                                                                     }
@@ -553,9 +552,9 @@ export default function Orders({
                                                         {order.is_batch &&
                                                         order.orders ? (
                                                             <div className="flex flex-col gap-2">
-                                                                <div className="flex items-center gap-2 rounded-lg border border-purple-200 bg-purple-50 px-2 py-1">
-                                                                    <Package className="h-4 w-4 text-purple-600" />
-                                                                    <span className="text-xs font-bold text-purple-700">
+                                                                <div className="flex items-center gap-2 border border-gray-300 bg-gray-100 px-2 py-1">
+                                                                    <Package className="h-4 w-4 text-black" />
+                                                                    <span className="text-xs font-bold text-black">
                                                                         {
                                                                             order
                                                                                 .orders
@@ -576,7 +575,7 @@ export default function Orders({
                                                                                 }
                                                                                 className="flex items-center gap-1.5 text-xs text-gray-600"
                                                                             >
-                                                                                <span className="flex h-4 w-4 items-center justify-center rounded bg-gray-100 text-[10px] font-semibold">
+                                                                                <span className="flex h-4 w-4 items-center justify-center border border-gray-300 bg-white text-[10px] font-semibold">
                                                                                     {idx +
                                                                                         1}
                                                                                 </span>
@@ -606,15 +605,15 @@ export default function Orders({
                                                                         alt={
                                                                             order.product_name
                                                                         }
-                                                                        className="h-10 w-10 rounded-lg object-cover"
+                                                                        className="h-10 w-10 border border-gray-200 object-cover"
                                                                     />
                                                                 ) : (
-                                                                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gray-100">
+                                                                    <div className="flex h-10 w-10 items-center justify-center border border-gray-200 bg-gray-100">
                                                                         <Package className="h-5 w-5 text-gray-400" />
                                                                     </div>
                                                                 )}
                                                                 <div>
-                                                                    <div className="text-xs font-semibold text-gray-900">
+                                                                    <div className="text-xs font-semibold text-black">
                                                                         {
                                                                             order.product_name
                                                                         }
@@ -632,8 +631,8 @@ export default function Orders({
 
                                                     {/* Total */}
                                                     <td className="px-4 py-3 whitespace-nowrap">
-                                                        <div className="text-base font-bold text-emerald-600">
-                                                            $
+                                                        <div className="text-base font-bold text-black">
+                                                            €
                                                             {formatPrice(
                                                                 order.total_amount,
                                                             )}
@@ -643,7 +642,7 @@ export default function Orders({
                                                     {/* Status */}
                                                     <td className="px-4 py-3 whitespace-nowrap">
                                                         <span
-                                                            className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-semibold ${getStatusColor(order.status)}`}
+                                                            className={`inline-flex items-center px-2 py-1 text-xs font-bold tracking-wide uppercase ${getStatusColor(order.status)}`}
                                                         >
                                                             {order.status
                                                                 .charAt(0)
@@ -675,7 +674,7 @@ export default function Orders({
                                                                         order,
                                                                     )
                                                                 }
-                                                                className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-600 px-3 py-2 text-xs font-semibold text-white transition-all duration-200 hover:scale-105 hover:from-blue-600 hover:to-indigo-700 focus:ring-4 focus:ring-blue-300 focus:outline-none"
+                                                                className="inline-flex w-full items-center justify-center gap-2 border border-gray-300 bg-white px-3 py-2 text-xs font-bold tracking-wide text-black uppercase transition-all duration-200 hover:bg-black hover:text-white focus:outline-none"
                                                             >
                                                                 <Eye className="h-3 w-3" />
                                                                 View
@@ -686,7 +685,7 @@ export default function Orders({
                                                                         order,
                                                                     )
                                                                 }
-                                                                className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-purple-500 to-violet-600 px-3 py-2 text-xs font-semibold text-white transition-all duration-200 hover:scale-105 hover:from-purple-600 hover:to-violet-700 focus:ring-4 focus:ring-purple-300 focus:outline-none"
+                                                                className="inline-flex w-full items-center justify-center gap-2 border border-gray-300 bg-black px-3 py-2 text-xs font-bold tracking-wide text-white uppercase transition-all duration-200 hover:bg-black focus:outline-none"
                                                             >
                                                                 <Edit2 className="h-3 w-3" />
                                                                 Edit
@@ -697,7 +696,7 @@ export default function Orders({
                                                                         order,
                                                                     )
                                                                 }
-                                                                className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-red-500 to-red-600 px-3 py-2 text-xs font-semibold text-white transition-all duration-200 hover:scale-105 hover:from-red-600 hover:to-red-700 focus:ring-4 focus:ring-red-300 focus:outline-none"
+                                                                className="inline-flex w-full items-center justify-center gap-2 border border-black bg-black px-3 py-2 text-xs font-bold tracking-wide text-white uppercase transition-all duration-200 hover:bg-gray-100 hover:text-black focus:outline-none"
                                                             >
                                                                 <Trash2 className="h-3 w-3" />
                                                                 Delete
@@ -715,14 +714,14 @@ export default function Orders({
                                     {orders.map((order) => (
                                         <div
                                             key={order.id}
-                                            className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-lg transition-all duration-300 hover:shadow-2xl"
+                                            className="overflow-hidden border border-gray-200 bg-white shadow-sm transition-all duration-300 hover:shadow-sm"
                                         >
                                             {/* Order Header */}
-                                            <div className="border-b border-gray-100 bg-gradient-to-r from-emerald-50 to-teal-50 p-4">
+                                            <div className="border-b border-gray-100 bg-black p-4">
                                                 <div className="flex items-center justify-between">
                                                     <div className="flex items-center gap-3">
-                                                        <div className="rounded-lg bg-gradient-to-r from-emerald-100 to-teal-100 p-2">
-                                                            <Hash className="h-4 w-4 text-emerald-600" />
+                                                        <div className="bg-black p-2">
+                                                            <Hash className="h-4 w-4 text-black" />
                                                         </div>
                                                         <div>
                                                             <p className="text-xs font-semibold tracking-wide text-gray-500 uppercase">
@@ -736,7 +735,7 @@ export default function Orders({
                                                         </div>
                                                     </div>
                                                     <span
-                                                        className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${getStatusColor(order.status)}`}
+                                                        className={`inline-flex items-center px-3 py-1 text-xs font-semibold ${getStatusColor(order.status)}`}
                                                     >
                                                         {order.status
                                                             .charAt(0)
@@ -752,8 +751,8 @@ export default function Orders({
                                             <div className="space-y-4 p-4">
                                                 {/* Customer Info */}
                                                 <div className="flex items-start gap-3">
-                                                    <div className="rounded-xl bg-gradient-to-r from-blue-100 to-indigo-100 p-2">
-                                                        <User className="h-5 w-5 text-blue-600" />
+                                                    <div className="border border-gray-300 bg-white p-2">
+                                                        <User className="h-5 w-5 text-black" />
                                                     </div>
                                                     <div className="flex-1">
                                                         <p className="text-xs font-semibold tracking-wide text-gray-500 uppercase">
@@ -787,10 +786,10 @@ export default function Orders({
                                                             alt={
                                                                 order.product_name
                                                             }
-                                                            className="h-16 w-16 flex-shrink-0 rounded-lg object-cover shadow-md"
+                                                            className="h-16 w-16 flex-shrink-0 object-cover shadow-md"
                                                         />
                                                     ) : (
-                                                        <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-lg bg-gray-100">
+                                                        <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center bg-gray-100">
                                                             <Package className="h-8 w-8 text-gray-400" />
                                                         </div>
                                                     )}
@@ -824,7 +823,7 @@ export default function Orders({
                                                         {/* Shipping indicator */}
                                                         {order.customer_country !==
                                                             'kosovo' && (
-                                                            <div className="mt-1 inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5">
+                                                            <div className="mt-1 inline-flex items-center gap-1 bg-gray-200 px-2 py-0.5">
                                                                 <span className="text-[10px] font-semibold text-amber-700">
                                                                     +4€ SHIPPING
                                                                 </span>
@@ -839,7 +838,7 @@ export default function Orders({
                                                         <p className="text-xs font-semibold tracking-wide text-gray-500 uppercase">
                                                             Total Amount
                                                         </p>
-                                                        <p className="text-2xl font-bold text-emerald-600">
+                                                        <p className="text-2xl font-bold text-black">
                                                             €
                                                             {formatPrice(
                                                                 order.total_amount,
@@ -869,7 +868,7 @@ export default function Orders({
                                                                 order,
                                                             )
                                                         }
-                                                        className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-600 px-4 py-3 text-sm font-semibold text-white transition-all duration-200 hover:scale-105 hover:from-blue-600 hover:to-indigo-700 focus:ring-4 focus:ring-blue-300 focus:outline-none"
+                                                        className="flex items-center justify-center gap-2 border border-black bg-white px-4 py-3 text-sm font-semibold text-black transition-all duration-200 hover:bg-black hover:text-white focus:ring-1 focus:ring-black focus:outline-none"
                                                     >
                                                         <Eye className="h-4 w-4" />
                                                         View
@@ -880,7 +879,7 @@ export default function Orders({
                                                                 order,
                                                             )
                                                         }
-                                                        className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-purple-500 to-violet-600 px-4 py-3 text-sm font-semibold text-white transition-all duration-200 hover:scale-105 hover:from-purple-600 hover:to-violet-700 focus:ring-4 focus:ring-purple-300 focus:outline-none"
+                                                        className="flex items-center justify-center gap-2 bg-black px-4 py-3 text-sm font-semibold text-white transition-all duration-200 hover:bg-black focus:ring-1 focus:ring-black focus:outline-none"
                                                     >
                                                         <Edit2 className="h-4 w-4" />
                                                         Edit
@@ -891,7 +890,7 @@ export default function Orders({
                                                                 order,
                                                             )
                                                         }
-                                                        className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-red-500 to-red-600 px-4 py-3 text-sm font-semibold text-white transition-all duration-200 hover:scale-105 hover:from-red-600 hover:to-red-700 focus:ring-4 focus:ring-red-300 focus:outline-none"
+                                                        className="flex items-center justify-center gap-2 bg-black px-4 py-3 text-sm font-semibold text-white transition-all duration-200 hover:bg-gray-100 hover:text-black focus:ring-1 focus:ring-black focus:outline-none"
                                                     >
                                                         <Trash2 className="h-4 w-4" />
                                                         Delete
@@ -904,7 +903,7 @@ export default function Orders({
                             </>
                         ) : (
                             <div className="flex flex-col items-center justify-center py-16 text-center">
-                                <div className="mb-4 rounded-full bg-gray-100 p-5">
+                                <div className="mb-4 bg-gray-100 p-5">
                                     <ShoppingCart className="h-10 w-10 text-gray-400" />
                                 </div>
                                 <h3 className="mb-2 text-lg font-bold text-gray-900">
@@ -945,7 +944,7 @@ export default function Orders({
                                                         },
                                                     )
                                                 }
-                                                className="relative inline-flex items-center rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 transition-colors duration-200 hover:bg-gray-50"
+                                                className="relative inline-flex items-center border border-gray-300 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 transition-colors duration-200 hover:bg-gray-50"
                                             >
                                                 Previous
                                             </button>
@@ -970,10 +969,10 @@ export default function Orders({
                                                         },
                                                     )
                                                 }
-                                                className={`relative inline-flex items-center rounded-lg border px-3 py-1.5 text-xs font-medium transition-all duration-200 ${
+                                                className={`relative inline-flex items-center border px-3 py-1.5 text-xs font-medium transition-all duration-200 ${
                                                     page ===
                                                     pagination.current_page
-                                                        ? 'scale-105 border-emerald-500 bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-lg'
+                                                        ? 'scale-105 border-gray-300 bg-black text-white shadow-sm'
                                                         : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50'
                                                 }`}
                                             >
@@ -999,7 +998,7 @@ export default function Orders({
                                                         },
                                                     )
                                                 }
-                                                className="relative inline-flex items-center rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 transition-colors duration-200 hover:bg-gray-50"
+                                                className="relative inline-flex items-center border border-gray-300 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 transition-colors duration-200 hover:bg-gray-50"
                                             >
                                                 Next
                                             </button>
@@ -1015,13 +1014,13 @@ export default function Orders({
             {/* View Details Modal */}
             {showDetailsModal && selectedOrder && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-md">
-                    <div className="w-full max-w-5xl animate-in overflow-hidden rounded-3xl bg-white shadow-2xl duration-300 fade-in zoom-in">
-                        {/* Header with gradient and order ID */}
-                        <div className="relative overflow-hidden bg-gradient-to-br from-emerald-600 via-teal-500 to-cyan-500 px-8 py-8">
+                    <div className="w-full max-w-5xl animate-in overflow-hidden border-2 border-black bg-white shadow-sm duration-300 fade-in zoom-in">
+                        {/* Header with black background */}
+                        <div className="relative overflow-hidden bg-black px-8 py-8">
                             <div className="bg-grid-white/10 absolute inset-0"></div>
                             <div className="relative flex items-center justify-between">
                                 <div>
-                                    <p className="mb-1 text-sm font-medium text-emerald-100">
+                                    <p className="mb-1 text-sm font-medium text-black">
                                         Order Details
                                     </p>
                                     <h3 className="flex items-center gap-2 text-3xl font-bold text-white">
@@ -1034,7 +1033,7 @@ export default function Orders({
                                         setShowDetailsModal(false);
                                         setSelectedOrder(null);
                                     }}
-                                    className="rounded-full bg-white/20 p-2 text-white backdrop-blur-sm transition-all hover:rotate-90 hover:bg-white/30"
+                                    className="bg-white/20 p-2 text-white backdrop-blur-sm transition-all hover:rotate-90 hover:bg-gray-100/30"
                                 >
                                     <X className="h-6 w-6" />
                                 </button>
@@ -1042,9 +1041,9 @@ export default function Orders({
                             {/* Status badge in header */}
                             <div className="relative mt-4">
                                 <span
-                                    className={`inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-sm font-bold shadow-lg ${getStatusColor(selectedOrder.status)}`}
+                                    className={`inline-flex items-center gap-1.5 px-4 py-1.5 text-sm font-bold shadow-sm ${getStatusColor(selectedOrder.status)}`}
                                 >
-                                    <span className="h-2 w-2 animate-pulse rounded-full bg-current"></span>
+                                    <span className="h-2 w-2 animate-pulse bg-current"></span>
                                     {selectedOrder.status
                                         .charAt(0)
                                         .toUpperCase() +
@@ -1059,13 +1058,13 @@ export default function Orders({
                             {selectedOrder.is_batch && selectedOrder.orders ? (
                                 /* Multi-Product Display */
                                 <div className="mb-8 space-y-4">
-                                    <div className="flex items-center gap-3 rounded-xl border-2 border-purple-200 bg-gradient-to-r from-purple-50 to-pink-50 px-5 py-4">
-                                        <Package className="h-6 w-6 text-purple-600" />
+                                    <div className="flex items-center gap-3 border-2 border-black bg-white px-5 py-4">
+                                        <Package className="h-6 w-6 text-black" />
                                         <div>
-                                            <span className="text-lg font-bold text-purple-900">
+                                            <span className="text-lg font-bold text-black">
                                                 Multi-Product Order
                                             </span>
-                                            <p className="text-sm text-purple-700">
+                                            <p className="text-sm text-black">
                                                 {selectedOrder.orders.length}{' '}
                                                 products in this order
                                             </p>
@@ -1078,9 +1077,9 @@ export default function Orders({
                                             (item, idx) => (
                                                 <div
                                                     key={idx}
-                                                    className="overflow-hidden rounded-xl border-2 border-gray-200 bg-white shadow-md transition-all hover:shadow-xl"
+                                                    className="overflow-hidden border-2 border-black bg-white shadow-sm transition-all hover:shadow-md"
                                                 >
-                                                    <div className="bg-gradient-to-r from-purple-500 to-pink-500 px-4 py-2">
+                                                    <div className="bg-black px-4 py-2">
                                                         <span className="text-sm font-bold text-white">
                                                             Product #{idx + 1}
                                                         </span>
@@ -1096,11 +1095,11 @@ export default function Orders({
                                                                         alt={
                                                                             item.product_name
                                                                         }
-                                                                        className="h-24 w-24 rounded-lg border-2 border-gray-200 object-cover shadow-sm"
+                                                                        className="h-24 w-24 border-2 border-gray-200 object-cover shadow-sm"
                                                                     />
                                                                 </div>
                                                             ) : (
-                                                                <div className="flex h-24 w-24 flex-shrink-0 items-center justify-center rounded-lg border-2 border-gray-200 bg-gray-100">
+                                                                <div className="flex h-24 w-24 flex-shrink-0 items-center justify-center border-2 border-gray-200 bg-gray-100">
                                                                     <Package className="h-10 w-10 text-gray-400" />
                                                                 </div>
                                                             )}
@@ -1112,7 +1111,7 @@ export default function Orders({
                                                                 </h5>
                                                                 <div className="flex flex-wrap gap-1.5">
                                                                     {item.product_size && (
-                                                                        <span className="inline-flex items-center gap-1 rounded-md bg-blue-50 px-2 py-0.5 text-xs font-semibold text-blue-700">
+                                                                        <span className="inline-flex items-center gap-1 bg-blue-50 px-2 py-0.5 text-xs font-semibold text-black">
                                                                             <Package className="h-3 w-3" />
                                                                             {
                                                                                 item.product_size
@@ -1120,13 +1119,13 @@ export default function Orders({
                                                                         </span>
                                                                     )}
                                                                     {item.product_color && (
-                                                                        <span className="inline-flex items-center gap-1 rounded-md bg-purple-50 px-2 py-0.5 text-xs font-semibold text-purple-700">
+                                                                        <span className="inline-flex items-center gap-1 bg-black px-2 py-0.5 text-xs font-semibold text-white">
                                                                             {
                                                                                 item.product_color
                                                                             }
                                                                         </span>
                                                                     )}
-                                                                    <span className="inline-flex items-center gap-1 rounded-md bg-amber-50 px-2 py-0.5 text-xs font-semibold text-amber-700">
+                                                                    <span className="inline-flex items-center gap-1 bg-gray-200 px-2 py-0.5 text-xs font-semibold text-amber-700">
                                                                         Qty:{' '}
                                                                         {
                                                                             item.quantity
@@ -1140,7 +1139,7 @@ export default function Orders({
                                                                             item.product_price,
                                                                         )}
                                                                     </span>
-                                                                    <span className="text-base font-bold text-emerald-600">
+                                                                    <span className="text-base font-bold text-black">
                                                                         €
                                                                         {formatPrice(
                                                                             item.total_amount,
@@ -1156,12 +1155,12 @@ export default function Orders({
                                     </div>
 
                                     {/* Total Summary for Batch */}
-                                    <div className="rounded-xl border-2 border-emerald-200 bg-gradient-to-r from-emerald-50 to-teal-50 p-4">
+                                    <div className="border-2 border-gray-300 bg-black p-4">
                                         <div className="flex items-center justify-between">
                                             <span className="text-lg font-bold text-gray-900">
                                                 Total Order Amount:
                                             </span>
-                                            <span className="text-3xl font-bold text-emerald-600">
+                                            <span className="text-3xl font-bold text-black">
                                                 €
                                                 {formatPrice(
                                                     selectedOrder.total_amount,
@@ -1172,11 +1171,11 @@ export default function Orders({
                                 </div>
                             ) : (
                                 /* Single Product Display */
-                                <div className="mb-8 overflow-hidden rounded-2xl border border-gray-200 bg-gradient-to-br from-gray-50 to-white shadow-sm">
+                                <div className="mb-8 overflow-hidden border border-black bg-white shadow-sm">
                                     <div className="flex flex-col gap-6 p-6 md:flex-row">
                                         {selectedOrder.product_image && (
                                             <div className="flex-shrink-0">
-                                                <div className="relative overflow-hidden rounded-xl border-4 border-white shadow-lg">
+                                                <div className="relative overflow-hidden border-4 border-white shadow-sm">
                                                     <img
                                                         src={
                                                             selectedOrder.product_image
@@ -1186,7 +1185,7 @@ export default function Orders({
                                                         }
                                                         className="h-48 w-48 object-cover"
                                                     />
-                                                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                                                    <div className="absolute inset-0"></div>
                                                 </div>
                                             </div>
                                         )}
@@ -1203,9 +1202,9 @@ export default function Orders({
 
                                             <div className="flex flex-wrap gap-3">
                                                 {selectedOrder.product_size && (
-                                                    <div className="flex items-center gap-2 rounded-lg bg-blue-50 px-3 py-2">
-                                                        <Package className="h-4 w-4 text-blue-600" />
-                                                        <span className="text-sm font-semibold text-blue-900">
+                                                    <div className="flex items-center gap-2 bg-blue-50 px-3 py-2">
+                                                        <Package className="h-4 w-4 text-black" />
+                                                        <span className="text-sm font-semibold text-black">
                                                             Size:{' '}
                                                             {
                                                                 selectedOrder.product_size
@@ -1214,21 +1213,21 @@ export default function Orders({
                                                     </div>
                                                 )}
                                                 {selectedOrder.product_color && (
-                                                    <div className="flex items-center gap-2 rounded-lg bg-purple-50 px-3 py-2">
+                                                    <div className="flex items-center gap-2 bg-black px-3 py-2">
                                                         <div
-                                                            className="h-4 w-4 rounded-full border-2 border-purple-300 bg-current"
+                                                            className="h-4 w-4 border-2 border-gray-300 bg-current"
                                                             style={{
                                                                 color: selectedOrder.product_color.toLowerCase(),
                                                             }}
                                                         ></div>
-                                                        <span className="text-sm font-semibold text-purple-900">
+                                                        <span className="text-sm font-semibold text-white">
                                                             {
                                                                 selectedOrder.product_color
                                                             }
                                                         </span>
                                                     </div>
                                                 )}
-                                                <div className="flex items-center gap-2 rounded-lg bg-amber-50 px-3 py-2">
+                                                <div className="flex items-center gap-2 bg-gray-200 px-3 py-2">
                                                     <ShoppingCart className="h-4 w-4 text-amber-600" />
                                                     <span className="text-sm font-semibold text-amber-900">
                                                         Qty:{' '}
@@ -1238,7 +1237,7 @@ export default function Orders({
                                             </div>
 
                                             {/* Price Breakdown */}
-                                            <div className="space-y-2 rounded-xl bg-white p-4 shadow-sm">
+                                            <div className="space-y-2 bg-white p-4 shadow-sm">
                                                 <div className="flex justify-between text-sm">
                                                     <span className="text-gray-600">
                                                         Unit Price:
@@ -1273,7 +1272,7 @@ export default function Orders({
                                                     </span>
                                                     {selectedOrder.customer_country ===
                                                     'kosovo' ? (
-                                                        <span className="font-bold text-green-600">
+                                                        <span className="font-bold text-white">
                                                             FREE 🎉
                                                         </span>
                                                     ) : (
@@ -1299,11 +1298,11 @@ export default function Orders({
                                                 </div>
                                             </div>
 
-                                            <div className="flex justify-between border-t-2 border-emerald-200 pt-3">
+                                            <div className="flex justify-between border-t-2 border-gray-300 pt-3">
                                                 <span className="text-base font-bold text-gray-900">
                                                     Total Amount:
                                                 </span>
-                                                <span className="text-2xl font-bold text-emerald-600">
+                                                <span className="text-2xl font-bold text-black">
                                                     €
                                                     {formatPrice(
                                                         selectedOrder.total_amount,
@@ -1318,15 +1317,15 @@ export default function Orders({
                             {/* Customer & Order Info Grid */}
                             <div className="grid gap-6 md:grid-cols-2">
                                 {/* Customer Information */}
-                                <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+                                <div className="border border-gray-200 bg-white p-6 shadow-sm">
                                     <h4 className="mb-4 flex items-center gap-2 text-lg font-bold text-gray-900">
-                                        <div className="rounded-lg bg-blue-100 p-2">
-                                            <User className="h-5 w-5 text-blue-600" />
+                                        <div className="bg-black p-2">
+                                            <User className="h-5 w-5 text-black" />
                                         </div>
                                         Customer Information
                                     </h4>
                                     <div className="space-y-3">
-                                        <div className="flex items-start gap-3 rounded-lg bg-gray-50 p-3">
+                                        <div className="flex items-start gap-3 bg-gray-50 p-3">
                                             <User className="mt-0.5 h-4 w-4 flex-shrink-0 text-gray-400" />
                                             <div>
                                                 <p className="text-xs font-semibold text-gray-500">
@@ -1339,7 +1338,7 @@ export default function Orders({
                                                 </p>
                                             </div>
                                         </div>
-                                        <div className="flex items-start gap-3 rounded-lg bg-gray-50 p-3">
+                                        <div className="flex items-start gap-3 bg-gray-50 p-3">
                                             <Package className="mt-0.5 h-4 w-4 flex-shrink-0 text-gray-400" />
                                             <div>
                                                 <p className="text-xs font-semibold text-gray-500">
@@ -1352,7 +1351,7 @@ export default function Orders({
                                                 </p>
                                             </div>
                                         </div>
-                                        <div className="flex items-start gap-3 rounded-lg bg-gray-50 p-3">
+                                        <div className="flex items-start gap-3 bg-gray-50 p-3">
                                             <Phone className="mt-0.5 h-4 w-4 flex-shrink-0 text-gray-400" />
                                             <div>
                                                 <p className="text-xs font-semibold text-gray-500">
@@ -1365,7 +1364,7 @@ export default function Orders({
                                                 </p>
                                             </div>
                                         </div>
-                                        <div className="flex items-start gap-3 rounded-lg bg-gray-50 p-3">
+                                        <div className="flex items-start gap-3 bg-gray-50 p-3">
                                             <Package className="mt-0.5 h-4 w-4 flex-shrink-0 text-gray-400" />
                                             <div>
                                                 <p className="text-xs font-semibold text-gray-500">
@@ -1391,15 +1390,15 @@ export default function Orders({
                                 </div>
 
                                 {/* Order Information */}
-                                <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+                                <div className="border border-gray-200 bg-white p-6 shadow-sm">
                                     <h4 className="mb-4 flex items-center gap-2 text-lg font-bold text-gray-900">
-                                        <div className="rounded-lg bg-emerald-100 p-2">
-                                            <CreditCard className="h-5 w-5 text-emerald-600" />
+                                        <div className="bg-gray-100 p-2">
+                                            <CreditCard className="h-5 w-5 text-black" />
                                         </div>
                                         Order Information
                                     </h4>
                                     <div className="space-y-3">
-                                        <div className="flex items-start gap-3 rounded-lg bg-gray-50 p-3">
+                                        <div className="flex items-start gap-3 bg-gray-50 p-3">
                                             <Calendar className="mt-0.5 h-4 w-4 flex-shrink-0 text-gray-400" />
                                             <div>
                                                 <p className="text-xs font-semibold text-gray-500">
@@ -1414,7 +1413,7 @@ export default function Orders({
                                                 </p>
                                             </div>
                                         </div>
-                                        <div className="flex items-start gap-3 rounded-lg bg-gray-50 p-3">
+                                        <div className="flex items-start gap-3 bg-gray-50 p-3">
                                             <CreditCard className="mt-0.5 h-4 w-4 flex-shrink-0 text-gray-400" />
                                             <div>
                                                 <p className="text-xs font-semibold text-gray-500">
@@ -1426,7 +1425,7 @@ export default function Orders({
                                             </div>
                                         </div>
                                         {selectedOrder.notes && (
-                                            <div className="flex items-start gap-3 rounded-lg bg-amber-50 p-3">
+                                            <div className="flex items-start gap-3 bg-gray-200 p-3">
                                                 <Package className="mt-0.5 h-4 w-4 flex-shrink-0 text-amber-600" />
                                                 <div>
                                                     <p className="text-xs font-semibold text-amber-700">
@@ -1443,16 +1442,16 @@ export default function Orders({
                             </div>
 
                             {/* Shipping Information */}
-                            <div className="mt-6 rounded-2xl border-2 border-amber-200 bg-gradient-to-br from-amber-50 to-orange-50 p-6 shadow-sm">
+                            <div className="mt-6 border-2 border-black bg-white p-6 shadow-sm">
                                 <h4 className="mb-4 flex items-center gap-2 text-lg font-bold text-gray-900">
-                                    <div className="rounded-lg bg-amber-100 p-2">
+                                    <div className="bg-gray-200 p-2">
                                         <Package className="h-5 w-5 text-amber-600" />
                                     </div>
                                     Shipping & Pricing Details
                                 </h4>
 
                                 {/* Price Breakdown */}
-                                <div className="mb-4 rounded-xl border-2 border-gray-200 bg-white p-5 shadow-sm">
+                                <div className="mb-4 border-2 border-gray-200 bg-white p-5 shadow-sm">
                                     <h5 className="mb-3 text-sm font-bold text-gray-700 uppercase">
                                         💰 Price Breakdown
                                     </h5>
@@ -1488,7 +1487,7 @@ export default function Orders({
                                                 Shipping Fee
                                                 {selectedOrder.customer_country ===
                                                     'kosovo' && (
-                                                    <span className="rounded-full bg-green-100 px-2 py-0.5 text-xs font-semibold text-green-700">
+                                                    <span className="bg-black px-2 py-0.5 text-xs font-semibold text-green-700">
                                                         FREE
                                                     </span>
                                                 )}
@@ -1497,7 +1496,7 @@ export default function Orders({
                                                 className={`text-base font-semibold ${
                                                     selectedOrder.customer_country ===
                                                     'kosovo'
-                                                        ? 'text-green-600'
+                                                        ? 'text-white'
                                                         : 'text-amber-600'
                                                 }`}
                                             >
@@ -1507,11 +1506,11 @@ export default function Orders({
                                                     : '€4.00'}
                                             </span>
                                         </div>
-                                        <div className="mt-2 flex items-center justify-between border-t-2 border-emerald-200 pt-3">
+                                        <div className="mt-2 flex items-center justify-between border-t-2 border-gray-300 pt-3">
                                             <span className="text-base font-bold text-gray-900">
                                                 Total Amount:
                                             </span>
-                                            <span className="text-2xl font-bold text-emerald-600">
+                                            <span className="text-2xl font-bold text-black">
                                                 €
                                                 {formatPrice(
                                                     selectedOrder.total_amount,
@@ -1522,7 +1521,7 @@ export default function Orders({
                                 </div>
 
                                 <div className="grid gap-4 md:grid-cols-2">
-                                    <div className="rounded-xl bg-white/80 p-4 shadow-sm">
+                                    <div className="bg-white/80 p-4 shadow-sm">
                                         <p className="mb-1 text-xs font-semibold text-gray-500 uppercase">
                                             Shipping Country
                                         </p>
@@ -1532,7 +1531,7 @@ export default function Orders({
                                             )}
                                         </p>
                                     </div>
-                                    <div className="rounded-xl bg-white/80 p-4 shadow-sm">
+                                    <div className="bg-white/80 p-4 shadow-sm">
                                         <p className="mb-1 text-xs font-semibold text-gray-500 uppercase">
                                             Delivery Address
                                         </p>
@@ -1544,16 +1543,16 @@ export default function Orders({
                                         </p>
                                     </div>
                                 </div>
-                                <div className="mt-4 rounded-xl border-2 border-blue-200 bg-blue-50 p-4">
+                                <div className="mt-4 border-2 border-gray-300 bg-blue-50 p-4">
                                     <div className="flex items-start gap-3">
-                                        <div className="flex-shrink-0 rounded-lg bg-blue-100 p-2">
-                                            <Package className="h-5 w-5 text-blue-600" />
+                                        <div className="flex-shrink-0 bg-black p-2">
+                                            <Package className="h-5 w-5 text-black" />
                                         </div>
                                         <div>
-                                            <p className="font-semibold text-blue-900">
+                                            <p className="font-semibold text-black">
                                                 Shipping Instructions
                                             </p>
-                                            <p className="mt-1 text-sm text-blue-800">
+                                            <p className="mt-1 text-sm text-black">
                                                 📦 Package will be delivered to
                                                 the address provided above.
                                                 <br />
@@ -1575,13 +1574,13 @@ export default function Orders({
                         </div>
 
                         {/* Footer Actions */}
-                        <div className="border-t border-gray-200 bg-gradient-to-r from-gray-50 to-white px-8 py-6">
+                        <div className="border-t border-black bg-gray-50 px-8 py-6">
                             <button
                                 onClick={() => {
                                     setShowDetailsModal(false);
                                     setSelectedOrder(null);
                                 }}
-                                className="w-full rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 px-6 py-4 font-semibold text-white shadow-lg transition-all duration-200 hover:scale-[1.02] hover:from-emerald-700 hover:to-teal-700 hover:shadow-xl focus:ring-4 focus:ring-emerald-300 focus:outline-none"
+                                className="w-full bg-black px-6 py-4 font-semibold text-white shadow-sm transition-all duration-200 hover:scale-[1.02] hover:bg-black hover:shadow-sm focus:ring-1 focus:ring-black focus:outline-none"
                             >
                                 Close
                             </button>
@@ -1593,8 +1592,8 @@ export default function Orders({
             {/* Edit Status Modal */}
             {showEditModal && selectedOrder && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
-                    <div className="w-full max-w-md overflow-hidden rounded-3xl border border-gray-100 bg-white shadow-2xl">
-                        <div className="bg-gradient-to-r from-purple-500 to-violet-600 px-8 py-6">
+                    <div className="w-full max-w-md overflow-hidden rounded-3xl border border-gray-100 bg-white shadow-sm">
+                        <div className="bg-black px-8 py-6">
                             <h3 className="text-xl font-bold text-white">
                                 Update Order Status
                             </h3>
@@ -1609,7 +1608,7 @@ export default function Orders({
                                     onChange={(e) =>
                                         setNewStatus(e.target.value)
                                     }
-                                    className="w-full rounded-2xl border-2 border-gray-200 bg-gray-50/50 px-4 py-4 text-sm font-medium transition-all duration-300 focus:border-purple-400 focus:bg-white focus:ring-4 focus:ring-purple-100 focus:outline-none"
+                                    className="w-full border-2 border-gray-200 bg-gray-50/50 px-4 py-4 text-sm font-medium transition-all duration-300 focus:border-gray-300 focus:bg-white focus:ring-1 focus:ring-black focus:outline-none"
                                 >
                                     <option value="pending">Pending</option>
                                     <option value="confirmed">Confirmed</option>
@@ -1627,14 +1626,14 @@ export default function Orders({
                                         setShowEditModal(false);
                                         setSelectedOrder(null);
                                     }}
-                                    className="flex-1 rounded-2xl border-2 border-gray-300 bg-white px-6 py-4 text-sm font-semibold text-gray-700 transition-all duration-200 hover:border-gray-400 hover:bg-gray-50 focus:ring-4 focus:ring-gray-200 focus:outline-none"
+                                    className="flex-1 border-2 border-gray-300 bg-white px-6 py-4 text-sm font-semibold text-gray-700 transition-all duration-200 hover:border-gray-400 hover:bg-gray-50 focus:ring-4 focus:ring-gray-200 focus:outline-none"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     onClick={handleUpdateStatus}
                                     disabled={isLoading}
-                                    className="flex-1 rounded-2xl bg-gradient-to-r from-purple-500 to-violet-600 px-6 py-4 text-sm font-semibold text-white transition-all duration-200 hover:from-purple-600 hover:to-violet-700 focus:ring-4 focus:ring-purple-300 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                                    className="flex-1 bg-black px-6 py-4 text-sm font-semibold text-white transition-all duration-200 hover:bg-black focus:ring-1 focus:ring-black focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                                 >
                                     {isLoading
                                         ? 'Updating...'
@@ -1649,16 +1648,16 @@ export default function Orders({
             {/* Delete Confirmation Modal */}
             {showDeleteModal && selectedOrder && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
-                    <div className="w-full max-w-md overflow-hidden rounded-3xl border border-gray-100 bg-white shadow-2xl">
-                        <div className="bg-gradient-to-r from-red-500 to-pink-500 px-8 py-6">
+                    <div className="w-full max-w-md overflow-hidden rounded-3xl border border-gray-100 bg-white shadow-sm">
+                        <div className="bg-black px-8 py-6">
                             <h3 className="text-xl font-bold text-white">
                                 Confirm Deletion
                             </h3>
                         </div>
                         <div className="p-8">
                             <div className="mb-8 flex items-center gap-4">
-                                <div className="rounded-full bg-red-100 p-4">
-                                    <ShoppingCart className="h-8 w-8 text-red-600" />
+                                <div className="bg-red-100 p-4">
+                                    <ShoppingCart className="h-8 w-8 text-black" />
                                 </div>
                                 <div>
                                     <p className="text-lg font-semibold text-gray-900">
@@ -1677,14 +1676,14 @@ export default function Orders({
                                         setShowDeleteModal(false);
                                         setSelectedOrder(null);
                                     }}
-                                    className="flex-1 rounded-2xl border-2 border-gray-300 bg-white px-6 py-4 text-sm font-semibold text-gray-700 transition-all duration-200 hover:border-gray-400 hover:bg-gray-50 focus:ring-4 focus:ring-gray-200 focus:outline-none"
+                                    className="flex-1 border-2 border-gray-300 bg-white px-6 py-4 text-sm font-semibold text-gray-700 transition-all duration-200 hover:border-gray-400 hover:bg-gray-50 focus:ring-4 focus:ring-gray-200 focus:outline-none"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     onClick={confirmDelete}
                                     disabled={isLoading}
-                                    className="flex-1 rounded-2xl bg-gradient-to-r from-red-500 to-red-600 px-6 py-4 text-sm font-semibold text-white transition-all duration-200 hover:from-red-600 hover:to-red-700 focus:ring-4 focus:ring-red-300 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                                    className="flex-1 bg-black px-6 py-4 text-sm font-semibold text-white transition-all duration-200 hover:bg-gray-100 hover:text-black focus:ring-1 focus:ring-black focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                                 >
                                     {isLoading ? 'Deleting...' : 'Delete Order'}
                                 </button>

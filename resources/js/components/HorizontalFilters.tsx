@@ -294,7 +294,7 @@ export const HorizontalFilters = memo(
 
                 {/* Expandable Dropdown Sections */}
                 {expandedSection && (
-                    <div className="border-b border-gray-200 bg-gradient-to-b from-white to-gray-50">
+                    <div className="shadow-soft border-b border-gray-200 bg-gradient-to-b from-white to-gray-50">
                         <div className="mx-auto max-w-[1920px] px-4 sm:px-6 lg:px-16 xl:px-24">
                             <div className="py-8">
                                 {/* Sort Options */}

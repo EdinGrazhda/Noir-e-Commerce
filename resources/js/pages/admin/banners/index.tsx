@@ -169,13 +169,13 @@ export default function Banners({
             <Head title="Banners" />
 
             {/* Main Container with proper spacing */}
-            <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-gray-50">
+            <div className="min-h-screen bg-white">
                 <div className="mx-auto max-w-7xl px-6 py-8 lg:px-8">
                     {/* Header Section */}
                     <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                         <div className="space-y-1">
                             <div className="flex items-center gap-3">
-                                <div className="rounded-xl bg-gradient-to-r from-blue-500 to-indigo-600 p-2 shadow-lg">
+                                <div className="border border-gray-300 bg-white p-2 shadow-sm">
                                     <ImageIcon className="h-5 w-5 text-white" />
                                 </div>
                                 <div>
@@ -191,7 +191,7 @@ export default function Banners({
                         </div>
                         <button
                             onClick={handleCreateBanner}
-                            className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-600 px-6 py-3 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl focus:ring-4 focus:ring-blue-300 focus:ring-offset-2 focus:outline-none"
+                            className="inline-flex items-center gap-2 border-2 border-black bg-black px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-300 hover:bg-gray-100 hover:text-black focus:ring-1 focus:ring-black focus:ring-offset-2 focus:outline-none"
                         >
                             <Plus className="h-5 w-5" />
                             Create New Banner
@@ -199,21 +199,21 @@ export default function Banners({
                     </div>
 
                     {/* Smart Filters Section */}
-                    <div className="mb-6 overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-xl">
-                        <div className="border-b border-gray-100 bg-gradient-to-r from-slate-50 to-white px-6 py-4">
+                    <div className="mb-6 overflow-hidden border border-gray-100 bg-white shadow-sm">
+                        <div className="border-b border-gray-100 bg-gray-50 px-6 py-4">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-3">
                                     <Search className="h-5 w-5 text-gray-400" />
                                     <span className="text-sm font-semibold text-gray-700">
                                         Smart Filters
                                     </span>
-                                    <span className="rounded-lg bg-blue-100 px-2 py-1 text-xs font-bold text-blue-600">
+                                    <span className="bg-black px-2 py-1 text-xs font-bold text-black">
                                         {banners.length} banners
                                     </span>
                                 </div>
                                 <button
                                     onClick={clearFilters}
-                                    className="inline-flex items-center gap-2 rounded-lg bg-gray-100 px-4 py-2 text-xs font-semibold text-gray-700 transition-all duration-200 hover:scale-105 hover:bg-gray-200 hover:text-gray-900"
+                                    className="inline-flex items-center gap-2 bg-gray-100 px-4 py-2 text-xs font-semibold text-gray-700 transition-all duration-200 hover:bg-gray-200 hover:text-gray-900"
                                 >
                                     <X className="h-3 w-3" />
                                     Clear All
@@ -237,7 +237,7 @@ export default function Banners({
                                                 setSearchTerm(e.target.value)
                                             }
                                             placeholder="Search by header or description..."
-                                            className="w-full rounded-xl border-2 border-gray-300 bg-gray-50 px-12 py-3 text-sm font-medium text-gray-900 transition-all duration-200 placeholder:text-gray-500 focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-100 focus:outline-none"
+                                            className="w-full border-2 border-gray-300 bg-gray-50 px-12 py-3 text-sm font-medium text-gray-900 transition-all duration-200 placeholder:text-gray-500 focus:border-gray-300 focus:bg-white focus:ring-1 focus:ring-black focus:outline-none"
                                         />
                                     </div>
                                 </div>
@@ -246,15 +246,15 @@ export default function Banners({
                     </div>
 
                     {/* Banners Table Section */}
-                    <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-xl">
-                        <div className="border-b border-gray-100 bg-gradient-to-r from-slate-50 to-white px-6 py-4">
+                    <div className="overflow-hidden border border-gray-100 bg-white shadow-sm">
+                        <div className="border-b border-gray-100 bg-gray-50 px-6 py-4">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-3">
                                     <ImageIcon className="h-5 w-5 text-gray-600" />
                                     <span className="text-sm font-semibold text-gray-700">
                                         All Banners
                                     </span>
-                                    <span className="rounded-lg bg-blue-100 px-3 py-1 text-xs font-bold text-blue-600">
+                                    <span className="bg-black px-3 py-1 text-xs font-bold text-black">
                                         {banners.length} total
                                     </span>
                                 </div>
@@ -296,7 +296,7 @@ export default function Banners({
                                                 >
                                                     <td className="px-6 py-4">
                                                         <div className="flex items-center gap-4">
-                                                            <div className="relative h-16 w-24 overflow-hidden rounded-lg bg-gray-100">
+                                                            <div className="relative h-16 w-24 overflow-hidden bg-gray-100">
                                                                 {banner.has_image &&
                                                                 banner.image_url ? (
                                                                     <img
@@ -353,7 +353,7 @@ export default function Banners({
                                                                         banner,
                                                                     )
                                                                 }
-                                                                className="rounded-lg bg-blue-100 p-2 text-blue-600 transition-all duration-200 hover:scale-110 hover:bg-blue-200"
+                                                                className="bg-black p-2 text-black transition-all duration-200 hover:scale-110 hover:bg-blue-200"
                                                                 title="Edit banner"
                                                             >
                                                                 <Pencil className="h-4 w-4" />
@@ -364,7 +364,7 @@ export default function Banners({
                                                                         banner,
                                                                     )
                                                                 }
-                                                                className="rounded-lg bg-red-100 p-2 text-red-600 transition-all duration-200 hover:scale-110 hover:bg-red-200"
+                                                                className="bg-red-100 p-2 text-black transition-all duration-200 hover:scale-110 hover:bg-red-200"
                                                                 title="Delete banner"
                                                             >
                                                                 <Trash2 className="h-4 w-4" />
@@ -382,7 +382,7 @@ export default function Banners({
                                     {banners.map((banner) => (
                                         <div
                                             key={banner.id}
-                                            className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition-all duration-300 hover:shadow-lg"
+                                            className="overflow-hidden border border-gray-200 bg-white shadow-sm transition-all duration-300 hover:shadow-sm"
                                         >
                                             {/* Banner Image */}
                                             {banner.has_image &&
@@ -439,7 +439,7 @@ export default function Banners({
                                                                 banner,
                                                             )
                                                         }
-                                                        className="flex-1 rounded-xl bg-blue-100 px-4 py-3 text-sm font-semibold text-blue-600 transition-all duration-200 hover:bg-blue-200"
+                                                        className="flex-1 bg-black px-4 py-3 text-sm font-semibold text-black transition-all duration-200 hover:bg-blue-200"
                                                     >
                                                         <Pencil className="mx-auto h-4 w-4" />
                                                         Edit
@@ -450,7 +450,7 @@ export default function Banners({
                                                                 banner,
                                                             )
                                                         }
-                                                        className="flex-1 rounded-xl bg-red-100 px-4 py-3 text-sm font-semibold text-red-600 transition-all duration-200 hover:bg-red-200"
+                                                        className="flex-1 bg-red-100 px-4 py-3 text-sm font-semibold text-black transition-all duration-200 hover:bg-red-200"
                                                     >
                                                         <Trash2 className="mx-auto h-4 w-4" />
                                                         Delete
@@ -463,8 +463,8 @@ export default function Banners({
                             </>
                         ) : (
                             <div className="flex flex-col items-center justify-center py-16 text-center">
-                                <div className="mb-4 rounded-full bg-blue-100 p-4">
-                                    <ImageIcon className="h-10 w-10 text-blue-500" />
+                                <div className="mb-4 bg-black p-4">
+                                    <ImageIcon className="h-10 w-10 text-black" />
                                 </div>
                                 <h3 className="mb-2 text-lg font-bold text-gray-900">
                                     No banners found
@@ -476,7 +476,7 @@ export default function Banners({
                                 </p>
                                 <button
                                     onClick={handleCreateBanner}
-                                    className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-600 px-6 py-3 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl focus:ring-4 focus:ring-blue-300 focus:ring-offset-2 focus:outline-none"
+                                    className="inline-flex items-center gap-2 border-2 border-black bg-black px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-300 hover:bg-gray-100 hover:text-black focus:ring-1 focus:ring-black focus:ring-offset-2 focus:outline-none"
                                 >
                                     <Plus className="h-5 w-5" />
                                     Create First Banner
@@ -509,7 +509,7 @@ export default function Banners({
                                                         },
                                                     )
                                                 }
-                                                className={`rounded-lg px-3 py-2 text-sm font-semibold transition-all duration-200 ${
+                                                className={`px-3 py-2 text-sm font-semibold transition-all duration-200 ${
                                                     page ===
                                                     pagination.current_page
                                                         ? 'bg-blue-600 text-white'
@@ -542,16 +542,16 @@ export default function Banners({
             {/* Delete Confirmation Modal */}
             {showDeleteModal && selectedBanner && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
-                    <div className="w-full max-w-md overflow-hidden rounded-3xl border border-gray-100 bg-white shadow-2xl">
-                        <div className="bg-gradient-to-r from-red-500 to-pink-500 px-8 py-6">
+                    <div className="w-full max-w-md overflow-hidden rounded-3xl border border-gray-100 bg-white shadow-sm">
+                        <div className="bg-black px-8 py-6">
                             <h3 className="text-xl font-bold text-white">
                                 Confirm Deletion
                             </h3>
                         </div>
                         <div className="p-8">
                             <div className="mb-8 flex items-center gap-4">
-                                <div className="rounded-full bg-red-100 p-4">
-                                    <ImageIcon className="h-8 w-8 text-red-600" />
+                                <div className="bg-red-100 p-4">
+                                    <ImageIcon className="h-8 w-8 text-black" />
                                 </div>
                                 <div>
                                     <p className="text-lg font-semibold text-gray-900">
@@ -568,14 +568,14 @@ export default function Banners({
                                         setShowDeleteModal(false);
                                         setSelectedBanner(null);
                                     }}
-                                    className="flex-1 rounded-2xl border-2 border-gray-300 bg-white px-6 py-4 text-sm font-semibold text-gray-700 transition-all duration-200 hover:border-gray-400 hover:bg-gray-50 focus:ring-4 focus:ring-gray-200 focus:outline-none"
+                                    className="flex-1 border-2 border-gray-300 bg-white px-6 py-4 text-sm font-semibold text-gray-700 transition-all duration-200 hover:border-gray-400 hover:bg-gray-50 focus:ring-4 focus:ring-gray-200 focus:outline-none"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     onClick={confirmDelete}
                                     disabled={isLoading}
-                                    className="flex-1 rounded-2xl bg-gradient-to-r from-red-500 to-red-600 px-6 py-4 text-sm font-semibold text-white transition-all duration-200 hover:from-red-600 hover:to-red-700 focus:ring-4 focus:ring-red-300 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                                    className="flex-1 bg-black px-6 py-4 text-sm font-semibold text-white transition-all duration-200 hover:bg-gray-100 hover:text-black focus:ring-1 focus:ring-black focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                                 >
                                     {isLoading
                                         ? 'Deleting...'
