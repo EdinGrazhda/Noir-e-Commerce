@@ -128,13 +128,14 @@ class Product extends Model implements HasMedia
      */
     public function getAllImagesAttribute()
     {
-        return $this->getMedia('images')->map(function ($media) {
+        $baseUrl = config('app.url');
+        return $this->getMedia('images')->map(function ($media) use ($baseUrl) {
             return [
                 'id' => $media->id,
-                'url' => $media->getUrl('optimized'), // High quality for modals
-                'preview' => $media->getUrl('preview'), // Medium quality for cards
-                'thumb' => $media->getUrl('thumb'),
-                'original' => $media->getUrl(),
+                'url' => str_replace($baseUrl, '', $media->getUrl('optimized')), // High quality for modals
+                'preview' => str_replace($baseUrl, '', $media->getUrl('preview')), // Medium quality for cards
+                'thumb' => str_replace($baseUrl, '', $media->getUrl('thumb')),
+                'original' => str_replace($baseUrl, '', $media->getUrl()),
             ];
         })->toArray();
     }
@@ -146,7 +147,10 @@ class Product extends Model implements HasMedia
     {
         // If using media library, get first image - use optimized for best quality
         if ($this->hasMedia('images')) {
-            return $this->getFirstMediaUrl('images', 'optimized');
+            $url = $this->getFirstMediaUrl('images', 'optimized');
+            // Convert absolute URL to relative URL to work with any domain
+            $url = str_replace(config('app.url'), '', $url);
+            return $url;
         }
 
         // Fallback to default campaign image

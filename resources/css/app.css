@@ -7,6 +7,79 @@
 
 /* Dark variant removed to force light mode only */
 
+/* NOIR Premium Design System - Enhanced UX */
+@layer base {
+    * {
+        @apply border-border;
+    }
+    
+    html {
+        scroll-behavior: smooth;
+    }
+    
+    body {
+        @apply bg-white text-black;
+        font-feature-settings: "rlig" 1, "calt" 1;
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+}
+
+@layer utilities {
+    /* Smooth transitions for all interactive elements */
+    .transition-noir {
+        @apply transition-all duration-300 ease-out;
+    }
+    
+    /* Premium hover glow effect */
+    .hover-glow {
+        @apply transition-all duration-300;
+    }
+    .hover-glow:hover {
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.1);
+    }
+    
+    /* Subtle focus rings */
+    .focus-noir {
+        @apply focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 focus:ring-offset-white;
+    }
+    
+    /* Glass morphism effect for cards */
+    .glass-noir {
+        backdrop-filter: blur(8px);
+        background: rgba(255, 255, 255, 0.05);
+    }
+    
+    /* Animated underline */
+    .underline-animate {
+        @apply relative after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 after:bg-black after:transition-all after:duration-300;
+    }
+    .underline-animate:hover:after {
+        @apply w-full;
+    }
+    
+    /* Skeleton loading */
+    .skeleton {
+        @apply animate-pulse bg-gray-200;
+    }
+    
+    /* Custom scrollbar */
+    .scrollbar-noir::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
+    .scrollbar-noir::-webkit-scrollbar-track {
+        @apply bg-gray-100;
+    }
+    .scrollbar-noir::-webkit-scrollbar-thumb {
+        @apply bg-black rounded-full;
+    }
+    .scrollbar-noir::-webkit-scrollbar-thumb:hover {
+        @apply bg-gray-800;
+    }
+}
+
 @theme {
     --font-sans:
         'Instrument Sans', ui-sans-serif, system-ui, sans-serif,

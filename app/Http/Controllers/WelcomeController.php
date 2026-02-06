@@ -18,7 +18,8 @@ class WelcomeController extends Controller
         // Fetch initial products for SSR (40 products for better initial load)
         $products = Product::with([
                 'category:id,name,slug',
-                'sizeStocks:id,product_id,size,quantity'
+                'sizeStocks:id,product_id,size,quantity',
+                'media'
             ])
             ->select([
                 'id',

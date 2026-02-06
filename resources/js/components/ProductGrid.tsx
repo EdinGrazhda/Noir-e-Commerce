@@ -69,30 +69,60 @@ export const ProductGrid = memo(
         // No products found
         if (!isLoading && products.length === 0) {
             return (
-                <div className="px-4 py-20 sm:px-6 lg:px-8">
-                    <div className="text-center">
-                        <div className="mx-auto mb-6 flex h-32 w-32 items-center justify-center rounded-full bg-gray-100">
+                <div className="px-4 py-24 sm:px-6 lg:px-8">
+                    <div className="group mx-auto max-w-2xl text-center">
+                        {/* Animated Icon */}
+                        <div className="relative mx-auto mb-8 flex h-40 w-40 items-center justify-center">
+                            <div className="absolute inset-0 animate-pulse rounded-full border-4 border-black opacity-20" />
+                            <div className="absolute inset-4 animate-pulse rounded-full border-2 border-black opacity-40 animation-delay-150" />
+                            <div className="relative flex h-24 w-24 items-center justify-center rounded-full border-4 border-black bg-white shadow-2xl transition-transform duration-500 group-hover:scale-110 group-hover:rotate-12">
+                                <svg
+                                    className="h-12 w-12 text-black transition-transform duration-300 group-hover:scale-110"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                    aria-hidden="true"
+                                    strokeWidth={2}
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                                    />
+                                </svg>
+                            </div>
+                        </div>
+                        
+                        {/* Text Content */}
+                        <h2 className="mb-3 text-4xl font-black uppercase tracking-tight text-black">
+                            NO PRODUCTS FOUND
+                        </h2>
+                        <div className="mx-auto mb-6 h-1 w-24 bg-black" />
+                        <p className="mb-8 text-lg text-gray-700">
+                            We couldn't find any items matching your criteria.<br />
+                            Try adjusting your filters or exploring different categories.
+                        </p>
+                        
+                        {/* Action Button */}
+                        <button
+                            onClick={() => window.location.href = '/'}
+                            className="group inline-flex items-center gap-3 border-2 border-black bg-black px-8 py-4 font-bold uppercase tracking-wide text-white shadow-lg transition-all duration-300 hover:scale-105 hover:bg-white hover:text-black hover:shadow-2xl active:scale-95"
+                        >
+                            <span>Explore All Products</span>
                             <svg
-                                className="h-16 w-16 text-gray-400"
+                                className="h-5 w-5 transition-transform group-hover:translate-x-1"
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
-                                aria-hidden="true"
+                                strokeWidth={2.5}
                             >
                                 <path
                                     strokeLinecap="round"
                                     strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                                    d="M13 7l5 5m0 0l-5 5m5-5H6"
                                 />
                             </svg>
-                        </div>
-                        <h2 className="mb-2 text-2xl font-bold text-gray-900">
-                            No products found
-                        </h2>
-                        <p className="text-gray-600">
-                            Try adjusting your filters or search query
-                        </p>
+                        </button>
                     </div>
                 </div>
             );

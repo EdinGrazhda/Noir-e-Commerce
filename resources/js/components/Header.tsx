@@ -5,7 +5,6 @@ import { useCartStore } from '../store/cartStore';
 interface HeaderProps {
     searchValue: string;
     onSearchChange: (value: string) => void;
-    onToggleFilters?: () => void;
 }
 
 /**
@@ -13,25 +12,13 @@ interface HeaderProps {
  * Memoized to prevent unnecessary re-renders
  */
 export const Header = memo(
-    ({ searchValue, onSearchChange, onToggleFilters }: HeaderProps) => {
+    ({ searchValue, onSearchChange }: HeaderProps) => {
         const { totalItems, openCart } = useCartStore();
 
         return (
             <header className="sticky top-0 z-50 border-b-2 border-black bg-white">
                 <div className="mx-auto px-4 sm:px-6 lg:px-16 xl:px-24">
                     <div className="flex h-16 items-center justify-between gap-4 sm:h-20 sm:gap-8 lg:gap-16">
-                        {/* Filter Toggle (Mobile Only) */}
-                        <button
-                            onClick={onToggleFilters}
-                            className="relative flex-shrink-0 rounded-none border-2 border-black p-2 transition-all hover:bg-black hover:text-white focus:ring-2 focus:ring-black focus:outline-none sm:p-2.5 lg:hidden"
-                            aria-label="Toggle filters"
-                        >
-                            <SlidersHorizontal
-                                size={20}
-                                className="sm:h-6 sm:w-6"
-                            />
-                        </button>
-
                         {/* Logo / Brand */}
                         <div className="flex-shrink-0">
                             <h1 className="text-2xl font-black tracking-tighter text-black uppercase sm:text-3xl lg:text-4xl">

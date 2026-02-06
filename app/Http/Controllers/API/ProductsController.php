@@ -20,7 +20,7 @@ class ProductsController extends Controller
     public function index(Request $request): JsonResponse
     {
         try {
-            $query = Product::with(['category', 'sizeStocks']);
+            $query = Product::with(['category', 'sizeStocks', 'media']);
 
             // Apply filters
             if ($request->has('search') && ! empty($request->search)) {
@@ -269,7 +269,7 @@ class ProductsController extends Controller
     public function show(string $id): JsonResponse
     {
         try {
-            $product = Product::with(['category', 'sizeStocks'])->find($id);
+            $product = Product::with(['category', 'sizeStocks', 'media'])->find($id);
 
             if (! $product) {
                 return response()->json([

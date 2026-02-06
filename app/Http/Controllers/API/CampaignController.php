@@ -262,7 +262,7 @@ class CampaignController extends Controller
     {
         try {
             $campaigns = Campaign::with(['product' => function ($query) {
-                $query->with(['category', 'sizeStocks']);
+                $query->with(['category', 'sizeStocks', 'media']);
             }])
                 ->where('is_active', true)
                 ->where('start_date', '<=', now())

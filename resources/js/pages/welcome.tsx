@@ -8,7 +8,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { BannerCarousel } from '../components/BannerCarousel';
 import { CartDrawer } from '../components/CartDrawer';
 import { CheckoutModal } from '../components/CheckoutModalSimple';
-import { FilterSidebar } from '../components/FilterSidebar';
+import { HorizontalFilters } from '../components/HorizontalFilters';
 import { Footer } from '../components/Footer';
 import { Header } from '../components/Header';
 import { MultiOrderSuccessModal } from '../components/MultiOrderSuccessModal';
@@ -176,7 +176,6 @@ function StorefrontContent({
     const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(
         null,
     );
-    const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
 
     const {
         isOpen: isCheckoutOpen,
@@ -369,45 +368,27 @@ function StorefrontContent({
         setQuickViewProduct(null);
     }, []);
 
-    const handleToggleFilters = useCallback(() => {
-        setIsMobileFilterOpen((prev) => !prev);
-    }, []);
-
-    const handleCloseFilters = useCallback(() => {
-        setIsMobileFilterOpen(false);
-    }, []);
-
     return (
         <div className="min-h-screen bg-white">
             {/* Header */}
             <Header
                 searchValue={searchInput}
                 onSearchChange={handleSearchChange}
-                onToggleFilters={handleToggleFilters}
             />
 
-            {/* Banner and Filters Row - 30% Filters (Left), 70% Banner (Right) */}
-            <div className="flex flex-col gap-4 lg:flex-row">
-                {/* Filter Sidebar - 30% Width - LEFT SIDE */}
-                <div className="w-full lg:w-[30%]">
-                    <FilterSidebar
-                        filters={filters}
-                        categories={categories}
-                        onFilterChange={updateFilters}
-                        onClearFilters={clearFilters}
-                        hasActiveFilters={hasActiveFilters}
-                        isOpen={isMobileFilterOpen}
-                        onClose={handleCloseFilters}
-                    />
-                </div>
+            {/* Full Width Banner */}
+            <BannerCarousel />
 
-                {/* Banner Carousel - 70% Width - RIGHT SIDE */}
-                <div className="w-full lg:w-[70%]">
-                    <BannerCarousel />
-                </div>
-            </div>
+            {/* Sticky Horizontal Filter Bar */}
+            <HorizontalFilters
+                filters={filters}
+                categories={categories}
+                onFilterChange={updateFilters}
+                onClearFilters={clearFilters}
+                hasActiveFilters={hasActiveFilters}
+            />
 
-            {/* Product Grid - Full Width Below Banner and Filters */}
+            {/* Full Width Product Grid */}
             <main className="w-full">
                 <ProductGrid
                     products={products}
