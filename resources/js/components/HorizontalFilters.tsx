@@ -1,10 +1,11 @@
 import { ChevronDown, SlidersHorizontal, X } from 'lucide-react';
 import { memo, useMemo, useState } from 'react';
-import type { Category, Filters } from '../types/store';
+import type { Category, Filters, Product } from '../types/store';
 
 interface HorizontalFiltersProps {
     filters: Filters;
     categories: Category[];
+    products?: Product[];
     onFilterChange: (updates: Partial<Filters>) => void;
     onClearFilters: () => void;
     hasActiveFilters: boolean;
@@ -16,13 +17,6 @@ const SORT_OPTIONS = [
     { value: 'price-desc', label: 'Price: High to Low' },
     { value: 'rating', label: 'Highest Rated' },
 ] as const;
-
-const PRICE_RANGES = [
-    { label: 'Under €50', min: 0, max: 50 },
-    { label: '€50-€100', min: 50, max: 100 },
-    { label: '€100-€200', min: 100, max: 200 },
-    { label: '€200+', min: 200, max: 10000 },
-];
 
 const GENDERS = [
     { value: 'male', label: 'Male' },
@@ -38,6 +32,7 @@ export const HorizontalFilters = memo(
     ({
         filters,
         categories,
+        products = [],
         onFilterChange,
         onClearFilters,
         hasActiveFilters,
@@ -45,6 +40,52 @@ export const HorizontalFilters = memo(
         const [expandedSection, setExpandedSection] = useState<string | null>(
             null,
         );
+
+        // Calculate dynamic price ranges based on actual product prices
+        const PRICE_RANGES = useMemo(() => {
+            if (products.length === 0) {
+                return [
+                    { label: 'Under €50', min: 0, max: 50 },
+                    { label: '€50-€100', min: 50, max: 100 },
+                    { label: '€100-€200', min: 100, max: 200 },
+                    { label: '€200+', min: 200, max: 500 },
+                ];
+            }
+
+            const prices = products.map((p) => p.price || 0);
+            const minPrice = Math.min(...prices);
+            const maxPrice = Math.max(...prices);
+
+            // Round to nearest 10
+            const roundedMin = Math.floor(minPrice / 10) * 10;
+            const roundedMax = Math.ceil(maxPrice / 10) * 10;
+
+            // Calculate quartiles for better distribution
+            const quarter = (roundedMax - roundedMin) / 4;
+
+            return [
+                {
+                    label: `Under €${Math.ceil(roundedMin + quarter)}`,
+                    min: roundedMin,
+                    max: Math.ceil(roundedMin + quarter),
+                },
+                {
+                    label: `€${Math.ceil(roundedMin + quarter)}-€${Math.ceil(roundedMin + quarter * 2)}`,
+                    min: Math.ceil(roundedMin + quarter),
+                    max: Math.ceil(roundedMin + quarter * 2),
+                },
+                {
+                    label: `€${Math.ceil(roundedMin + quarter * 2)}-€${Math.ceil(roundedMin + quarter * 3)}`,
+                    min: Math.ceil(roundedMin + quarter * 2),
+                    max: Math.ceil(roundedMin + quarter * 3),
+                },
+                {
+                    label: `€${Math.ceil(roundedMin + quarter * 3)}+`,
+                    min: Math.ceil(roundedMin + quarter * 3),
+                    max: roundedMax + 50,
+                },
+            ];
+        }, [products]);
 
         const toggleSection = (section: string) => {
             setExpandedSection(expandedSection === section ? null : section);
@@ -96,7 +137,7 @@ export const HorizontalFilters = memo(
                                 <div className="relative">
                                     <button
                                         onClick={() => toggleSection('sort')}
-                                        className={`hover:shadow-soft group flex items-center gap-1.5 border px-3 py-2 text-xs font-bold uppercase tracking-wide transition-all duration-300 sm:gap-2 sm:px-5 sm:py-2.5 sm:text-sm ${
+                                        className={`hover:shadow-soft group flex items-center gap-1.5 border px-3 py-2 text-xs font-bold tracking-wide uppercase transition-all duration-300 sm:gap-2 sm:px-5 sm:py-2.5 sm:text-sm ${
                                             expandedSection === 'sort'
                                                 ? 'shadow-elevated border-black bg-black text-white'
                                                 : 'border-gray-300 bg-white text-black hover:border-black'
@@ -119,7 +160,7 @@ export const HorizontalFilters = memo(
                                 <div className="relative">
                                     <button
                                         onClick={() => toggleSection('price')}
-                                        className={`hover:shadow-soft group flex items-center gap-1.5 border px-3 py-2 text-xs font-bold uppercase tracking-wide transition-all duration-300 sm:gap-2 sm:px-5 sm:py-2.5 sm:text-sm ${
+                                        className={`hover:shadow-soft group flex items-center gap-1.5 border px-3 py-2 text-xs font-bold tracking-wide uppercase transition-all duration-300 sm:gap-2 sm:px-5 sm:py-2.5 sm:text-sm ${
                                             expandedSection === 'price'
                                                 ? 'shadow-elevated border-black bg-black text-white'
                                                 : 'border-gray-300 bg-white text-black hover:border-black'
@@ -143,7 +184,7 @@ export const HorizontalFilters = memo(
                                 <div className="relative">
                                     <button
                                         onClick={() => toggleSection('gender')}
-                                        className={`hover:shadow-soft group flex items-center gap-1.5 border px-3 py-2 text-xs font-bold uppercase tracking-wide transition-all duration-300 sm:gap-2 sm:px-5 sm:py-2.5 sm:text-sm ${
+                                        className={`hover:shadow-soft group flex items-center gap-1.5 border px-3 py-2 text-xs font-bold tracking-wide uppercase transition-all duration-300 sm:gap-2 sm:px-5 sm:py-2.5 sm:text-sm ${
                                             expandedSection === 'gender'
                                                 ? 'shadow-elevated border-black bg-black text-white'
                                                 : 'border-gray-300 bg-white text-black hover:border-black'
@@ -169,7 +210,7 @@ export const HorizontalFilters = memo(
                                         onClick={() =>
                                             toggleSection('categories')
                                         }
-                                        className={`hover:shadow-soft group flex items-center gap-1.5 border px-3 py-2 text-xs font-bold uppercase tracking-wide transition-all duration-300 sm:gap-2 sm:px-5 sm:py-2.5 sm:text-sm ${
+                                        className={`hover:shadow-soft group flex items-center gap-1.5 border px-3 py-2 text-xs font-bold tracking-wide uppercase transition-all duration-300 sm:gap-2 sm:px-5 sm:py-2.5 sm:text-sm ${
                                             expandedSection === 'categories'
                                                 ? 'shadow-elevated border-black bg-black text-white'
                                                 : 'border-gray-300 bg-white text-black hover:border-black'
@@ -209,7 +250,7 @@ export const HorizontalFilters = memo(
                                         </div>
                                         <button
                                             onClick={onClearFilters}
-                                            className="shadow-soft hover:shadow-elevated group flex items-center gap-1.5 border border-red-600 bg-red-600 px-3 py-2 text-xs font-bold uppercase tracking-wide text-white transition-all duration-300 hover:bg-red-700 sm:gap-2 sm:px-5 sm:py-2.5 sm:text-sm"
+                                            className="shadow-soft hover:shadow-elevated group flex items-center gap-1.5 border border-red-600 bg-red-600 px-3 py-2 text-xs font-bold tracking-wide text-white uppercase transition-all duration-300 hover:bg-red-700 sm:gap-2 sm:px-5 sm:py-2.5 sm:text-sm"
                                         >
                                             <X
                                                 size={14}
@@ -231,7 +272,7 @@ export const HorizontalFilters = memo(
                         {/* Active Filter Tags */}
                         {selectedCategories.length > 0 && (
                             <div className="flex flex-wrap items-center gap-2 pb-4">
-                                <span className="text-xs font-semibold uppercase tracking-wide text-gray-600">
+                                <span className="text-xs font-semibold tracking-wide text-gray-600 uppercase">
                                     Active:
                                 </span>
                                 {selectedCategories.map((category) => (
@@ -240,7 +281,7 @@ export const HorizontalFilters = memo(
                                         onClick={() =>
                                             handleCategoryToggle(category.id)
                                         }
-                                        className="group inline-flex items-center gap-1.5 border border-black bg-black px-3 py-1 text-xs font-semibold uppercase text-white transition-all duration-200 hover:scale-105 hover:bg-white hover:text-black active:scale-95"
+                                        className="group inline-flex items-center gap-1.5 border border-black bg-black px-3 py-1 text-xs font-semibold text-white uppercase transition-all duration-200 hover:scale-105 hover:bg-white hover:text-black active:scale-95"
                                     >
                                         <span>{category.name}</span>
                                         <X size={12} strokeWidth={2.5} />

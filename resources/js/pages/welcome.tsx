@@ -383,6 +383,7 @@ function StorefrontContent({
             <HorizontalFilters
                 filters={filters}
                 categories={categories}
+                products={products}
                 onFilterChange={updateFilters}
                 onClearFilters={clearFilters}
                 hasActiveFilters={hasActiveFilters}
