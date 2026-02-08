@@ -113,6 +113,9 @@ class ProductsController extends Controller
                 // Add media library image URL and all images
                 $product->image_url = $product->image_url; // Uses accessor from model
                 $product->all_images = $product->all_images; // Get all images array
+                
+                // Ensure allows_custom_logo is included in response
+                $product->allows_custom_logo = (bool) $product->allows_custom_logo;
 
                 // Format sizeStocks as key-value object for frontend
                 if ($product->relationLoaded('sizeStocks') && $product->sizeStocks->count() > 0) {
@@ -167,6 +170,7 @@ class ProductsController extends Controller
                 'category_id' => 'required|exists:categories,id',
                 'gender' => 'required|string|in:male,female,unisex',
                 'product_id' => 'nullable|string|max:255|unique:products',
+                'allows_custom_logo' => 'nullable|boolean',
             ]);
 
             if ($validator->fails()) {
@@ -190,6 +194,7 @@ class ProductsController extends Controller
                 'category_id' => $request->category_id,
                 'gender' => $request->gender,
                 'product_id' => $request->product_id ?? null,
+                'allows_custom_logo' => $request->has('allows_custom_logo') ? (bool) $request->allows_custom_logo : false,
             ]);
 
             // NOTE: media files will be handled AFTER commit below to ensure
@@ -348,6 +353,7 @@ class ProductsController extends Controller
                 'color' => 'sometimes|nullable|string|max:255',
                 'category_id' => 'sometimes|required|exists:categories,id',
                 'gender' => 'sometimes|required|string|in:male,female,unisex',
+                'allows_custom_logo' => 'sometimes|nullable|boolean',
                 'product_id' => 'sometimes|nullable|string|max:255|unique:products,product_id,'.$id,
             ]);
 
@@ -365,6 +371,9 @@ class ProductsController extends Controller
             $updateData = $request->only(['name', 'description', 'price', 'foot_numbers', 'color', 'category_id', 'gender', 'product_id']);
             if ($request->has('stock')) {
                 $updateData['stock_quantity'] = $request->stock;
+            }
+            if ($request->has('allows_custom_logo')) {
+                $updateData['allows_custom_logo'] = (bool) $request->allows_custom_logo;
             }
             $product->update($updateData);
 

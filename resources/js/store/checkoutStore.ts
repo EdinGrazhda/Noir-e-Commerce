@@ -26,6 +26,7 @@ export interface CheckoutItem {
     product: Product;
     selectedSize: string | null;
     quantity: number;
+    customLogoDataUrl?: string; // Base64 data URL of uploaded logo
 }
 
 interface CheckoutState {

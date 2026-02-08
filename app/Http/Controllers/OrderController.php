@@ -117,6 +117,7 @@ class OrderController extends Controller
                     'product_image' => $order->product_image,
                     'product_size' => $order->product_size,
                     'product_color' => $order->product_color,
+                    'custom_logo' => $order->custom_logo,
                     'quantity' => $order->quantity,
                     'total_amount' => $order->total_amount,
                     'status' => $order->status,
@@ -167,6 +168,7 @@ class OrderController extends Controller
             'total_amount' => 'required|numeric|min:0',
             'shipping_fee' => 'required|numeric|min:0',
             'notes' => 'nullable|string|max:1000',
+            'custom_logo' => 'nullable|file|mimes:png|max:5120', // 5MB max
         ]);
 
         if ($validator->fails()) {
@@ -249,6 +251,14 @@ class OrderController extends Controller
             // Resolve and normalize product image (prefer medialibrary URL, then product.image)
             $productImage = ImageUrlNormalizer::fromProduct($product);
 
+            // Handle custom logo upload
+            $customLogoPath = null;
+            if ($request->hasFile('custom_logo')) {
+                $logoFile = $request->file('custom_logo');
+                $logoFileName = time() . '_' . uniqid() . '_' . $logoFile->getClientOriginalName();
+                $customLogoPath = $logoFile->storeAs('custom_logos', $logoFileName, 'public');
+            }
+
             // Generate or reuse batch_id for multi-orders
             $batchId = $request->batch_id ?? null;
             
@@ -266,6 +276,7 @@ class OrderController extends Controller
                 'product_image' => $productImage,
                 'product_size' => $request->product_size,
                 'product_color' => $request->product_color,
+                'custom_logo' => $customLogoPath,
                 'quantity' => $request->quantity,
                 'total_amount' => $totalAmount,
                 'payment_method' => 'cash',

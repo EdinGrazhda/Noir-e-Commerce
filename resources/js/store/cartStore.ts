@@ -5,7 +5,7 @@ import type { CartItem, Product } from '../types/store';
 interface CartStore {
     items: CartItem[];
     isOpen: boolean;
-    addItem: (product: Product, quantity?: number) => void;
+    addItem: (product: Product, quantity?: number, customLogoDataUrl?: string) => void;
     removeItem: (productId: number) => void;
     updateQuantity: (productId: number, quantity: number) => void;
     clearCart: () => void;
@@ -26,7 +26,7 @@ export const useCartStore = create<CartStore>()(
             items: [],
             isOpen: false,
 
-            addItem: (product, quantity = 1) => {
+            addItem: (product, quantity = 1, customLogoDataUrl) => {
                 set((state) => {
                     const existingItem = state.items.find(
                         (item) => item.product.id === product.id,
@@ -39,6 +39,7 @@ export const useCartStore = create<CartStore>()(
                                     ? {
                                           ...item,
                                           quantity: item.quantity + quantity,
+                                          customLogoDataUrl: customLogoDataUrl || item.customLogoDataUrl,
                                       }
                                     : item,
                             ),
@@ -52,6 +53,7 @@ export const useCartStore = create<CartStore>()(
                             {
                                 product,
                                 quantity: quantity,
+                                customLogoDataUrl,
                             },
                         ],
                         isOpen: true,

@@ -18,6 +18,7 @@ export interface Product {
     campaign_id?: number; // Campaign ID if product is on campaign
     campaign_name?: string; // Campaign name if product is on campaign
     campaign_end_date?: string; // Campaign end date for countdown timer
+    allows_custom_logo?: boolean; // Allow customers to upload custom logos
 }
 
 export interface Category {
@@ -29,6 +30,7 @@ export interface Category {
 export interface CartItem {
     product: Product;
     quantity: number;
+    customLogoDataUrl?: string; // Base64 data URL of uploaded logo
 }
 
 export interface Filters {

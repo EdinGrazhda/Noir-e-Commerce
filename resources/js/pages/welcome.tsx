@@ -115,6 +115,7 @@ const fetchProducts = async (
                 categories: product.category ? [product.category] : [],
                 created_at: product.created_at,
                 hasActiveCampaign: !!product.campaign_price, // Flag to show campaign badge
+                allows_custom_logo: !!product.allows_custom_logo,
             })),
             current_page: data.current_page,
             last_page: data.last_page,
@@ -270,6 +271,7 @@ function StorefrontContent({
                                           created_at: product.created_at,
                                           hasActiveCampaign:
                                               !!product.campaign_price,
+                                          allows_custom_logo: !!product.allows_custom_logo,
                                       }),
                                   ),
                                   current_page: initialProducts.current_page,

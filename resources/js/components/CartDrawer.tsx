@@ -32,6 +32,7 @@ export const CartDrawer = memo(() => {
             product: item.product,
             selectedSize: item.product.selectedSize || null,
             quantity: item.quantity,
+            customLogoDataUrl: item.customLogoDataUrl,
         }));
 
         // Close the cart drawer
@@ -126,6 +127,22 @@ export const CartDrawer = memo(() => {
                                                 2,
                                             )}
                                         </p>
+
+                                        {/* Custom Logo Indicator */}
+                                        {item.customLogoDataUrl && (
+                                            <div className="mt-1 flex items-center gap-2">
+                                                <div className="h-6 w-6 flex-shrink-0 border border-gray-200 bg-gray-50 p-0.5">
+                                                    <img
+                                                        src={item.customLogoDataUrl}
+                                                        alt="Logo"
+                                                        className="h-full w-full object-contain"
+                                                    />
+                                                </div>
+                                                <span className="font-sans text-[10px] font-semibold text-green-700">
+                                                    ✓ Logo
+                                                </span>
+                                            </div>
+                                        )}
 
                                         {/* Quantity Controls */}
                                         <div className="mt-3 flex items-center gap-2">

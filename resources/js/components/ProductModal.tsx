@@ -23,6 +23,7 @@ interface Product {
     gender?: 'male' | 'female' | 'unisex';
     category?: Category;
     category_id?: number;
+    allows_custom_logo?: boolean;
 }
 
 interface ProductModalProps {
@@ -49,6 +50,7 @@ interface FormData {
     gender: 'male' | 'female' | 'unisex';
     sizeStocks: Record<string, number>; // New field for size-specific stock
     product_id: string; // Custom product ID
+    allows_custom_logo: boolean; // Allow customers to upload custom logos
 }
 
 export default function ProductModal({
@@ -74,6 +76,7 @@ export default function ProductModal({
         gender: product?.gender || 'unisex',
         sizeStocks: {},
         product_id: product?.product_id || '',
+        allows_custom_logo: product?.allows_custom_logo || false,
     });
 
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -136,6 +139,7 @@ export default function ProductModal({
                 gender: product?.gender || 'unisex',
                 sizeStocks: initialSizeStocks,
                 product_id: product?.product_id || '',
+                allows_custom_logo: product?.allows_custom_logo || false,
             });
             setErrors({});
         }
@@ -179,6 +183,7 @@ export default function ProductModal({
             payload.append('color', formData.color);
             payload.append('category_id', formData.category_id.toString());
             payload.append('gender', formData.gender);
+            payload.append('allows_custom_logo', formData.allows_custom_logo ? '1' : '0');
 
             // Add product_id if provided
             if (formData.product_id) {
@@ -593,6 +598,29 @@ export default function ProductModal({
                                         {errors.color[0]}
                                     </p>
                                 )}
+                            </div>
+
+                            {/* Allow Custom Logo Upload */}
+                            <div className="sm:col-span-2">
+                                <label className="flex cursor-pointer items-center gap-2">
+                                    <input
+                                        type="checkbox"
+                                        checked={formData.allows_custom_logo}
+                                        onChange={(e) =>
+                                            handleInputChange(
+                                                'allows_custom_logo',
+                                                e.target.checked,
+                                            )
+                                        }
+                                        className="h-4 w-4 rounded border-gray-300 text-rose-600 transition-colors focus:ring-2 focus:ring-rose-200 focus:ring-offset-0 focus:outline-none"
+                                    />
+                                    <span className="text-xs font-semibold text-gray-700">
+                                        Allow customers to upload custom logo (PNG only)
+                                    </span>
+                                </label>
+                                <p className="mt-1 text-[11px] text-gray-500">
+                                    Enable this for products like solid t-shirts where customers can add their own logo
+                                </p>
                             </div>
 
                             {/* Foot Numbers */}

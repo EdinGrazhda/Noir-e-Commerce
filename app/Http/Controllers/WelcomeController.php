@@ -33,7 +33,8 @@ class WelcomeController extends Controller
                 'gender',
                 'category_id',
                 'created_at',
-                'product_id'
+                'product_id',
+                'allows_custom_logo'
             ])
             ->orderBy('created_at', 'desc')
             ->paginate(40);
@@ -60,6 +61,9 @@ class WelcomeController extends Controller
 
             // Add media library image URL (uses accessor from Product model)
             $product->image_url = $product->image_url;
+            
+            // Ensure allows_custom_logo is included
+            $product->allows_custom_logo = (bool) $product->allows_custom_logo;
 
             // Format sizeStocks as key-value object for frontend
             // Only include sizes with stock > 0
@@ -103,7 +107,8 @@ class WelcomeController extends Controller
                             'gender',
                             'category_id',
                             'created_at',
-                            'product_id'
+                            'product_id',
+                            'allows_custom_logo'
                         ]);
                 }
             ])

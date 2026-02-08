@@ -23,6 +23,7 @@ class Order extends Model
         'product_image',
         'product_size',
         'product_color',
+        'custom_logo',
         'quantity',
         'total_amount',
         'payment_method',

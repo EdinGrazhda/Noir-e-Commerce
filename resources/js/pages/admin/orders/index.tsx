@@ -49,6 +49,7 @@ interface SingleOrder {
     product_image?: string;
     product_size?: string;
     product_color?: string;
+    custom_logo?: string;
     quantity: number;
     total_amount: number;
     payment_method: 'cash';
@@ -85,6 +86,7 @@ interface Order {
     product_image?: string;
     product_size?: string;
     product_color?: string;
+    custom_logo?: string;
     quantity?: number;
     total_amount: number;
     payment_method: 'cash';
@@ -1571,6 +1573,57 @@ export default function Orders({
                                     </div>
                                 </div>
                             </div>
+
+                            {/* Custom Logo Section */}
+                            {selectedOrder.custom_logo && (
+                                <div className="mt-6 border-2 border-blue-300 bg-blue-50 p-6 shadow-sm">
+                                    <h4 className="mb-4 flex items-center gap-2 text-lg font-bold text-blue-900">
+                                        <div className="bg-blue-600 p-2">
+                                            <Package className="h-5 w-5 text-white" />
+                                        </div>
+                                        Custom Logo Uploaded
+                                    </h4>
+                                    <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                                        <div className="flex items-center gap-4">
+                                            <div className="h-32 w-32 flex-shrink-0 overflow-hidden rounded-lg border-2 border-blue-200 bg-white p-2">
+                                                <img
+                                                    src={`/storage/${selectedOrder.custom_logo}`}
+                                                    alt="Custom logo"
+                                                    className="h-full w-full object-contain"
+                                                />
+                                            </div>
+                                            <div>
+                                                <p className="font-semibold text-blue-900">
+                                                    Customer uploaded a custom logo
+                                                </p>
+                                                <p className="mt-1 text-sm text-blue-700">
+                                                    This logo should be printed on the product
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <a
+                                            href={`/storage/${selectedOrder.custom_logo}`}
+                                            download
+                                            className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-3 font-semibold text-white shadow-md transition-all hover:bg-blue-700 hover:shadow-lg"
+                                        >
+                                            <svg
+                                                className="h-5 w-5"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth={2}
+                                                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                                                />
+                                            </svg>
+                                            Download Logo
+                                        </a>
+                                    </div>
+                                </div>
+                            )}
                         </div>
 
                         {/* Footer Actions */}

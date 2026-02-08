@@ -1,4 +1,4 @@
-import { Minus, Plus, ShoppingCart, Star, X } from 'lucide-react';
+import { Minus, Plus, ShoppingCart, Star, Upload, X } from 'lucide-react';
 import { memo, useCallback, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useCartStore } from '../store/cartStore';
@@ -17,6 +17,8 @@ export const QuickView = memo(({ product, onClose }: QuickViewProps) => {
     const [quantity, setQuantity] = useState(1);
     const [selectedSize, setSelectedSize] = useState<string | null>(null);
     const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+    const [customLogoFile, setCustomLogoFile] = useState<File | null>(null);
+    const [customLogoPreview, setCustomLogoPreview] = useState<string | null>(null);
     const addItem = useCartStore((state) => state.addItem);
 
     // Reset state when product changes or modal opens
@@ -25,6 +27,8 @@ export const QuickView = memo(({ product, onClose }: QuickViewProps) => {
             setQuantity(1);
             setSelectedSize(null);
             setSelectedImageIndex(0);
+            setCustomLogoFile(null);
+            setCustomLogoPreview(null);
         }
     }, [product?.id]);
 
@@ -36,6 +40,33 @@ export const QuickView = memo(({ product, onClose }: QuickViewProps) => {
         },
         [onClose],
     );
+
+    // Handle logo file upload
+    const handleLogoFileChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        if (!file.type.startsWith('image/png')) {
+            toast.error('Please upload a PNG file only');
+            return;
+        }
+
+        if (file.size > 5 * 1024 * 1024) {
+            toast.error('File size must be less than 5MB');
+            return;
+        }
+
+        setCustomLogoFile(file);
+        const reader = new FileReader();
+        reader.onloadend = () => setCustomLogoPreview(reader.result as string);
+        reader.readAsDataURL(file);
+        toast.success('Logo uploaded!');
+    }, []);
+
+    const handleRemoveLogo = useCallback(() => {
+        setCustomLogoFile(null);
+        setCustomLogoPreview(null);
+    }, []);
 
     const handleAddToCart = useCallback(() => {
         if (!product) return;
@@ -68,14 +99,15 @@ export const QuickView = memo(({ product, onClose }: QuickViewProps) => {
             }
         }
 
-        // Add to cart with selected size
+        // Add to cart with selected size and logo
         addItem(
             { ...product, selectedSize: selectedSize || undefined },
             quantity,
+            customLogoPreview || undefined,
         );
         toast.success('Added to cart successfully!');
         onClose();
-    }, [product, quantity, selectedSize, addItem, onClose]);
+    }, [product, quantity, selectedSize, customLogoPreview, addItem, onClose]);
 
     // Parse available sizes and check stock - MOVED BEFORE early return
     const getAvailableSizes = useCallback(() => {
@@ -320,6 +352,55 @@ export const QuickView = memo(({ product, onClose }: QuickViewProps) => {
                             </div>
                         )}
 
+                        {/* Custom Logo Upload - Show after size selection */}
+                        {product.allows_custom_logo && selectedSize && (
+                            <div className="mb-6">
+                                <h4 className="mb-3 font-sans text-xs font-bold tracking-wider text-gray-600 uppercase">
+                                    Upload Your Logo (PNG only):
+                                </h4>
+
+                                {!customLogoPreview ? (
+                                    <label className="shadow-soft transition-noir flex cursor-pointer flex-col items-center justify-center border-2 border-dashed border-gray-300 bg-gray-50 p-6 hover:border-black hover:bg-gray-100">
+                                        <Upload size={32} className="mb-2 text-gray-400" strokeWidth={1.5} />
+                                        <span className="mb-1 font-sans text-sm font-semibold text-gray-700">
+                                            Click to upload logo
+                                        </span>
+                                        <span className="font-sans text-xs text-gray-500">
+                                            PNG only, max 5MB
+                                        </span>
+                                        <input
+                                            type="file"
+                                            accept="image/png"
+                                            onChange={handleLogoFileChange}
+                                            className="hidden"
+                                        />
+                                    </label>
+                                ) : (
+                                    <div className="shadow-soft relative border-2 border-gray-300 bg-white p-4">
+                                        <button
+                                            onClick={handleRemoveLogo}
+                                            className="absolute top-2 right-2 flex h-8 w-8 items-center justify-center border border-red-300 bg-red-50 text-red-600 hover:bg-red-600 hover:text-white"
+                                            aria-label="Remove logo"
+                                        >
+                                            <X size={16} strokeWidth={2.5} />
+                                        </button>
+                                        <div className="flex items-center gap-4">
+                                            <div className="h-20 w-20 flex-shrink-0 overflow-hidden border border-gray-200 bg-gray-50 p-2">
+                                                <img
+                                                    src={customLogoPreview}
+                                                    alt="Logo preview"
+                                                    className="h-full w-full object-contain"
+                                                />
+                                            </div>
+                                            <p className="font-sans text-sm font-semibold text-green-700">
+                                                ✓ Logo uploaded
+                                            </p>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
                         {/* Quantity Selector */}
                         {!isOutOfStock && (
                             <div className="mb-6">
@@ -383,24 +464,20 @@ export const QuickView = memo(({ product, onClose }: QuickViewProps) => {
                             disabled={
                                 isOutOfStock ||
                                 (!!product.sizeStocks &&
-                                    Object.keys(product.sizeStocks).length >
-                                        0 &&
+                                    Object.keys(product.sizeStocks).length > 0 &&
                                     !selectedSize) ||
                                 (!!selectedSize &&
                                     !!product.sizeStocks?.[selectedSize] &&
-                                    product.sizeStocks[selectedSize]
-                                        .quantity === 0)
+                                    product.sizeStocks[selectedSize].quantity === 0)
                             }
                             className={`shadow-soft transition-noir flex w-full items-center justify-center gap-3 py-5 font-sans text-sm font-bold tracking-widest uppercase focus:ring-2 focus:ring-black focus:ring-offset-2 focus:outline-none ${
                                 isOutOfStock ||
                                 (!!product.sizeStocks &&
-                                    Object.keys(product.sizeStocks).length >
-                                        0 &&
+                                    Object.keys(product.sizeStocks).length > 0 &&
                                     !selectedSize) ||
                                 (!!selectedSize &&
                                     !!product.sizeStocks?.[selectedSize] &&
-                                    product.sizeStocks[selectedSize]
-                                        .quantity === 0)
+                                    product.sizeStocks[selectedSize].quantity === 0)
                                     ? 'cursor-not-allowed border border-gray-300 bg-gray-100 text-gray-400'
                                     : 'hover:shadow-elevated bg-black text-white hover:-translate-y-0.5 active:translate-y-0'
                             }`}
@@ -409,12 +486,10 @@ export const QuickView = memo(({ product, onClose }: QuickViewProps) => {
                             <ShoppingCart size={20} strokeWidth={2.5} />
                             {isOutOfStock ||
                             (selectedSize &&
-                                product.sizeStocks?.[selectedSize]?.quantity ===
-                                    0)
+                                product.sizeStocks?.[selectedSize]?.quantity === 0)
                                 ? 'Out of Stock'
                                 : product.sizeStocks &&
-                                    Object.keys(product.sizeStocks).length >
-                                        0 &&
+                                    Object.keys(product.sizeStocks).length > 0 &&
                                     !selectedSize
                                   ? 'Select Size First'
                                   : 'Add to Cart'}

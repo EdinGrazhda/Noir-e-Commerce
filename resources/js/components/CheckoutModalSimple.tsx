@@ -1,4 +1,4 @@
-import { Check, Package, X } from 'lucide-react';
+import { Check, Package, Upload, X } from 'lucide-react';
 import { memo, useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useCartStore } from '../store/cartStore';
@@ -126,6 +126,62 @@ export const CheckoutModal = memo(({ isOpen, onClose }: CheckoutModalProps) => {
                     shippingFee * (itemSubtotal / subtotal);
                 const itemTotal = itemSubtotal + itemShippingProportion;
 
+                const csrfToken = document
+                    .querySelector('meta[name="csrf-token"]')
+                    ?.getAttribute('content') || '';
+
+                // Use FormData if item has a custom logo
+                if (item.customLogoDataUrl) {
+                    const formData = new FormData();
+                    formData.append('batch_id', batchId || '');
+                    formData.append('customer_full_name', customerInfo.full_name);
+                    formData.append('customer_email', customerInfo.email);
+                    formData.append('customer_phone', customerInfo.phone);
+                    formData.append('customer_address', customerInfo.address);
+                    formData.append('customer_city', customerInfo.city);
+                    formData.append('customer_country', customerInfo.country);
+                    formData.append('product_id', item.product.id.toString());
+                    formData.append('product_price', Number(item.product.price).toString());
+                    formData.append('product_size', productSize);
+                    formData.append('product_color', item.product.color || 'As Shown');
+                    formData.append('quantity', Number(item.quantity).toString());
+                    formData.append('total_amount', Number(itemTotal.toFixed(2)).toString());
+                    formData.append('shipping_fee', Number(itemShippingProportion.toFixed(2)).toString());
+                    formData.append('notes', batchId ? `Part of ${items.length} item order` : '');
+
+                    // Convert base64 data URL to File
+                    const res = await fetch(item.customLogoDataUrl);
+                    const blob = await res.blob();
+                    const logoFile = new File([blob], 'custom-logo.png', { type: 'image/png' });
+                    formData.append('custom_logo', logoFile);
+
+                    const response = await fetch('/api/orders', {
+                        method: 'POST',
+                        headers: {
+                            Accept: 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRF-TOKEN': csrfToken,
+                        },
+                        body: formData,
+                    });
+
+                    const data = await response.json();
+
+                    if (!response.ok) {
+                        if (data.errors) {
+                            const errorMessages = Object.entries(data.errors)
+                                .map(([field, messages]: [string, any]) =>
+                                    `${field}: ${Array.isArray(messages) ? messages.join(', ') : messages}`)
+                                .join('\n');
+                            throw new Error(`Validation errors for ${item.product.name}:\n${errorMessages}`);
+                        }
+                        throw new Error(`Error for ${item.product.name}: ${data.message || 'Failed to place order'}`);
+                    }
+
+                    return { item, order: data.order };
+                }
+
+                // Use JSON when no file upload
                 const orderData = {
                     batch_id: batchId,
                     customer_full_name: customerInfo.full_name,
@@ -146,37 +202,20 @@ export const CheckoutModal = memo(({ isOpen, onClose }: CheckoutModalProps) => {
                         : null,
                 };
 
-                console.log(
-                    `Order Data for item ${item.product.id}:`,
-                    orderData,
-                );
-
                 const response = await fetch('/api/orders', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         Accept: 'application/json',
                         'X-Requested-With': 'XMLHttpRequest',
-                        'X-CSRF-TOKEN':
-                            document
-                                .querySelector('meta[name="csrf-token"]')
-                                ?.getAttribute('content') || '',
+                        'X-CSRF-TOKEN': csrfToken,
                     },
                     body: JSON.stringify(orderData),
                 });
 
                 const data = await response.json();
-                console.log(
-                    `Response Status for item ${item.product.id}:`,
-                    response.status,
-                );
-                console.log(`Response Data for item ${item.product.id}:`, data);
 
                 if (!response.ok) {
-                    console.log('=== ORDER ERROR ===');
-                    console.error('Status:', response.status);
-                    console.error('Response Data:', data);
-
                     if (data.errors) {
                         const errorMessages = Object.entries(data.errors)
                             .map(
@@ -519,6 +558,21 @@ export const CheckoutModal = memo(({ isOpen, onClose }: CheckoutModalProps) => {
                                                             )}
                                                         </span>
                                                     </div>
+                                                    {/* Custom Logo Preview */}
+                                                    {item.customLogoDataUrl && (
+                                                        <div className="mt-3 flex items-center gap-3 border-t border-gray-200 pt-3">
+                                                            <div className="h-12 w-12 flex-shrink-0 border border-gray-200 bg-gray-50 p-1">
+                                                                <img
+                                                                    src={item.customLogoDataUrl}
+                                                                    alt="Custom logo"
+                                                                    className="h-full w-full object-contain"
+                                                                />
+                                                            </div>
+                                                            <span className="font-sans text-xs font-semibold text-green-700">
+                                                                ✓ Custom logo attached
+                                                            </span>
+                                                        </div>
+                                                    )}
                                                 </div>
                                             </div>
                                         </div>

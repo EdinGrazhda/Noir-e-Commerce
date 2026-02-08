@@ -23,11 +23,13 @@ class Product extends Model implements HasMedia
         'category_id',
         'gender',
         'product_id',
+        'allows_custom_logo',
     ];
 
     protected $casts = [
         'price' => 'decimal:2',
         'stock_quantity' => 'integer',
+        'allows_custom_logo' => 'boolean',
     ];
 
     protected $appends = ['image_url', 'stock_status', 'total_stock', 'all_images'];

@@ -10,6 +10,7 @@ import {
     Phone,
     ShoppingBag,
     Truck,
+    Upload,
     User,
     X,
 } from 'lucide-react';
@@ -36,6 +37,7 @@ interface Product {
     category_id?: number;
     created_at?: string;
     updated_at?: string;
+    allows_custom_logo?: boolean;
     sizeStocks?: {
         [size: string]: {
             quantity: number;
@@ -67,6 +69,8 @@ export default function Checkout({ product }: CheckoutPageProps) {
     const [currentStep, setCurrentStep] = useState(1);
     const [isLoading, setIsLoading] = useState(false);
     const [selectedSize, setSelectedSize] = useState<string>('');
+    const [customLogoFile, setCustomLogoFile] = useState<File | null>(null);
+    const [customLogoPreview, setCustomLogoPreview] = useState<string | null>(null);
 
     const [customerInfo, setCustomerInfo] = useState<CustomerInfo>({
         full_name: '',
@@ -82,6 +86,8 @@ export default function Checkout({ product }: CheckoutPageProps) {
         if (showModal) {
             setCurrentStep(1);
             setSelectedSize('');
+            setCustomLogoFile(null);
+            setCustomLogoPreview(null);
             setCustomerInfo({
                 full_name: '',
                 email: '',
@@ -102,6 +108,39 @@ export default function Checkout({ product }: CheckoutPageProps) {
           ? product.foot_numbers.split(',').map((size) => size.trim())
           : ['38', '39', '40', '41', '42', '43', '44', '45'];
 
+    // Determine total steps dynamically based on product features
+    const totalSteps = 2 + (product.allows_custom_logo ? 1 : 0) + 1; // Customer Info + Logo (if enabled) + Product Info + Confirmation
+    const logoStepNumber = product.allows_custom_logo ? 2 : 0;
+    const productStepNumber = product.allows_custom_logo ? 3 : 2;
+    const confirmationStepNumber = totalSteps;
+
+    // Handle logo file selection
+    const handleLogoFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        // Validate file type
+        if (!file.type.startsWith('image/png')) {
+            toast.error('Please upload a PNG file only');
+            return;
+        }
+
+        // Validate file size (max 5MB)
+        if (file.size > 5 * 1024 * 1024) {
+            toast.error('File size must be less than 5MB');
+            return;
+        }
+
+        setCustomLogoFile(file);
+        
+        // Create preview
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            setCustomLogoPreview(reader.result as string);
+        };
+        reader.readAsDataURL(file);
+    };
+
     const handleNextStep = () => {
         if (currentStep === 1) {
             if (
@@ -116,7 +155,13 @@ export default function Checkout({ product }: CheckoutPageProps) {
                 return;
             }
         }
-        if (currentStep === 2 && product.sizeStocks && !selectedSize) {
+        if (currentStep === logoStepNumber && product.allows_custom_logo) {
+            if (!customLogoFile) {
+                toast.error('Please upload your custom logo (PNG only)');
+                return;
+            }
+        }
+        if (currentStep === productStepNumber && product.sizeStocks && !selectedSize) {
             toast.error('Please select a size');
             return;
         }
@@ -130,35 +175,72 @@ export default function Checkout({ product }: CheckoutPageProps) {
     const handleSubmitOrder = async () => {
         setIsLoading(true);
         try {
-            const response = await fetch('/api/orders', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'X-CSRF-TOKEN':
-                        document
-                            .querySelector('meta[name="csrf-token"]')
-                            ?.getAttribute('content') || '',
-                },
-                body: JSON.stringify({
-                    customer_full_name: customerInfo.full_name,
-                    customer_email: customerInfo.email,
-                    customer_phone: customerInfo.phone,
-                    customer_address: customerInfo.address,
-                    customer_city: customerInfo.city,
-                    customer_country: customerInfo.country,
-                    product_id: product.id,
-                    product_price: product.price,
-                    product_size:
-                        selectedSize ||
+            const csrfToken = document
+                .querySelector('meta[name="csrf-token"]')
+                ?.getAttribute('content') || '';
+
+            let response;
+
+            // Use FormData if there's a custom logo file
+            if (customLogoFile) {
+                const formData = new FormData();
+                formData.append('customer_full_name', customerInfo.full_name);
+                formData.append('customer_email', customerInfo.email);
+                formData.append('customer_phone', customerInfo.phone);
+                formData.append('customer_address', customerInfo.address);
+                formData.append('customer_city', customerInfo.city);
+                formData.append('customer_country', customerInfo.country);
+                formData.append('product_id', product.id.toString());
+                formData.append('product_price', product.price.toString());
+                formData.append(
+                    'product_size',
+                    selectedSize ||
                         product.foot_numbers?.split(',')[0]?.trim() ||
-                        'Standard',
-                    product_color: product.color || 'As Shown',
-                    quantity: 1,
-                    notes: '',
-                }),
-            });
+                        'Standard'
+                );
+                formData.append('product_color', product.color || 'As Shown');
+                formData.append('quantity', '1');
+                formData.append('notes', '');
+                formData.append('custom_logo', customLogoFile);
+
+                response = await fetch('/api/orders', {
+                    method: 'POST',
+                    headers: {
+                        Accept: 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-TOKEN': csrfToken,
+                    },
+                    body: formData,
+                });
+            } else {
+                // Use JSON when no file upload
+                response = await fetch('/api/orders', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Accept: 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-TOKEN': csrfToken,
+                    },
+                    body: JSON.stringify({
+                        customer_full_name: customerInfo.full_name,
+                        customer_email: customerInfo.email,
+                        customer_phone: customerInfo.phone,
+                        customer_address: customerInfo.address,
+                        customer_city: customerInfo.city,
+                        customer_country: customerInfo.country,
+                        product_id: product.id,
+                        product_price: product.price,
+                        product_size:
+                            selectedSize ||
+                            product.foot_numbers?.split(',')[0]?.trim() ||
+                            'Standard',
+                        product_color: product.color || 'As Shown',
+                        quantity: 1,
+                        notes: '',
+                    }),
+                });
+            }
 
             if (response.ok) {
                 const data = await response.json();
@@ -345,7 +427,7 @@ export default function Checkout({ product }: CheckoutPageProps) {
 
                             {/* Progress Steps */}
                             <div className="mt-6 flex items-center justify-between">
-                                {[1, 2, 3].map((step, index) => (
+                                {Array.from({ length: totalSteps }, (_, i) => i + 1).map((step, index) => (
                                     <div
                                         key={step}
                                         className="flex flex-1 items-center"
@@ -379,11 +461,12 @@ export default function Checkout({ product }: CheckoutPageProps) {
                                                 }`}
                                             >
                                                 {step === 1 && 'Customer Info'}
-                                                {step === 2 && 'Product Info'}
-                                                {step === 3 && 'Confirmation'}
+                                                {step === logoStepNumber && product.allows_custom_logo && 'Custom Logo'}
+                                                {step === productStepNumber && 'Product Info'}
+                                                {step === confirmationStepNumber && 'Confirmation'}
                                             </span>
                                         </div>
-                                        {index < 2 && (
+                                        {index < totalSteps - 1 && (
                                             <div
                                                 className={`h-0.5 flex-1 transition-all ${
                                                     currentStep > step
@@ -636,8 +719,96 @@ export default function Checkout({ product }: CheckoutPageProps) {
                                 </div>
                             )}
 
-                            {/* Step 2: Product Information */}
-                            {currentStep === 2 && (
+                            {/* Step 2: Custom Logo Upload (if enabled) */}
+                            {product.allows_custom_logo && currentStep === logoStepNumber && (
+                                <div className="animate-in space-y-6 duration-300 fade-in slide-in-from-right-4">
+                                    <div>
+                                        <h3 className="mb-6 flex items-center gap-2 text-xl font-bold text-gray-900">
+                                            <Upload
+                                                className="h-6 w-6"
+                                                style={{ color: '#771f48' }}
+                                            />
+                                            Upload Your Custom Logo
+                                        </h3>
+                                        <p className="text-sm text-gray-600">
+                                            Upload your custom logo (PNG format only) to be printed on your {product.name}
+                                        </p>
+                                    </div>
+
+                                    <div className="rounded-2xl border-2 border-dashed border-gray-300 bg-gray-50 p-8 transition-all hover:border-[#771f48] hover:bg-white">
+                                        <div className="flex flex-col items-center justify-center space-y-4">
+                                            {customLogoPreview ? (
+                                                <div className="relative">
+                                                    <img
+                                                        src={customLogoPreview}
+                                                        alt="Logo preview"
+                                                        className="max-h-64 rounded-lg border-2 border-gray-200 bg-white object-contain p-4"
+                                                    />
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => {
+                                                            setCustomLogoFile(null);
+                                                            setCustomLogoPreview(null);
+                                                        }}
+                                                        className="absolute -top-2 -right-2 rounded-full bg-red-500 p-2 text-white shadow-lg transition-all hover:bg-red-600"
+                                                    >
+                                                        <X className="h-4 w-4" />
+                                                    </button>
+                                                </div>
+                                            ) : (
+                                                <>
+                                                    <div className="rounded-full bg-[#771f48]/10 p-6">
+                                                        <Upload className="h-12 w-12 text-[#771f48]" />
+                                                    </div>
+                                                    <div className="text-center">
+                                                        <p className="mb-1 font-semibold text-gray-900">
+                                                            Click to upload or drag and drop
+                                                        </p>
+                                                        <p className="text-sm text-gray-500">
+                                                            PNG files only (Max 5MB)
+                                                        </p>
+                                                    </div>
+                                                </>
+                                            )}
+                                            <input
+                                                type="file"
+                                                accept=".png,image/png"
+                                                onChange={handleLogoFileChange}
+                                                className="hidden"
+                                                id="logo-upload"
+                                            />
+                                            <label
+                                                htmlFor="logo-upload"
+                                                className="cursor-pointer rounded-xl px-6 py-3 font-semibold text-white transition-all shadow-lg hover:shadow-xl"
+                                                style={{ backgroundColor: '#771f48' }}
+                                            >
+                                                {customLogoPreview ? 'Change Logo' : 'Select Logo File'}
+                                            </label>
+                                        </div>
+                                        {customLogoFile && (
+                                            <div className="mt-4 rounded-lg bg-green-50 border border-green-200 p-3">
+                                                <p className="text-sm text-green-800">
+                                                    <Check className="inline h-4 w-4 mr-1" />
+                                                    {customLogoFile.name} ({(customLogoFile.size / 1024).toFixed(2)} KB)
+                                                </p>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    <div className="rounded-xl bg-blue-50 border border-blue-200 p-4">
+                                        <h4 className="mb-2 font-semibold text-blue-900">Logo Guidelines:</h4>
+                                        <ul className="space-y-1 text-sm text-blue-800">
+                                            <li>• Use PNG format with transparent background for best results</li>
+                                            <li>• Minimum resolution: 300x300 pixels</li>
+                                            <li>• Maximum file size: 5MB</li>
+                                            <li>• High-contrast logos work best on solid colored t-shirts</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Step 2/3: Product Information */}
+                            {currentStep === productStepNumber && (
                                 <div className="animate-in space-y-6 duration-300 fade-in slide-in-from-right-4">
                                     <div>
                                         <h3 className="mb-6 flex items-center gap-2 text-xl font-bold text-gray-900">
@@ -872,8 +1043,8 @@ export default function Checkout({ product }: CheckoutPageProps) {
                                 </div>
                             )}
 
-                            {/* Step 3: Confirmation */}
-                            {currentStep === 3 && (
+                            {/* Step 3/4: Confirmation */}
+                            {currentStep === confirmationStepNumber && (
                                 <div className="animate-in space-y-6 duration-300 fade-in slide-in-from-right-4">
                                     <div>
                                         <h3 className="mb-6 flex items-center gap-2 text-xl font-bold text-gray-900">
@@ -1000,6 +1171,42 @@ export default function Checkout({ product }: CheckoutPageProps) {
                                         </div>
                                     </div>
 
+                                    {/* Custom Logo Preview (if uploaded) */}
+                                    {customLogoPreview && (
+                                        <div
+                                            className="rounded-2xl border-2 border-gray-100 p-6"
+                                            style={{
+                                                background:
+                                                    'linear-gradient(to bottom right, rgba(119, 31, 72, 0.05), rgba(119, 31, 72, 0.1))',
+                                            }}
+                                        >
+                                            <h4 className="mb-4 flex items-center gap-2 font-bold text-gray-900">
+                                                <Upload
+                                                    className="h-5 w-5"
+                                                    style={{ color: '#771f48' }}
+                                                />
+                                                Your Custom Logo
+                                            </h4>
+                                            <div className="flex items-center gap-4">
+                                                <img
+                                                    src={customLogoPreview}
+                                                    alt="Custom logo"
+                                                    className="h-24 w-24 rounded-lg border-2 border-gray-200 bg-white object-contain p-2"
+                                                />
+                                                <div className="flex-1">
+                                                    <p className="text-sm text-gray-600">
+                                                        Your custom logo will be printed on the product
+                                                    </p>
+                                                    {customLogoFile && (
+                                                        <p className="mt-1 text-xs text-gray-500">
+                                                            {customLogoFile.name} ({(customLogoFile.size / 1024).toFixed(2)} KB)
+                                                        </p>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+
                                     {/* Payment Method */}
                                     <div className="rounded-2xl border-2 border-amber-200 bg-gradient-to-br from-amber-50 to-yellow-50 p-6">
                                         <h4 className="mb-3 flex items-center gap-2 font-bold text-gray-900">
@@ -1029,7 +1236,7 @@ export default function Checkout({ product }: CheckoutPageProps) {
                                     </button>
                                 )}
 
-                                {currentStep < 3 ? (
+                                {currentStep < confirmationStepNumber ? (
                                     <button
                                         onClick={handleNextStep}
                                         className="ml-auto flex items-center gap-2 rounded-full px-8 py-3 font-semibold text-white shadow-lg transition-all hover:scale-105 hover:shadow-xl"
