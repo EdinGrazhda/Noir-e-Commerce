@@ -62,8 +62,9 @@ class OrderController extends Controller
         }
 
         // Apply sorting
-        $sortBy = $request->get('sort_by', 'created_at');
-        $sortOrder = $request->get('sort_order', 'desc');
+        $allowedSortFields = ['created_at', 'customer_full_name', 'total_amount', 'status', 'customer_country', 'payment_method'];
+        $sortBy = in_array($request->get('sort_by'), $allowedSortFields) ? $request->get('sort_by') : 'created_at';
+        $sortOrder = $request->get('sort_order') === 'asc' ? 'asc' : 'desc';
         $query->orderBy($sortBy, $sortOrder);
 
         // Get all filtered orders
@@ -185,13 +186,8 @@ class OrderController extends Controller
             
             Log::info('Order Creation - Product Details', [
                 'product_id' => $product->id,
-                'product_name' => $product->name,
-                'sizeStocks_count' => $product->sizeStocks()->count(),
-                'sizeStocks_data' => $product->sizeStocks->toArray(),
                 'requested_size' => $request->product_size,
                 'requested_quantity' => $request->quantity,
-                'shipping_fee' => $request->shipping_fee,
-                'total_amount' => $request->total_amount,
             ]);
             
             // Check if product has size-specific stock tracking
@@ -243,10 +239,29 @@ class OrderController extends Controller
                 $product->update(['stock_quantity' => $product->stock_quantity - $request->quantity]);
             }
             
-            // Use the total amount sent from frontend (includes shipping fee)
-            $productPrice = $request->product_price;
-            $totalAmount = $request->total_amount;
-            $shippingFee = $request->shipping_fee;
+            // Calculate price server-side to prevent price manipulation
+            $productPrice = (float) $product->price;
+
+            // Check for active campaign price
+            $activeCampaign = \App\Models\Campaign::where('product_id', $product->id)
+                ->where('is_active', true)
+                ->where('start_date', '<=', now())
+                ->where('end_date', '>=', now())
+                ->first();
+
+            if ($activeCampaign) {
+                $productPrice = (float) $activeCampaign->price;
+            }
+
+            // Calculate shipping fee server-side based on country
+            $shippingFee = match($request->customer_country) {
+                'kosovo' => 2.00,
+                'albania' => 5.00,
+                'macedonia' => 5.00,
+                default => 5.00,
+            };
+
+            $totalAmount = ($productPrice * $request->quantity) + $shippingFee;
 
             // Resolve and normalize product image (prefer medialibrary URL, then product.image)
             $productImage = ImageUrlNormalizer::fromProduct($product);
@@ -255,7 +270,8 @@ class OrderController extends Controller
             $customLogoPath = null;
             if ($request->hasFile('custom_logo')) {
                 $logoFile = $request->file('custom_logo');
-                $logoFileName = time() . '_' . uniqid() . '_' . $logoFile->getClientOriginalName();
+                $extension = $logoFile->getClientOriginalExtension();
+                $logoFileName = time() . '_' . uniqid() . '.' . $extension;
                 $customLogoPath = $logoFile->storeAs('custom_logos', $logoFileName, 'public');
             }
 
@@ -279,9 +295,13 @@ class OrderController extends Controller
                 'custom_logo' => $customLogoPath,
                 'quantity' => $request->quantity,
                 'total_amount' => $totalAmount,
-                'payment_method' => 'cash',
                 'notes' => $request->notes,
             ]);
+
+            // Set fields not in $fillable explicitly to prevent mass assignment
+            $order->payment_method = 'cash';
+            $order->status = 'pending';
+            $order->save();
 
             DB::commit();
 
@@ -343,8 +363,8 @@ class OrderController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Error creating order: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString(),
-                'request' => $request->all()
+                'product_id' => $request->product_id ?? null,
+                'quantity' => $request->quantity ?? null,
             ]);
 
             return response()->json([
@@ -377,21 +397,20 @@ class OrderController extends Controller
         $previousStatus = $order->status;
         $newStatus = $request->status;
 
-        $updateData = [
-            'status' => $newStatus,
-            'notes' => $request->notes,
-        ];
+        // Update status and timestamps directly (not mass-assigned, admin only)
+        $order->status = $newStatus;
+        $order->notes = $request->notes;
 
         // Set timestamps based on status
-        if ($newStatus === 'confirmed' && $order->status !== 'confirmed') {
-            $updateData['confirmed_at'] = now();
-        } elseif ($newStatus === 'shipped' && $order->status !== 'shipped') {
-            $updateData['shipped_at'] = now();
-        } elseif ($newStatus === 'delivered' && $order->status !== 'delivered') {
-            $updateData['delivered_at'] = now();
+        if ($newStatus === 'confirmed' && $previousStatus !== 'confirmed') {
+            $order->confirmed_at = now();
+        } elseif ($newStatus === 'shipped' && $previousStatus !== 'shipped') {
+            $order->shipped_at = now();
+        } elseif ($newStatus === 'delivered' && $previousStatus !== 'delivered') {
+            $order->delivered_at = now();
         }
 
-        $order->update($updateData);
+        $order->save();
 
         // Send email notification if status actually changed
         if ($previousStatus !== $newStatus) {

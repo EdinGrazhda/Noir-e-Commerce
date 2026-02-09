@@ -493,7 +493,30 @@ export default function Banners({
                                         {pagination.to} of {pagination.total}{' '}
                                         results
                                     </div>
-                                    <div className="flex gap-2">
+                                    <div className="flex items-center gap-2">
+                                        <button
+                                            onClick={() =>
+                                                router.get(
+                                                    '/admin/banners',
+                                                    {
+                                                        ...getCurrentFilters(),
+                                                        page:
+                                                            pagination.current_page -
+                                                            1,
+                                                    },
+                                                    {
+                                                        preserveState: true,
+                                                        preserveScroll: true,
+                                                    },
+                                                )
+                                            }
+                                            disabled={
+                                                pagination.current_page <= 1
+                                            }
+                                            className="rounded-lg bg-gray-100 px-3 py-2 text-sm font-semibold text-gray-600 transition-all duration-200 hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-50"
+                                        >
+                                            Previous
+                                        </button>
                                         {Array.from(
                                             { length: pagination.last_page },
                                             (_, i) => i + 1,
@@ -507,18 +530,46 @@ export default function Banners({
                                                             ...getCurrentFilters(),
                                                             page,
                                                         },
+                                                        {
+                                                            preserveState: true,
+                                                            preserveScroll: true,
+                                                        },
                                                     )
                                                 }
-                                                className={`px-3 py-2 text-sm font-semibold transition-all duration-200 ${
+                                                className={`rounded-lg px-3 py-2 text-sm font-semibold transition-all duration-200 ${
                                                     page ===
                                                     pagination.current_page
-                                                        ? 'bg-blue-600 text-white'
+                                                        ? 'bg-black text-white'
                                                         : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                                                 }`}
                                             >
                                                 {page}
                                             </button>
                                         ))}
+                                        <button
+                                            onClick={() =>
+                                                router.get(
+                                                    '/admin/banners',
+                                                    {
+                                                        ...getCurrentFilters(),
+                                                        page:
+                                                            pagination.current_page +
+                                                            1,
+                                                    },
+                                                    {
+                                                        preserveState: true,
+                                                        preserveScroll: true,
+                                                    },
+                                                )
+                                            }
+                                            disabled={
+                                                pagination.current_page >=
+                                                pagination.last_page
+                                            }
+                                            className="rounded-lg bg-gray-100 px-3 py-2 text-sm font-semibold text-gray-600 transition-all duration-200 hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-50"
+                                        >
+                                            Next
+                                        </button>
                                     </div>
                                 </div>
                             </div>

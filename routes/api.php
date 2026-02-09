@@ -82,7 +82,9 @@ Route::prefix('banners')->group(function () {
 // Orders API routes
 Route::prefix('orders')->group(function () {
     // Public route - anyone can create an order (customers placing orders)
-    Route::post('/', [OrderController::class, 'store'])->name('api.orders.store');
+    Route::post('/', [OrderController::class, 'store'])
+        ->middleware('throttle:10,1')
+        ->name('api.orders.store');
     
     // Admin only routes - view, update, delete orders
     Route::middleware(['auth:sanctum,web', 'admin'])->group(function () {

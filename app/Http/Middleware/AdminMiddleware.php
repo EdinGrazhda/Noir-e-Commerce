@@ -24,28 +24,22 @@ class AdminMiddleware
         $user = $request->user();
         
         if (!$user) {
-            return response()->json([
-                'message' => 'Unauthenticated. Please log in.',
-                'error' => 'Authentication required',
-                'debug' => [
-                    'guards_checked' => ['sanctum', 'web'],
-                    'session_id' => session()->getId(),
-                    'has_csrf' => $request->header('X-CSRF-TOKEN') ? 'yes' : 'no'
-                ]
-            ], 401);
+            if ($request->expectsJson() || $request->is('api/*')) {
+                return response()->json([
+                    'message' => 'Unauthenticated.',
+                ], 401);
+            }
+            return redirect()->route('login');
         }
 
         // Check if user is admin
         if (!$user->is_admin) {
-            return response()->json([
-                'message' => 'Unauthorized. Admin access required.',
-                'error' => 'Insufficient permissions',
-                'user' => [
-                    'id' => $user->id,
-                    'email' => $user->email,
-                    'is_admin' => $user->is_admin
-                ]
-            ], 403);
+            if ($request->expectsJson() || $request->is('api/*')) {
+                return response()->json([
+                    'message' => 'Unauthorized.',
+                ], 403);
+            }
+            abort(403, 'Unauthorized.');
         }
 
         return $next($request);

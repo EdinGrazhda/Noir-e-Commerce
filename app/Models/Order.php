@@ -9,7 +9,6 @@ use Illuminate\Support\Str;
 class Order extends Model
 {
     protected $fillable = [
-        'unique_id',
         'batch_id',
         'customer_full_name',
         'customer_email',
@@ -26,12 +25,7 @@ class Order extends Model
         'custom_logo',
         'quantity',
         'total_amount',
-        'payment_method',
-        'status',
         'notes',
-        'confirmed_at',
-        'shipped_at',
-        'delivered_at',
     ];
 
     protected $casts = [

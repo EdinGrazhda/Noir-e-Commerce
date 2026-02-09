@@ -21,16 +21,23 @@ export const Header = memo(({ searchValue, onSearchChange }: HeaderProps) => {
                     <div className="flex h-20 items-center justify-between gap-6 lg:gap-12">
                         {/* Logo / Brand - Elevated */}
                         <div className="flex-shrink-0">
-                            <h1 className="cursor-pointer text-3xl font-black uppercase tracking-tighter transition-all duration-300 hover:scale-105 lg:text-4xl">
-                                NOIR
-                            </h1>
+                            <a
+                                href="/"
+                                className="block transition-all duration-300 hover:scale-105"
+                            >
+                                <img
+                                    src="/images/1-02.png"
+                                    alt="NOIR"
+                                    className="h-14 w-auto lg:h-16"
+                                />
+                            </a>
                         </div>
 
                         {/* Search Bar - Premium Design */}
                         <div className="max-w-3xl flex-1">
                             <div className="group relative">
                                 <Search
-                                    className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 transition-colors group-focus-within:text-black"
+                                    className="absolute top-1/2 left-4 -translate-y-1/2 text-gray-400 transition-colors group-focus-within:text-black"
                                     size={20}
                                     strokeWidth={2}
                                     aria-hidden="true"
@@ -42,7 +49,7 @@ export const Header = memo(({ searchValue, onSearchChange }: HeaderProps) => {
                                         onSearchChange(e.target.value)
                                     }
                                     placeholder="Search products..."
-                                    className="w-full border border-gray-200 bg-gray-50 py-3.5 pl-12 pr-4 text-sm font-medium tracking-wide text-black placeholder-gray-400 transition-all duration-300 focus:border-black focus:bg-white focus:outline-none focus:ring-1 focus:ring-black"
+                                    className="w-full border border-gray-200 bg-gray-50 py-3.5 pr-4 pl-12 text-sm font-medium tracking-wide text-black placeholder-gray-400 transition-all duration-300 focus:border-black focus:bg-white focus:ring-1 focus:ring-black focus:outline-none"
                                     aria-label="Search products"
                                 />
                             </div>

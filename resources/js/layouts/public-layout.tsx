@@ -17,15 +17,12 @@ export default function PublicLayout({
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div className="flex h-16 items-center justify-between">
                         <div className="flex items-center">
-                            <a href="/" className="flex items-center space-x-3">
-                                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-r from-blue-600 to-purple-600">
-                                    <span className="text-sm font-bold text-white">
-                                        AS
-                                    </span>
-                                </div>
-                                <span className="text-xl font-bold text-gray-900">
-                                    AndShoes
-                                </span>
+                            <a href="/" className="flex items-center">
+                                <img
+                                    src="/images/1-02.png"
+                                    alt="NOIR"
+                                    className="h-10 w-auto"
+                                />
                             </a>
                         </div>
                         <nav className="hidden space-x-8 md:flex">
@@ -59,7 +56,7 @@ export default function PublicLayout({
             <footer className="mt-16 border-t border-gray-200 bg-white">
                 <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
                     <div className="text-center text-gray-600">
-                        <p>&copy; 2025 AndShoes. All rights reserved.</p>
+                        <p>&copy; 2025 NOIR. All rights reserved.</p>
                         <p className="mt-2 text-sm">
                             Questions? Contact us at{' '}
                             <a

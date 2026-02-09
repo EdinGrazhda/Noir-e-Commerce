@@ -206,7 +206,7 @@
         <!-- Header -->
         <div class="header">
             <div class="logo">NOIR eCommerce</div>
-            <p class="tagline">Premium Footwear Collection</p>
+            <p class="tagline">Premium Clothing Collection</p>
         </div>
 
         <!-- Status Update Section -->

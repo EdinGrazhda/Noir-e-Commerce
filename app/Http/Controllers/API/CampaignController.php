@@ -34,8 +34,9 @@ class CampaignController extends Controller
         }
 
         // Sorting
-        $sortBy = $request->get('sort_by', 'created_at');
-        $sortOrder = $request->get('sort_order', 'desc');
+        $allowedSortFields = ['created_at', 'name', 'start_date', 'end_date', 'price', 'is_active'];
+        $sortBy = in_array($request->get('sort_by'), $allowedSortFields) ? $request->get('sort_by') : 'created_at';
+        $sortOrder = $request->get('sort_order') === 'asc' ? 'asc' : 'desc';
         $query->orderBy($sortBy, $sortOrder);
 
         // Pagination
@@ -131,12 +132,11 @@ class CampaignController extends Controller
         } catch (\Exception $e) {
             Log::error('Campaign creation error:', [
                 'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
             ]);
 
             return response()->json([
                 'message' => 'Error creating campaign',
-                'error' => $e->getMessage(),
+                'error' => config('app.debug') ? $e->getMessage() : 'Internal server error',
             ], 500);
         }
     }
@@ -230,7 +230,7 @@ class CampaignController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Error updating campaign',
-                'error' => $e->getMessage(),
+                'error' => config('app.debug') ? $e->getMessage() : 'Internal server error',
             ], 500);
         }
     }
@@ -250,7 +250,7 @@ class CampaignController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Error deleting campaign',
-                'error' => $e->getMessage(),
+                'error' => config('app.debug') ? $e->getMessage() : 'Internal server error',
             ], 500);
         }
     }
@@ -311,12 +311,11 @@ class CampaignController extends Controller
             ]);
         } catch (\Exception $e) {
             Log::error('Error fetching active campaigns: '.$e->getMessage());
-            Log::error($e->getTraceAsString());
 
             return response()->json([
                 'data' => [],
                 'message' => 'Error fetching active campaigns',
-                'error' => $e->getMessage(),
+                'error' => config('app.debug') ? $e->getMessage() : 'Internal server error',
             ], 500);
         }
     }

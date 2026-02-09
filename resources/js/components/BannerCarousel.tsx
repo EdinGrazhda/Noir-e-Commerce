@@ -28,7 +28,7 @@ const defaultSlides: BannerSlide[] = [
         id: 1,
         image: 'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=400&q=80',
         title: 'PURE ELEGANCE',
-        subtitle: 'Minimalist footwear for the modern soul',
+        subtitle: 'Minimalist clothing for the modern style',
         cta: 'EXPLORE',
         ctaLink: '#products',
     },

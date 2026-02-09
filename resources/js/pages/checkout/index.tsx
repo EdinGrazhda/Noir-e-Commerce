@@ -70,7 +70,9 @@ export default function Checkout({ product }: CheckoutPageProps) {
     const [isLoading, setIsLoading] = useState(false);
     const [selectedSize, setSelectedSize] = useState<string>('');
     const [customLogoFile, setCustomLogoFile] = useState<File | null>(null);
-    const [customLogoPreview, setCustomLogoPreview] = useState<string | null>(null);
+    const [customLogoPreview, setCustomLogoPreview] = useState<string | null>(
+        null,
+    );
 
     const [customerInfo, setCustomerInfo] = useState<CustomerInfo>({
         full_name: '',
@@ -132,7 +134,7 @@ export default function Checkout({ product }: CheckoutPageProps) {
         }
 
         setCustomLogoFile(file);
-        
+
         // Create preview
         const reader = new FileReader();
         reader.onloadend = () => {
@@ -161,7 +163,11 @@ export default function Checkout({ product }: CheckoutPageProps) {
                 return;
             }
         }
-        if (currentStep === productStepNumber && product.sizeStocks && !selectedSize) {
+        if (
+            currentStep === productStepNumber &&
+            product.sizeStocks &&
+            !selectedSize
+        ) {
             toast.error('Please select a size');
             return;
         }
@@ -175,9 +181,10 @@ export default function Checkout({ product }: CheckoutPageProps) {
     const handleSubmitOrder = async () => {
         setIsLoading(true);
         try {
-            const csrfToken = document
-                .querySelector('meta[name="csrf-token"]')
-                ?.getAttribute('content') || '';
+            const csrfToken =
+                document
+                    .querySelector('meta[name="csrf-token"]')
+                    ?.getAttribute('content') || '';
 
             let response;
 
@@ -196,7 +203,7 @@ export default function Checkout({ product }: CheckoutPageProps) {
                     'product_size',
                     selectedSize ||
                         product.foot_numbers?.split(',')[0]?.trim() ||
-                        'Standard'
+                        'Standard',
                 );
                 formData.append('product_color', product.color || 'As Shown');
                 formData.append('quantity', '1');
@@ -275,18 +282,12 @@ export default function Checkout({ product }: CheckoutPageProps) {
                             <ArrowLeft className="h-5 w-5" />
                             <span className="font-medium">Back to Shop</span>
                         </button>
-                        <div className="flex items-center space-x-3">
-                            <div
-                                className="flex h-10 w-10 items-center justify-center rounded-full"
-                                style={{ backgroundColor: '#771f48' }}
-                            >
-                                <span className="text-sm font-bold text-white">
-                                    AS
-                                </span>
-                            </div>
-                            <span className="text-xl font-bold text-gray-900">
-                                AndShoes
-                            </span>
+                        <div className="flex items-center">
+                            <img
+                                src="/images/1-02.png"
+                                alt="NOIR"
+                                className="h-10 w-auto"
+                            />
                         </div>
                     </div>
                 </div>
@@ -427,7 +428,10 @@ export default function Checkout({ product }: CheckoutPageProps) {
 
                             {/* Progress Steps */}
                             <div className="mt-6 flex items-center justify-between">
-                                {Array.from({ length: totalSteps }, (_, i) => i + 1).map((step, index) => (
+                                {Array.from(
+                                    { length: totalSteps },
+                                    (_, i) => i + 1,
+                                ).map((step, index) => (
                                     <div
                                         key={step}
                                         className="flex flex-1 items-center"
@@ -461,9 +465,14 @@ export default function Checkout({ product }: CheckoutPageProps) {
                                                 }`}
                                             >
                                                 {step === 1 && 'Customer Info'}
-                                                {step === logoStepNumber && product.allows_custom_logo && 'Custom Logo'}
-                                                {step === productStepNumber && 'Product Info'}
-                                                {step === confirmationStepNumber && 'Confirmation'}
+                                                {step === logoStepNumber &&
+                                                    product.allows_custom_logo &&
+                                                    'Custom Logo'}
+                                                {step === productStepNumber &&
+                                                    'Product Info'}
+                                                {step ===
+                                                    confirmationStepNumber &&
+                                                    'Confirmation'}
                                             </span>
                                         </div>
                                         {index < totalSteps - 1 && (
@@ -720,92 +729,130 @@ export default function Checkout({ product }: CheckoutPageProps) {
                             )}
 
                             {/* Step 2: Custom Logo Upload (if enabled) */}
-                            {product.allows_custom_logo && currentStep === logoStepNumber && (
-                                <div className="animate-in space-y-6 duration-300 fade-in slide-in-from-right-4">
-                                    <div>
-                                        <h3 className="mb-6 flex items-center gap-2 text-xl font-bold text-gray-900">
-                                            <Upload
-                                                className="h-6 w-6"
-                                                style={{ color: '#771f48' }}
-                                            />
-                                            Upload Your Custom Logo
-                                        </h3>
-                                        <p className="text-sm text-gray-600">
-                                            Upload your custom logo (PNG format only) to be printed on your {product.name}
-                                        </p>
-                                    </div>
-
-                                    <div className="rounded-2xl border-2 border-dashed border-gray-300 bg-gray-50 p-8 transition-all hover:border-[#771f48] hover:bg-white">
-                                        <div className="flex flex-col items-center justify-center space-y-4">
-                                            {customLogoPreview ? (
-                                                <div className="relative">
-                                                    <img
-                                                        src={customLogoPreview}
-                                                        alt="Logo preview"
-                                                        className="max-h-64 rounded-lg border-2 border-gray-200 bg-white object-contain p-4"
-                                                    />
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => {
-                                                            setCustomLogoFile(null);
-                                                            setCustomLogoPreview(null);
-                                                        }}
-                                                        className="absolute -top-2 -right-2 rounded-full bg-red-500 p-2 text-white shadow-lg transition-all hover:bg-red-600"
-                                                    >
-                                                        <X className="h-4 w-4" />
-                                                    </button>
-                                                </div>
-                                            ) : (
-                                                <>
-                                                    <div className="rounded-full bg-[#771f48]/10 p-6">
-                                                        <Upload className="h-12 w-12 text-[#771f48]" />
-                                                    </div>
-                                                    <div className="text-center">
-                                                        <p className="mb-1 font-semibold text-gray-900">
-                                                            Click to upload or drag and drop
-                                                        </p>
-                                                        <p className="text-sm text-gray-500">
-                                                            PNG files only (Max 5MB)
-                                                        </p>
-                                                    </div>
-                                                </>
-                                            )}
-                                            <input
-                                                type="file"
-                                                accept=".png,image/png"
-                                                onChange={handleLogoFileChange}
-                                                className="hidden"
-                                                id="logo-upload"
-                                            />
-                                            <label
-                                                htmlFor="logo-upload"
-                                                className="cursor-pointer rounded-xl px-6 py-3 font-semibold text-white transition-all shadow-lg hover:shadow-xl"
-                                                style={{ backgroundColor: '#771f48' }}
-                                            >
-                                                {customLogoPreview ? 'Change Logo' : 'Select Logo File'}
-                                            </label>
+                            {product.allows_custom_logo &&
+                                currentStep === logoStepNumber && (
+                                    <div className="animate-in space-y-6 duration-300 fade-in slide-in-from-right-4">
+                                        <div>
+                                            <h3 className="mb-6 flex items-center gap-2 text-xl font-bold text-gray-900">
+                                                <Upload
+                                                    className="h-6 w-6"
+                                                    style={{ color: '#771f48' }}
+                                                />
+                                                Upload Your Custom Logo
+                                            </h3>
+                                            <p className="text-sm text-gray-600">
+                                                Upload your custom logo (PNG
+                                                format only) to be printed on
+                                                your {product.name}
+                                            </p>
                                         </div>
-                                        {customLogoFile && (
-                                            <div className="mt-4 rounded-lg bg-green-50 border border-green-200 p-3">
-                                                <p className="text-sm text-green-800">
-                                                    <Check className="inline h-4 w-4 mr-1" />
-                                                    {customLogoFile.name} ({(customLogoFile.size / 1024).toFixed(2)} KB)
-                                                </p>
-                                            </div>
-                                        )}
-                                    </div>
 
-                                    <div className="rounded-xl bg-blue-50 border border-blue-200 p-4">
-                                        <h4 className="mb-2 font-semibold text-blue-900">Logo Guidelines:</h4>
-                                        <ul className="space-y-1 text-sm text-blue-800">
-                                            <li>• Use PNG format with transparent background for best results</li>
-                                            <li>• Minimum resolution: 300x300 pixels</li>
-                                            <li>• Maximum file size: 5MB</li>
-                                            <li>• High-contrast logos work best on solid colored t-shirts</li>
-                                        </ul>
+                                        <div className="rounded-2xl border-2 border-dashed border-gray-300 bg-gray-50 p-8 transition-all hover:border-[#771f48] hover:bg-white">
+                                            <div className="flex flex-col items-center justify-center space-y-4">
+                                                {customLogoPreview ? (
+                                                    <div className="relative">
+                                                        <img
+                                                            src={
+                                                                customLogoPreview
+                                                            }
+                                                            alt="Logo preview"
+                                                            className="max-h-64 rounded-lg border-2 border-gray-200 bg-white object-contain p-4"
+                                                        />
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => {
+                                                                setCustomLogoFile(
+                                                                    null,
+                                                                );
+                                                                setCustomLogoPreview(
+                                                                    null,
+                                                                );
+                                                            }}
+                                                            className="absolute -top-2 -right-2 rounded-full bg-red-500 p-2 text-white shadow-lg transition-all hover:bg-red-600"
+                                                        >
+                                                            <X className="h-4 w-4" />
+                                                        </button>
+                                                    </div>
+                                                ) : (
+                                                    <>
+                                                        <div className="rounded-full bg-[#771f48]/10 p-6">
+                                                            <Upload className="h-12 w-12 text-[#771f48]" />
+                                                        </div>
+                                                        <div className="text-center">
+                                                            <p className="mb-1 font-semibold text-gray-900">
+                                                                Click to upload
+                                                                or drag and drop
+                                                            </p>
+                                                            <p className="text-sm text-gray-500">
+                                                                PNG files only
+                                                                (Max 5MB)
+                                                            </p>
+                                                        </div>
+                                                    </>
+                                                )}
+                                                <input
+                                                    type="file"
+                                                    accept=".png,image/png"
+                                                    onChange={
+                                                        handleLogoFileChange
+                                                    }
+                                                    className="hidden"
+                                                    id="logo-upload"
+                                                />
+                                                <label
+                                                    htmlFor="logo-upload"
+                                                    className="cursor-pointer rounded-xl px-6 py-3 font-semibold text-white shadow-lg transition-all hover:shadow-xl"
+                                                    style={{
+                                                        backgroundColor:
+                                                            '#771f48',
+                                                    }}
+                                                >
+                                                    {customLogoPreview
+                                                        ? 'Change Logo'
+                                                        : 'Select Logo File'}
+                                                </label>
+                                            </div>
+                                            {customLogoFile && (
+                                                <div className="mt-4 rounded-lg border border-green-200 bg-green-50 p-3">
+                                                    <p className="text-sm text-green-800">
+                                                        <Check className="mr-1 inline h-4 w-4" />
+                                                        {customLogoFile.name} (
+                                                        {(
+                                                            customLogoFile.size /
+                                                            1024
+                                                        ).toFixed(2)}{' '}
+                                                        KB)
+                                                    </p>
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        <div className="rounded-xl border border-blue-200 bg-blue-50 p-4">
+                                            <h4 className="mb-2 font-semibold text-blue-900">
+                                                Logo Guidelines:
+                                            </h4>
+                                            <ul className="space-y-1 text-sm text-blue-800">
+                                                <li>
+                                                    • Use PNG format with
+                                                    transparent background for
+                                                    best results
+                                                </li>
+                                                <li>
+                                                    • Minimum resolution:
+                                                    300x300 pixels
+                                                </li>
+                                                <li>
+                                                    • Maximum file size: 5MB
+                                                </li>
+                                                <li>
+                                                    • High-contrast logos work
+                                                    best on solid colored
+                                                    t-shirts
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </div>
-                                </div>
-                            )}
+                                )}
 
                             {/* Step 2/3: Product Information */}
                             {currentStep === productStepNumber && (
@@ -1195,11 +1242,20 @@ export default function Checkout({ product }: CheckoutPageProps) {
                                                 />
                                                 <div className="flex-1">
                                                     <p className="text-sm text-gray-600">
-                                                        Your custom logo will be printed on the product
+                                                        Your custom logo will be
+                                                        printed on the product
                                                     </p>
                                                     {customLogoFile && (
                                                         <p className="mt-1 text-xs text-gray-500">
-                                                            {customLogoFile.name} ({(customLogoFile.size / 1024).toFixed(2)} KB)
+                                                            {
+                                                                customLogoFile.name
+                                                            }{' '}
+                                                            (
+                                                            {(
+                                                                customLogoFile.size /
+                                                                1024
+                                                            ).toFixed(2)}{' '}
+                                                            KB)
                                                         </p>
                                                     )}
                                                 </div>

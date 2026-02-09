@@ -17,9 +17,52 @@ class ProductsController extends Controller
     /**
      * Display a listing of the products with filtering, sorting, and pagination.
      */
+    /**
+     * Strip sensitive fields from product data for public (non-admin) responses.
+     */
+    private function filterForPublic(array $productData): array
+    {
+        // Remove internal/sensitive fields
+        unset(
+            $productData['product_id'],
+            $productData['updated_at'],
+            $productData['stock_quantity'],
+            $productData['media'],
+            $productData['stock'],           // raw DB column
+        );
+
+        // Simplify sizeStocks: expose availability per size, not exact quantities
+        if (isset($productData['sizeStocks']) && is_array($productData['sizeStocks'])) {
+            $productData['sizeStocks'] = array_map(function ($info) {
+                return [
+                    'available' => ($info['quantity'] ?? 0) > 0,
+                    'stock_status' => $info['stock_status'] ?? 'out of stock',
+                ];
+            }, $productData['sizeStocks']);
+        }
+
+        // Strip internal media IDs and original URLs from all_images
+        if (isset($productData['all_images']) && is_array($productData['all_images'])) {
+            $productData['all_images'] = array_map(function ($img) {
+                return [
+                    'url' => $img['url'] ?? '',
+                    'preview' => $img['preview'] ?? '',
+                    'thumb' => $img['thumb'] ?? '',
+                ];
+            }, $productData['all_images']);
+        }
+
+        return $productData;
+    }
+
+    /**
+     * Display a listing of the products with filtering, sorting, and pagination.
+     */
     public function index(Request $request): JsonResponse
     {
         try {
+            $isAdmin = $request->user()?->is_admin;
+
             $query = Product::with(['category', 'sizeStocks', 'media']);
 
             // Apply filters
@@ -133,6 +176,13 @@ class ProductsController extends Controller
                 return $product;
             });
 
+            // Filter fields for public (non-admin) users
+            if (! $isAdmin) {
+                $products->getCollection()->transform(function ($product) {
+                    return $this->filterForPublic($product->toArray());
+                });
+            }
+
             // Return paginated data in the format expected by frontend
             return response()->json($products, 200);
 
@@ -160,9 +210,9 @@ class ProductsController extends Controller
                 'name' => 'required|string|max:255|unique:products',
                 'description' => 'nullable|string',
                 'price' => 'required|numeric|min:0|max:999999.99',
-                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:51200',
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
                 'images' => 'nullable|array|max:4',
-                'images.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:51200',
+                'images.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:5120',
                 'stock' => 'nullable|integer|min:0',
                 'size_stocks' => 'nullable|string',
                 'foot_numbers' => 'nullable|string|max:255',
@@ -271,9 +321,11 @@ class ProductsController extends Controller
     /**
      * Display the specified product.
      */
-    public function show(string $id): JsonResponse
+    public function show(Request $request, string $id): JsonResponse
     {
         try {
+            $isAdmin = $request->user()?->is_admin;
+
             $product = Product::with(['category', 'sizeStocks', 'media'])->find($id);
 
             if (! $product) {
@@ -302,6 +354,11 @@ class ProductsController extends Controller
 
             // Remove the size_stocks array format
             unset($productData['size_stocks']);
+
+            // Filter for public users
+            if (! $isAdmin) {
+                $productData = $this->filterForPublic($productData);
+            }
 
             return response()->json([
                 'success' => true,
@@ -342,9 +399,9 @@ class ProductsController extends Controller
                 'name' => 'sometimes|required|string|max:255|unique:products,name,'.$id,
                 'description' => 'sometimes|nullable|string',
                 'price' => 'sometimes|required|numeric|min:0|max:999999.99',
-                'image' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif,webp|max:51200',
+                'image' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
                 'images' => 'sometimes|nullable|array|max:4',
-                'images.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:51200',
+                'images.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:5120',
                 'delete_images' => 'sometimes|nullable|array',
                 'delete_images.*' => 'integer',
                 'stock' => 'sometimes|nullable|integer|min:0',

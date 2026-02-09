@@ -7,12 +7,14 @@ export function Footer() {
                 <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-4">
                     {/* Brand Section */}
                     <div className="space-y-4">
-                        <h2 className="text-3xl font-black tracking-tighter uppercase">
-                            NOIR
-                        </h2>
+                        <img
+                            src="/images/1-02.png"
+                            alt="NOIR"
+                            className="h-12 w-auto brightness-0 invert"
+                        />
                         <div className="h-1 w-16 bg-white" />
                         <p className="font-medium tracking-wide text-gray-400 uppercase">
-                            Premium footwear for the modern soul
+                            Premium clothing for the modern style
                         </p>
                     </div>
 
@@ -25,17 +27,7 @@ export function Footer() {
                         <ul className="space-y-2.5 text-sm font-medium tracking-wide text-gray-400 uppercase">
                             <li className="flex items-start gap-2">
                                 <span className="mt-1 h-2 w-2 flex-shrink-0 border-2 border-white" />
-                                <span>Rr. Tirana (Përballë Abi Qarshia)</span>
-                            </li>
-                            <li className="flex items-start gap-2">
-                                <span className="mt-1 h-2 w-2 flex-shrink-0 border-2 border-white" />
-                                <span>Rr. Zahir Pajaziti</span>
-                            </li>
-                            <li className="flex items-start gap-2">
-                                <span className="mt-1 h-2 w-2 flex-shrink-0 border-2 border-white" />
-                                <span>
-                                    Rr. De Rada (Afër Stacionit Autobusave)
-                                </span>
+                                <span>Rr. 27 Shote Galica, Prizren 20000</span>
                             </li>
                         </ul>
                     </div>
@@ -49,38 +41,38 @@ export function Footer() {
                         <ul className="space-y-2.5 text-sm font-medium text-gray-400">
                             <li>
                                 <a
-                                    href="tel:+38343509944"
+                                    href="tel:+37745959288"
                                     className="flex items-center gap-2 tracking-wide uppercase transition-colors hover:text-white"
                                 >
                                     <Phone
                                         className="h-4 w-4"
                                         strokeWidth={2.5}
                                     />
-                                    043 509 944
+                                    +377 45 959 288
                                 </a>
                             </li>
                             <li>
                                 <a
-                                    href="tel:+38349831828"
+                                    href="tel:+38348346489"
                                     className="flex items-center gap-2 tracking-wide uppercase transition-colors hover:text-white"
                                 >
                                     <Phone
                                         className="h-4 w-4"
                                         strokeWidth={2.5}
                                     />
-                                    049 831 828
+                                    +383 48 346 489
                                 </a>
                             </li>
                             <li>
                                 <a
-                                    href="mailto:support@noir-ecommerce.com"
+                                    href="mailto:noirclothing.ks@gmail.com"
                                     className="flex items-center gap-2 transition-colors hover:text-white"
                                 >
                                     <Mail
                                         className="h-4 w-4"
                                         strokeWidth={2.5}
                                     />
-                                    support@noir-ecommerce.com
+                                    noirclothing.ks@gmail.com
                                 </a>
                             </li>
                         </ul>
@@ -93,7 +85,7 @@ export function Footer() {
                         </h3>
                         <div className="flex flex-col gap-3">
                             <a
-                                href="https://www.instagram.com/and.shoess/"
+                                href="https://www.instagram.com/p/DUI0oecDK8t/"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="group inline-flex items-center gap-2 border-2 border-white bg-transparent px-4 py-2.5 font-black tracking-widest text-white uppercase transition-all hover:bg-white hover:text-black"
@@ -105,7 +97,7 @@ export function Footer() {
                                 INSTAGRAM
                             </a>
                             <a
-                                href="https://www.tiktok.com/@and.shoess"
+                                href="https://www.tiktok.com/@noirclothing.ks"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="group inline-flex items-center gap-2 border-2 border-white bg-transparent px-4 py-2.5 font-black tracking-widest text-white uppercase transition-all hover:bg-white hover:text-black"

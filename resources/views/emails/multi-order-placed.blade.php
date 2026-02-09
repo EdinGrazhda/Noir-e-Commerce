@@ -315,7 +315,7 @@
 
         <!-- Footer -->
         <div class="footer">
-            <p><strong>NOIR eCommerce</strong> - Premium Footwear Collection</p>
+            <p><strong>NOIR eCommerce</strong> - Premium Clothing Collection</p>
             <p>Questions? Contact us at <a href="mailto:support@noir-ecommerce.com">support@noir-ecommerce.com</a></p>
             <p style="margin-top: 15px; font-size: 12px; color: #999;">
                 This is an automated message. Please do not reply directly to this email.

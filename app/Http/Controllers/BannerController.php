@@ -28,8 +28,9 @@ class BannerController extends Controller
         }
 
         // Apply sorting
-        $sortBy = $request->input('sort_by', 'created_at');
-        $sortOrder = $request->input('sort_order', 'desc');
+        $allowedSortFields = ['created_at', 'header', 'updated_at'];
+        $sortBy = in_array($request->input('sort_by'), $allowedSortFields) ? $request->input('sort_by') : 'created_at';
+        $sortOrder = $request->input('sort_order') === 'asc' ? 'asc' : 'desc';
         $query->orderBy($sortBy, $sortOrder);
 
         // Paginate results
