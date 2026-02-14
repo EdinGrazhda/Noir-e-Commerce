@@ -195,6 +195,7 @@ class OrderController extends Controller
                 // Product uses per-size stock tracking
                 if (empty($request->product_size)) {
                     Log::warning('Order Creation - Size required but not provided');
+                    DB::rollBack();
                     return response()->json([
                         'message' => 'Product size is required for this product',
                     ], 422);
@@ -212,6 +213,7 @@ class OrderController extends Controller
                         'available_sizes' => $product->sizeStocks->pluck('size')->toArray(),
                     ]);
                     
+                    DB::rollBack();
                     return response()->json([
                         'message' => 'Selected size is not available',
                         'requested_size' => $request->product_size,
@@ -220,6 +222,7 @@ class OrderController extends Controller
                 }
 
                 if ($sizeStock->quantity < $request->quantity) {
+                    DB::rollBack();
                     return response()->json([
                         'message' => "Insufficient stock for size {$request->product_size}. Only {$sizeStock->quantity} available.",
                     ], 422);
@@ -231,6 +234,7 @@ class OrderController extends Controller
             } else {
                 // Product uses total stock tracking (backward compatibility)
                 if ($product->stock_quantity < $request->quantity) {
+                    DB::rollBack();
                     return response()->json([
                         'message' => "Insufficient stock. Only {$product->stock_quantity} available.",
                     ], 422);
