@@ -373,7 +373,7 @@ export default function OrderSuccess({ order }: OrderSuccessPageProps) {
                                 <div className="flex items-center justify-center gap-2">
                                     <Mail className="h-4 w-4 text-gray-500" />
                                     <span className="text-gray-700">
-                                        support@andshoes.com
+                                        info@noirclothes.shop
                                     </span>
                                 </div>
                             </div>

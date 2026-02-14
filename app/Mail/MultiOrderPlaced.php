@@ -56,6 +56,7 @@ class MultiOrderPlaced extends Mailable
     {
         return new Content(
             view: 'emails.multi-order-placed',
+            text: 'emails.multi-order-placed-text',
             with: [
                 'orders' => $this->orders,
                 'customerInfo' => $this->customerInfo,
@@ -70,18 +71,25 @@ class MultiOrderPlaced extends Mailable
      */
     public function build()
     {
-        $this->withSymfonyMessage(function (Email $message) {
-            // Embed each product image
-            foreach ($this->orders as $order) {
-                $imagePath = $this->resolveProductImagePath($order);
-                
-                if ($imagePath && file_exists($imagePath)) {
-                    // Embed the image and store CID reference for this order
-                    $cid = $message->embed(fopen($imagePath, 'r'), basename($imagePath));
-                    $this->productImageCids[$order->id] = $cid;
+        $this->replyTo('info@noirclothes.shop', 'NOIR')
+             ->withSymfonyMessage(function (Email $message) {
+                // Anti-spam: List-Unsubscribe header
+                $message->getHeaders()->addTextHeader(
+                    'List-Unsubscribe',
+                    '<mailto:info@noirclothes.shop?subject=unsubscribe>'
+                );
+
+                // Embed each product image
+                foreach ($this->orders as $order) {
+                    $imagePath = $this->resolveProductImagePath($order);
+                    
+                    if ($imagePath && file_exists($imagePath)) {
+                        // Embed the image and store CID reference for this order
+                        $cid = $message->embed(fopen($imagePath, 'r'), basename($imagePath));
+                        $this->productImageCids[$order->id] = $cid;
+                    }
                 }
-            }
-        });
+            });
 
         return $this;
     }

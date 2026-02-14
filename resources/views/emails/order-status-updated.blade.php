@@ -287,7 +287,7 @@
             </div>
             @if($order->shipping_fee > 0)
             <div class="detail-row">
-                <span class="detail-label">Shipping Fee:</span>
+                <span class="detail-label">{{ $order->customer_country === 'kosovo' ? 'COD Postman Fee:' : 'Shipping Fee:' }}</span>
                 <span class="detail-value">€{{ number_format($order->shipping_fee, 2) }}</span>
             </div>
             @endif
@@ -334,7 +334,7 @@
             <p>If you have any questions, feel free to contact our customer service.</p>
             
             <div class="social-links">
-                <a href="mailto:support@noir-ecommerce.com">Support</a>
+                <a href="mailto:info@noirclothes.shop">Support</a>
                 <a href="{{ config('app.url') }}">Visit Website</a>
             </div>
             

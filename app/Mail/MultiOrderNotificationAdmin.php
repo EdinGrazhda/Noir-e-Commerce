@@ -45,7 +45,7 @@ class MultiOrderNotificationAdmin extends Mailable
     {
         $orderCount = $this->orders->count();
         return new Envelope(
-            subject: "[AndShoes] New Order - {$orderCount} Items from {$this->customerInfo['name']}",
+            subject: "[Noir Clothes] New Order - {$orderCount} Items from {$this->customerInfo['name']}",
         );
     }
 

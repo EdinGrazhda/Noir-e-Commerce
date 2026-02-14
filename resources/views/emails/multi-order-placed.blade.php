@@ -279,7 +279,7 @@
                     <span>€{{ number_format($orders->sum('product_price') * $orders->sum('quantity'), 2) }}</span>
                 </div>
                 <div class="summary-row">
-                    <span>Shipping:</span>
+                    <span>{{ $orders->first()->customer_country === 'kosovo' ? 'COD Postman Fee:' : 'Shipping:' }}</span>
                     <span>
                         @if($orders->sum('shipping_fee') == 0)
                             <span style="color: #4caf50; font-weight: bold;">FREE</span>
@@ -299,6 +299,9 @@
                 <h3>💰 Payment Method</h3>
                 <p><strong>Cash on Delivery (COD)</strong></p>
                 <p>You will pay €{{ number_format($totalAmount, 2) }} when you receive your order.</p>
+                @if($orders->first()->customer_country === 'kosovo')
+                    <p><strong>Note:</strong> The additional €2.40 is the COD postman fee, paid to the postman at delivery.</p>
+                @endif
             </div>
 
             <!-- Next Steps -->
@@ -316,7 +319,7 @@
         <!-- Footer -->
         <div class="footer">
             <p><strong>NOIR eCommerce</strong> - Premium Clothing Collection</p>
-            <p>Questions? Contact us at <a href="mailto:support@noir-ecommerce.com">support@noir-ecommerce.com</a></p>
+            <p>Questions? Contact us at <a href="mailto:info@noirclothes.shop">info@noirclothes.shop</a></p>
             <p style="margin-top: 15px; font-size: 12px; color: #999;">
                 This is an automated message. Please do not reply directly to this email.
             </p>

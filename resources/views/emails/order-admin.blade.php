@@ -306,8 +306,27 @@
             </div>
 
             <div class="summary-box">
-                <p class="summary-label">Total Order Value</p>
-                <p class="summary-amount">€{{ number_format($order->total_amount, 2) }}</p>
+                <table width="100%" cellpadding="0" cellspacing="0" style="color: white;">
+                    <tr>
+                        <td style="text-align: left; padding: 4px 0; font-size: 14px; opacity: 0.9;">Subtotal:</td>
+                        <td style="text-align: right; padding: 4px 0; font-size: 14px; opacity: 0.9;">€{{ number_format($order->product_price * $order->quantity, 2) }}</td>
+                    </tr>
+                    @if($order->shipping_fee > 0)
+                    <tr>
+                        <td style="text-align: left; padding: 4px 0; font-size: 14px; opacity: 0.9;">{{ $order->customer_country === 'kosovo' ? 'COD Postman Fee:' : 'Shipping:' }}</td>
+                        <td style="text-align: right; padding: 4px 0; font-size: 14px; opacity: 0.9;">€{{ number_format($order->shipping_fee, 2) }}</td>
+                    </tr>
+                    @endif
+                    <tr>
+                        <td colspan="2" style="padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.3);"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="text-align: center;">
+                            <p class="summary-label">Total Order Value</p>
+                            <p class="summary-amount">€{{ number_format($order->total_amount, 2) }}</p>
+                        </td>
+                    </tr>
+                </table>
             </div>
 
             <div class="customer-box">

@@ -245,8 +245,8 @@ class OrderController extends Controller
             // Check for active campaign price
             $activeCampaign = \App\Models\Campaign::where('product_id', $product->id)
                 ->where('is_active', true)
-                ->where('start_date', '<=', now())
-                ->where('end_date', '>=', now())
+                ->where('start_date', '<=', today())
+                ->where('end_date', '>=', today())
                 ->first();
 
             if ($activeCampaign) {
@@ -255,7 +255,7 @@ class OrderController extends Controller
 
             // Calculate shipping fee server-side based on country
             $shippingFee = match($request->customer_country) {
-                'kosovo' => 2.00,
+                'kosovo' => 2.40,
                 'albania' => 5.00,
                 'macedonia' => 5.00,
                 default => 5.00,
@@ -330,26 +330,44 @@ class OrderController extends Controller
             }
 
             if ($shouldSendEmails && !$request->has('is_batch_order')) {
+                // Send customer email
                 try {
                     if ($isMultiOrder) {
-                        // Send multi-order email with all related orders
                         $totalAmount = $recentOrders->sum('total_amount');
                         Mail::to($order->customer_email)->send(new \App\Mail\MultiOrderPlaced($recentOrders, $totalAmount));
-                        Mail::to(config('mail.admin_email'))->send(new \App\Mail\MultiOrderNotificationAdmin($recentOrders, $totalAmount));
                     } else {
-                        // Send single order email
                         Mail::to($order->customer_email)->send(new OrderPlaced($order));
-                        Mail::to(config('mail.admin_email'))->send(new OrderNotificationAdmin($order));
                     }
-                    
-                    Log::info('Order emails sent successfully', [
+                    Log::info('Customer order email sent successfully', [
                         'order_id' => $order->id,
-                        'is_multi_order' => $isMultiOrder,
                         'customer_email' => $order->customer_email,
+                        'is_multi_order' => $isMultiOrder,
                     ]);
                 } catch (\Exception $emailException) {
-                    Log::error('Failed to send order emails: ' . $emailException->getMessage(), [
+                    Log::error('Failed to send CUSTOMER order email: ' . $emailException->getMessage(), [
                         'order_id' => $order->id,
+                        'customer_email' => $order->customer_email,
+                        'trace' => $emailException->getTraceAsString(),
+                    ]);
+                }
+
+                // Send admin email (independently so customer email failure doesn't block admin)
+                try {
+                    if ($isMultiOrder) {
+                        $totalAmount = $totalAmount ?? $recentOrders->sum('total_amount');
+                        Mail::to(config('mail.admin_email'))->send(new \App\Mail\MultiOrderNotificationAdmin($recentOrders, $totalAmount));
+                    } else {
+                        Mail::to(config('mail.admin_email'))->send(new OrderNotificationAdmin($order));
+                    }
+                    Log::info('Admin order email sent successfully', [
+                        'order_id' => $order->id,
+                        'admin_email' => config('mail.admin_email'),
+                        'is_multi_order' => $isMultiOrder,
+                    ]);
+                } catch (\Exception $emailException) {
+                    Log::error('Failed to send ADMIN order email: ' . $emailException->getMessage(), [
+                        'order_id' => $order->id,
+                        'admin_email' => config('mail.admin_email'),
                         'trace' => $emailException->getTraceAsString(),
                     ]);
                 }
@@ -537,35 +555,46 @@ class OrderController extends Controller
      */
     private function sendBatchedEmails($order)
     {
-        try {
-            // Get all recent orders from this customer (within last 5 seconds)
-            $recentOrders = Order::where('customer_email', $order->customer_email)
-                ->where('created_at', '>=', now()->subSeconds(5))
-                ->get();
+        // Get all recent orders from this customer (within last 5 seconds)
+        $recentOrders = Order::where('customer_email', $order->customer_email)
+            ->where('created_at', '>=', now()->subSeconds(5))
+            ->get();
 
+        // Send customer email
+        try {
             if ($recentOrders->count() > 1) {
-                // Multiple orders - send grouped email
                 $totalAmount = $recentOrders->sum('total_amount');
                 Mail::to($order->customer_email)->send(new \App\Mail\MultiOrderPlaced($recentOrders, $totalAmount));
-                Mail::to(config('mail.admin_email'))->send(new \App\Mail\MultiOrderNotificationAdmin($recentOrders, $totalAmount));
-                
-                Log::info('Batched order emails sent', [
-                    'order_count' => $recentOrders->count(),
-                    'customer_email' => $order->customer_email,
-                ]);
             } else {
-                // Single order - send regular email
                 Mail::to($order->customer_email)->send(new OrderPlaced($order));
-                Mail::to(config('mail.admin_email'))->send(new OrderNotificationAdmin($order));
-                
-                Log::info('Single order email sent', [
-                    'order_id' => $order->id,
-                ]);
             }
+            Log::info('Batched customer email sent', [
+                'order_count' => $recentOrders->count(),
+                'customer_email' => $order->customer_email,
+            ]);
         } catch (\Exception $e) {
-            Log::error('Failed to send batched emails: ' . $e->getMessage(), [
+            Log::error('Failed to send batched CUSTOMER email: ' . $e->getMessage(), [
                 'order_id' => $order->id,
-                'trace' => $e->getTraceAsString(),
+                'customer_email' => $order->customer_email,
+            ]);
+        }
+
+        // Send admin email
+        try {
+            if ($recentOrders->count() > 1) {
+                $totalAmount = $totalAmount ?? $recentOrders->sum('total_amount');
+                Mail::to(config('mail.admin_email'))->send(new \App\Mail\MultiOrderNotificationAdmin($recentOrders, $totalAmount));
+            } else {
+                Mail::to(config('mail.admin_email'))->send(new OrderNotificationAdmin($order));
+            }
+            Log::info('Batched admin email sent', [
+                'order_count' => $recentOrders->count(),
+                'admin_email' => config('mail.admin_email'),
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Failed to send batched ADMIN email: ' . $e->getMessage(), [
+                'order_id' => $order->id,
+                'admin_email' => config('mail.admin_email'),
             ]);
         }
     }

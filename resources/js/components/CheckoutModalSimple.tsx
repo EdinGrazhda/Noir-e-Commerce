@@ -1,4 +1,4 @@
-import { Check, Package, Upload, X } from 'lucide-react';
+import { Check, Package, X } from 'lucide-react';
 import { memo, useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useCartStore } from '../store/cartStore';
@@ -60,7 +60,7 @@ export const CheckoutModal = memo(({ isOpen, onClose }: CheckoutModalProps) => {
     // Calculate shipping fee based on country
     const calculateShipping = (country: string, subtotal: number): number => {
         if (country === 'kosovo') {
-            return 0; // Free shipping for Kosovo
+            return 2.4; // COD Postman fee for Kosovo
         } else if (country === 'albania' || country === 'macedonia') {
             return 4; // Fixed 4€ shipping fee
         }
@@ -126,33 +126,57 @@ export const CheckoutModal = memo(({ isOpen, onClose }: CheckoutModalProps) => {
                     shippingFee * (itemSubtotal / subtotal);
                 const itemTotal = itemSubtotal + itemShippingProportion;
 
-                const csrfToken = document
-                    .querySelector('meta[name="csrf-token"]')
-                    ?.getAttribute('content') || '';
+                const csrfToken =
+                    document
+                        .querySelector('meta[name="csrf-token"]')
+                        ?.getAttribute('content') || '';
 
                 // Use FormData if item has a custom logo
                 if (item.customLogoDataUrl) {
                     const formData = new FormData();
                     formData.append('batch_id', batchId || '');
-                    formData.append('customer_full_name', customerInfo.full_name);
+                    formData.append(
+                        'customer_full_name',
+                        customerInfo.full_name,
+                    );
                     formData.append('customer_email', customerInfo.email);
                     formData.append('customer_phone', customerInfo.phone);
                     formData.append('customer_address', customerInfo.address);
                     formData.append('customer_city', customerInfo.city);
                     formData.append('customer_country', customerInfo.country);
                     formData.append('product_id', item.product.id.toString());
-                    formData.append('product_price', Number(item.product.price).toString());
+                    formData.append(
+                        'product_price',
+                        Number(item.product.price).toString(),
+                    );
                     formData.append('product_size', productSize);
-                    formData.append('product_color', item.product.color || 'As Shown');
-                    formData.append('quantity', Number(item.quantity).toString());
-                    formData.append('total_amount', Number(itemTotal.toFixed(2)).toString());
-                    formData.append('shipping_fee', Number(itemShippingProportion.toFixed(2)).toString());
-                    formData.append('notes', batchId ? `Part of ${items.length} item order` : '');
+                    formData.append(
+                        'product_color',
+                        item.product.color || 'As Shown',
+                    );
+                    formData.append(
+                        'quantity',
+                        Number(item.quantity).toString(),
+                    );
+                    formData.append(
+                        'total_amount',
+                        Number(itemTotal.toFixed(2)).toString(),
+                    );
+                    formData.append(
+                        'shipping_fee',
+                        Number(itemShippingProportion.toFixed(2)).toString(),
+                    );
+                    formData.append(
+                        'notes',
+                        batchId ? `Part of ${items.length} item order` : '',
+                    );
 
                     // Convert base64 data URL to File
                     const res = await fetch(item.customLogoDataUrl);
                     const blob = await res.blob();
-                    const logoFile = new File([blob], 'custom-logo.png', { type: 'image/png' });
+                    const logoFile = new File([blob], 'custom-logo.png', {
+                        type: 'image/png',
+                    });
                     formData.append('custom_logo', logoFile);
 
                     const response = await fetch('/api/orders', {
@@ -170,12 +194,18 @@ export const CheckoutModal = memo(({ isOpen, onClose }: CheckoutModalProps) => {
                     if (!response.ok) {
                         if (data.errors) {
                             const errorMessages = Object.entries(data.errors)
-                                .map(([field, messages]: [string, any]) =>
-                                    `${field}: ${Array.isArray(messages) ? messages.join(', ') : messages}`)
+                                .map(
+                                    ([field, messages]: [string, any]) =>
+                                        `${field}: ${Array.isArray(messages) ? messages.join(', ') : messages}`,
+                                )
                                 .join('\n');
-                            throw new Error(`Validation errors for ${item.product.name}:\n${errorMessages}`);
+                            throw new Error(
+                                `Validation errors for ${item.product.name}:\n${errorMessages}`,
+                            );
                         }
-                        throw new Error(`Error for ${item.product.name}: ${data.message || 'Failed to place order'}`);
+                        throw new Error(
+                            `Error for ${item.product.name}: ${data.message || 'Failed to place order'}`,
+                        );
                     }
 
                     return { item, order: data.order };
@@ -563,13 +593,16 @@ export const CheckoutModal = memo(({ isOpen, onClose }: CheckoutModalProps) => {
                                                         <div className="mt-3 flex items-center gap-3 border-t border-gray-200 pt-3">
                                                             <div className="h-12 w-12 flex-shrink-0 border border-gray-200 bg-gray-50 p-1">
                                                                 <img
-                                                                    src={item.customLogoDataUrl}
+                                                                    src={
+                                                                        item.customLogoDataUrl
+                                                                    }
                                                                     alt="Custom logo"
                                                                     className="h-full w-full object-contain"
                                                                 />
                                                             </div>
                                                             <span className="font-sans text-xs font-semibold text-green-700">
-                                                                ✓ Custom logo attached
+                                                                ✓ Custom logo
+                                                                attached
                                                             </span>
                                                         </div>
                                                     )}
@@ -595,7 +628,10 @@ export const CheckoutModal = memo(({ isOpen, onClose }: CheckoutModalProps) => {
                                         </div>
                                         <div className="flex justify-between">
                                             <span className="font-sans text-sm font-semibold tracking-wider text-gray-600 uppercase">
-                                                Shipping:
+                                                {customerInfo.country ===
+                                                'kosovo'
+                                                    ? 'COD Postman Fee:'
+                                                    : 'Shipping:'}
                                             </span>
                                             <span
                                                 className={`font-sans text-base font-bold ${

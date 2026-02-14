@@ -325,6 +325,12 @@
                     <span>Subtotal:</span>
                     <span>€{{ number_format($order->product_price * $order->quantity, 2) }}</span>
                 </div>
+                @if($order->shipping_fee > 0)
+                <div class="summary-row">
+                    <span>{{ $order->customer_country === 'kosovo' ? 'COD Postman Fee:' : 'Shipping:' }}</span>
+                    <span>€{{ number_format($order->shipping_fee, 2) }}</span>
+                </div>
+                @endif
                 <div class="summary-row summary-total">
                     <span>Total Amount:</span>
                     <span>€{{ number_format($order->total_amount, 2) }}</span>
@@ -372,7 +378,7 @@
             <p style="margin: 0 0 12px 0; font-weight: 700; font-size: 16px; letter-spacing: 2px; text-transform: uppercase;">NOIR eCommerce</p>
             <p style="margin: 12px 0;">
                 Need help? Contact us at 
-                <a href="mailto:support@noir-ecommerce.com">support@noir-ecommerce.com</a>
+                <a href="mailto:info@noirclothes.shop">info@noirclothes.shop</a>
             </p>
             <p style="margin-top: 20px; font-size: 11px; opacity: 0.7;">
                 This is an automated email. Please do not reply directly to this message.

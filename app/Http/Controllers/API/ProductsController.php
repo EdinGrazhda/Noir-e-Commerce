@@ -142,8 +142,8 @@ class ProductsController extends Controller
             $products->getCollection()->transform(function ($product) {
                 $activeCampaign = \App\Models\Campaign::where('product_id', $product->id)
                     ->where('is_active', true)
-                    ->where('start_date', '<=', now())
-                    ->where('end_date', '>=', now())
+                    ->where('start_date', '<=', today())
+                    ->where('end_date', '>=', today())
                     ->first();
 
                 if ($activeCampaign) {

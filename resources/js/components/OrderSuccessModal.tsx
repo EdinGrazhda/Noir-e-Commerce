@@ -386,10 +386,10 @@ export const OrderSuccessModal = memo(
                                 <p className="font-sans text-xs font-medium tracking-wider text-gray-600 uppercase">
                                     Need help? Contact us at{' '}
                                     <a
-                                        href="mailto:support@noir-ecommerce.com"
+                                        href="mailto:info@noirclothes.shop"
                                         className="font-bold text-black hover:underline"
                                     >
-                                        support@noir-ecommerce.com
+                                        info@noirclothes.shop
                                     </a>
                                 </p>
                                 <button

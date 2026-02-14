@@ -45,6 +45,7 @@ class OrderPlaced extends Mailable
     {
         return new Content(
             view: 'emails.order-placed',
+            text: 'emails.order-placed-text',
             with: [
                 'order' => $this->order,
                 'productImageCid' => $this->productImageCid,
@@ -67,16 +68,23 @@ class OrderPlaced extends Mailable
      */
     public function build()
     {
-        $this->withSymfonyMessage(function (Email $message) {
-            // Try to get the product image file path
-            $imagePath = $this->resolveProductImagePath();
-            
-            if ($imagePath && file_exists($imagePath)) {
-                // Embed the image and get the CID reference
-                $cid = $message->embed(fopen($imagePath, 'r'), basename($imagePath));
-                $this->productImageCid = $cid;
-            }
-        });
+        $this->replyTo('info@noirclothes.shop', 'NOIR')
+             ->withSymfonyMessage(function (Email $message) {
+                // Anti-spam: List-Unsubscribe header
+                $message->getHeaders()->addTextHeader(
+                    'List-Unsubscribe',
+                    '<mailto:info@noirclothes.shop?subject=unsubscribe>'
+                );
+
+                // Try to get the product image file path
+                $imagePath = $this->resolveProductImagePath();
+                
+                if ($imagePath && file_exists($imagePath)) {
+                    // Embed the image and get the CID reference
+                    $cid = $message->embed(fopen($imagePath, 'r'), basename($imagePath));
+                    $this->productImageCid = $cid;
+                }
+            });
 
         return $this;
     }

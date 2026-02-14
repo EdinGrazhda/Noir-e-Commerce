@@ -43,8 +43,8 @@ class WelcomeController extends Controller
         $productIds = $products->pluck('id')->toArray();
         $activeCampaigns = Campaign::whereIn('product_id', $productIds)
             ->where('is_active', true)
-            ->where('start_date', '<=', now())
-            ->where('end_date', '>=', now())
+            ->where('start_date', '<=', today())
+            ->where('end_date', '>=', today())
             ->get()
             ->keyBy('product_id');
 

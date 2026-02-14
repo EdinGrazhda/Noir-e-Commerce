@@ -60,10 +60,10 @@ export default function PublicLayout({
                         <p className="mt-2 text-sm">
                             Questions? Contact us at{' '}
                             <a
-                                href="mailto:support@andshoes.com"
+                                href="mailto:info@noirclothes.shop"
                                 className="text-blue-600 hover:text-blue-500"
                             >
-                                support@andshoes.com
+                                info@noirclothes.shop
                             </a>
                         </p>
                     </div>
