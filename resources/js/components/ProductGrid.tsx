@@ -61,7 +61,7 @@ export const ProductGrid = memo(
         if (isLoading && products.length === 0) {
             return (
                 <div className="px-4 py-8 sm:px-6 lg:px-8">
-                    <ProductGridSkeleton count={20} />
+                    <ProductGridSkeleton count={15} />
                 </div>
             );
         }
@@ -149,7 +149,7 @@ export const ProductGrid = memo(
 
                     {/* Premium Product Grid - Intentional Spacing */}
                     <div
-                        className="grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-3 lg:gap-8 xl:grid-cols-4 2xl:grid-cols-5"
+                        className="grid grid-cols-2 gap-2.5 sm:gap-5 md:grid-cols-3 lg:gap-8 xl:grid-cols-4 2xl:grid-cols-5"
                         role="list"
                         aria-label="Product catalog"
                     >

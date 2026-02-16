@@ -66,6 +66,14 @@ class ProductsController extends Controller
             $query = Product::with(['category', 'sizeStocks', 'media']);
 
             // Apply filters
+            if ($request->has('id') && ! empty($request->id)) {
+                $query->where('id', $request->id);
+            }
+
+            if ($request->has('product_id') && ! empty($request->product_id)) {
+                $query->where('product_id', 'like', '%'.$request->product_id.'%');
+            }
+
             if ($request->has('search') && ! empty($request->search)) {
                 $query->where('name', 'like', '%'.$request->search.'%')
                     ->orWhere('description', 'like', '%'.$request->search.'%');
@@ -156,7 +164,7 @@ class ProductsController extends Controller
                 // Add media library image URL and all images
                 $product->image_url = $product->image_url; // Uses accessor from model
                 $product->all_images = $product->all_images; // Get all images array
-                
+
                 // Ensure allows_custom_logo is included in response
                 $product->allows_custom_logo = (bool) $product->allows_custom_logo;
 

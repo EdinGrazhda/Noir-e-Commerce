@@ -12,7 +12,7 @@ import {
     Trash2,
     X,
 } from 'lucide-react';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -115,6 +115,9 @@ export default function Products({
     );
     const [isLoading, setIsLoading] = useState(false);
 
+    // Track whether user has changed filters (skip initial mount)
+    const isInitialMount = useRef(true);
+
     // Real-time filtering with debounce
     const getCurrentFilters = useCallback(() => {
         const filterParams: any = {};
@@ -141,8 +144,14 @@ export default function Products({
         });
     }, [getCurrentFilters]);
 
-    // Debounced filtering effect
+    // Debounced filtering effect — skip the initial mount to avoid
+    // resetting pagination when the page first loads with a page param.
     useEffect(() => {
+        if (isInitialMount.current) {
+            isInitialMount.current = false;
+            return;
+        }
+
         const timeoutId = setTimeout(() => {
             applyFilters();
         }, 300); // 300ms debounce

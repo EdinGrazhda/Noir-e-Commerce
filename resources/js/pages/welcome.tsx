@@ -4,7 +4,7 @@ import {
     useInfiniteQuery,
     useQuery,
 } from '@tanstack/react-query';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { BannerCarousel } from '../components/BannerCarousel';
 import { CartDrawer } from '../components/CartDrawer';
 import { CheckoutModal } from '../components/CheckoutModalSimple';
@@ -52,11 +52,9 @@ const fetchProducts = async (
     page: number,
     filters: Filters,
 ): Promise<PaginatedResponse<Product>> => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
-
     const params = new URLSearchParams({
         page: page.toString(),
-        per_page: '20',
+        per_page: '15',
     });
 
     if (filters.search) {
@@ -70,7 +68,7 @@ const fetchProducts = async (
     if (filters.priceMin > 0) {
         params.append('price_min', filters.priceMin.toString());
     }
-    if (filters.priceMax < 1000) {
+    if (filters.priceMax < 10000) {
         params.append('price_max', filters.priceMax.toString());
     }
     if (filters.gender && filters.gender.length > 0) {
@@ -129,7 +127,7 @@ const fetchProducts = async (
             data: [],
             current_page: page,
             last_page: 1,
-            per_page: 20,
+            per_page: 15,
             total: 0,
         };
     }
@@ -192,7 +190,7 @@ function StorefrontContent({
     } = useCheckoutStore();
 
     // Update filters when debounced search changes
-    useMemo(() => {
+    useEffect(() => {
         if (debouncedSearch !== filters.search) {
             updateFilters({ search: debouncedSearch });
         }
@@ -221,7 +219,7 @@ function StorefrontContent({
         filters.search ||
         filters.categories.length > 0 ||
         filters.priceMin > 0 ||
-        filters.priceMax < 1000 ||
+        filters.priceMax < 10000 ||
         (filters.gender && filters.gender.length > 0) ||
         filters.sortBy !== 'newest';
 

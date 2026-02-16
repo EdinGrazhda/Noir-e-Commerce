@@ -320,8 +320,8 @@ export const CheckoutModal = memo(({ isOpen, onClose }: CheckoutModalProps) => {
             <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm transition-all duration-500" />
 
             {/* Modal */}
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-                <div className="shadow-premium transition-noir relative w-full max-w-3xl bg-white">
+            <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-4">
+                <div className="shadow-premium transition-noir relative flex w-full max-w-3xl flex-col bg-white max-h-[100dvh] sm:max-h-[90dvh] sm:rounded-none">
                     {/* Header */}
                     <div className="flex items-center justify-between border-b border-gray-200 bg-gradient-to-b from-gray-50 to-white px-6 py-4">
                         <h2 className="font-sans text-xl font-bold tracking-wide text-black uppercase">
@@ -384,7 +384,7 @@ export const CheckoutModal = memo(({ isOpen, onClose }: CheckoutModalProps) => {
                     </div>
 
                     {/* Content */}
-                    <div className="p-6">
+                    <div className="flex-1 overflow-y-auto p-6">
                         {/* Step 1: Customer Information */}
                         {currentStep === 1 && (
                             <div className="space-y-4">
@@ -693,7 +693,7 @@ export const CheckoutModal = memo(({ isOpen, onClose }: CheckoutModalProps) => {
                     </div>
 
                     {/* Footer */}
-                    <div className="shadow-elevated border-t border-gray-200 bg-gradient-to-t from-gray-50 to-white px-6 py-4">
+                    <div className="shadow-elevated shrink-0 border-t border-gray-200 bg-gradient-to-t from-gray-50 to-white px-6 py-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
                         <div className="flex items-center justify-between">
                             <div>
                                 {currentStep > 1 && (
