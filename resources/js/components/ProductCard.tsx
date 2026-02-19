@@ -1,4 +1,4 @@
-import { ArrowRight, Clock, Tag } from 'lucide-react';
+import { Clock, Tag } from 'lucide-react';
 import { memo, useCallback, useEffect, useState } from 'react';
 import { useImageCache } from '../hooks/useImageCache';
 import type { Product } from '../types/store';
@@ -86,14 +86,22 @@ export const ProductCard = memo(
                 ),
             ];
 
-            if (product.sizeStocks) {
+            // Only filter by sizeStocks if it's a non-empty object
+            if (
+                product.sizeStocks &&
+                Object.keys(product.sizeStocks).length > 0
+            ) {
                 return allSizes.filter((size) => {
                     const sizeStockInfo = product.sizeStocks![size];
-                    const sizeStock =
-                        typeof sizeStockInfo === 'object'
-                            ? sizeStockInfo.quantity
-                            : sizeStockInfo || 0;
-                    return sizeStock > 0;
+                    if (!sizeStockInfo) return false;
+                    // Handle both { quantity: N } and { available: boolean } formats
+                    if (typeof sizeStockInfo === 'object') {
+                        if ('quantity' in sizeStockInfo)
+                            return sizeStockInfo.quantity > 0;
+                        if ('available' in sizeStockInfo)
+                            return !!(sizeStockInfo as any).available;
+                    }
+                    return (sizeStockInfo || 0) > 0;
                 });
             }
 
@@ -143,10 +151,14 @@ export const ProductCard = memo(
                     />
 
                     {/* Badges — top left */}
-                    <div className="absolute left-2.5 top-2.5 flex flex-col gap-1.5">
+                    <div className="absolute top-2.5 left-2.5 flex flex-col gap-1.5">
                         {discountPercent > 0 && (
                             <span className="inline-flex items-center gap-1 rounded-sm bg-black px-2 py-0.5">
-                                <Tag size={8} strokeWidth={3} className="text-white" />
+                                <Tag
+                                    size={8}
+                                    strokeWidth={3}
+                                    className="text-white"
+                                />
                                 <span className="text-[9px] font-bold text-white">
                                     -{discountPercent}%
                                 </span>
@@ -156,12 +168,12 @@ export const ProductCard = memo(
 
                     {/* Badges — top right */}
                     {isOutOfStock && (
-                        <span className="absolute right-2.5 top-2.5 rounded-sm bg-white/90 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-gray-700 backdrop-blur-sm">
+                        <span className="absolute top-2.5 right-2.5 rounded-sm bg-white/90 px-2 py-0.5 text-[9px] font-bold tracking-wider text-gray-700 uppercase backdrop-blur-sm">
                             Sold Out
                         </span>
                     )}
                     {isLowStock && !isOutOfStock && (
-                        <span className="absolute right-2.5 top-2.5 rounded-sm bg-black px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white">
+                        <span className="absolute top-2.5 right-2.5 rounded-sm bg-black px-2 py-0.5 text-[9px] font-bold tracking-wider text-white uppercase">
                             Low Stock
                         </span>
                     )}
@@ -170,7 +182,7 @@ export const ProductCard = memo(
                     <div className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-all duration-300 group-hover:bg-black/30 group-hover:opacity-100">
                         <button
                             onClick={handleShowDetails}
-                            className="translate-y-2 rounded-full bg-white px-5 py-2 text-[11px] font-bold uppercase tracking-wide text-black shadow-md transition-all duration-300 hover:bg-black hover:text-white group-hover:translate-y-0"
+                            className="translate-y-2 rounded-full bg-white px-5 py-2 text-[11px] font-bold tracking-wide text-black uppercase shadow-md transition-all duration-300 group-hover:translate-y-0 hover:bg-black hover:text-white"
                             aria-label={`Quick view ${product.name}`}
                         >
                             Quick View
@@ -179,10 +191,10 @@ export const ProductCard = memo(
                 </div>
 
                 {/* ── Info ── */}
-                <div className="flex flex-1 flex-col gap-1 px-2 pb-2 pt-2 sm:gap-2 sm:p-3">
+                <div className="flex flex-1 flex-col gap-1 px-2 pt-2 pb-2 sm:gap-2 sm:p-3">
                     {/* Gender tag + Name */}
                     {product.gender && (
-                        <span className="inline-flex w-fit rounded border border-gray-200 px-1.5 py-px text-[7px] font-bold uppercase tracking-widest text-gray-500 sm:py-0.5 sm:text-[9px]">
+                        <span className="inline-flex w-fit rounded border border-gray-200 px-1.5 py-px text-[7px] font-bold tracking-widest text-gray-500 uppercase sm:py-0.5 sm:text-[9px]">
                             {product.gender === 'male'
                                 ? 'Men'
                                 : product.gender === 'female'
@@ -190,7 +202,7 @@ export const ProductCard = memo(
                                   : 'Unisex'}
                         </span>
                     )}
-                    <h3 className="line-clamp-1 text-[11px] font-semibold leading-tight text-gray-900 sm:text-[13px]">
+                    <h3 className="line-clamp-1 text-[11px] leading-tight font-semibold text-gray-900 sm:text-[13px]">
                         {product.name}
                     </h3>
 
@@ -215,9 +227,14 @@ export const ProductCard = memo(
                     {/* Campaign timer */}
                     {product.hasActiveCampaign && timeRemaining && (
                         <div className="flex items-center gap-1 text-[9px] font-semibold text-amber-600 sm:text-[10px]">
-                            <Clock size={9} strokeWidth={2.5} className="sm:h-2.5 sm:w-2.5" />
+                            <Clock
+                                size={9}
+                                strokeWidth={2.5}
+                                className="sm:h-2.5 sm:w-2.5"
+                            />
                             <span>
-                                {timeRemaining.days > 0 && `${timeRemaining.days}d `}
+                                {timeRemaining.days > 0 &&
+                                    `${timeRemaining.days}d `}
                                 {timeRemaining.hours}h {timeRemaining.minutes}m
                             </span>
                         </div>
@@ -226,17 +243,19 @@ export const ProductCard = memo(
                     {/* Sizes */}
                     {availableSizes.length > 0 && (
                         <div className="mt-0.5">
-                            <span className="mb-0.5 hidden text-[9px] font-semibold uppercase tracking-widest text-gray-400 sm:mb-1 sm:block">
+                            <span className="mb-0.5 hidden text-[9px] font-semibold tracking-widest text-gray-400 uppercase sm:mb-1 sm:block">
                                 Available Sizes
                             </span>
                             <div className="flex flex-wrap items-center gap-[3px] sm:gap-1">
                                 {availableSizes.slice(0, 4).map((size) => {
-                                    const sizeStockInfo = product.sizeStocks?.[size];
+                                    const sizeStockInfo =
+                                        product.sizeStocks?.[size];
                                     const sizeStock =
                                         typeof sizeStockInfo === 'object'
-                                            ? sizeStockInfo.quantity
+                                            ? (sizeStockInfo.quantity ?? 0)
                                             : sizeStockInfo || 0;
-                                    const isLowSizeStock = sizeStock > 0 && sizeStock <= 3;
+                                    const isLowSizeStock =
+                                        sizeStock > 0 && sizeStock <= 3;
 
                                     return (
                                         <span
@@ -268,7 +287,7 @@ export const ProductCard = memo(
                     {/* Button */}
                     <button
                         onClick={handleShowDetails}
-                        className="mt-auto flex w-full items-center justify-center rounded bg-black py-[5px] text-[8px] font-bold uppercase tracking-wide text-white transition-colors duration-200 hover:bg-gray-800 sm:rounded-md sm:py-2.5 sm:text-[11px] sm:tracking-wider"
+                        className="mt-auto flex w-full items-center justify-center rounded bg-black py-[5px] text-[8px] font-bold tracking-wide text-white uppercase transition-colors duration-200 hover:bg-gray-800 sm:rounded-md sm:py-2.5 sm:text-[11px] sm:tracking-wider"
                         aria-label={`View details for ${product.name}`}
                     >
                         View Details

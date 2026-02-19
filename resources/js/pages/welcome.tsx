@@ -105,9 +105,13 @@ const fetchProducts = async (
                     product.image ||
                     `https://picsum.photos/seed/${product.id}/400/400`, // Use image_url from Media Library
                 all_images: product.all_images || [], // Multiple images for gallery
-                stock: product.stock || 0,
+                stock: product.stock_status || product.stock || 'in stock',
                 foot_numbers: product.foot_numbers, // Added missing foot_numbers field
-                sizeStocks: product.sizeStocks || {}, // Size-specific stock quantities
+                sizeStocks:
+                    product.sizeStocks &&
+                    Object.keys(product.sizeStocks).length > 0
+                        ? product.sizeStocks
+                        : undefined, // Size-specific stock quantities
                 color: product.color, // Also added color field for completeness
                 gender: product.gender || 'unisex', // Added gender field
                 categories: product.category ? [product.category] : [],
@@ -258,9 +262,17 @@ function StorefrontContent({
                                               product.image ||
                                               `https://picsum.photos/seed/${product.id}/400/400`,
                                           all_images: product.all_images || [],
-                                          stock: product.stock_quantity || 0,
+                                          stock:
+                                              product.stock_status ||
+                                              product.stock ||
+                                              'in stock',
                                           foot_numbers: product.foot_numbers,
-                                          sizeStocks: product.sizeStocks || {},
+                                          sizeStocks:
+                                              product.sizeStocks &&
+                                              Object.keys(product.sizeStocks)
+                                                  .length > 0
+                                                  ? product.sizeStocks
+                                                  : undefined,
                                           color: product.color,
                                           gender: product.gender || 'unisex',
                                           categories: product.category
@@ -269,7 +281,8 @@ function StorefrontContent({
                                           created_at: product.created_at,
                                           hasActiveCampaign:
                                               !!product.campaign_price,
-                                          allows_custom_logo: !!product.allows_custom_logo,
+                                          allows_custom_logo:
+                                              !!product.allows_custom_logo,
                                       }),
                                   ),
                                   current_page: initialProducts.current_page,
@@ -332,9 +345,13 @@ function StorefrontContent({
                         raw.image ||
                         `https://picsum.photos/seed/${raw.id}/400/400`,
                     all_images: raw.all_images || [],
-                    stock: raw.stock || 0,
+                    stock: raw.stock_status || raw.stock || 'in stock',
                     foot_numbers: raw.foot_numbers,
-                    sizeStocks: normalizedSizeStocks, // Normalized size-specific stock quantities
+                    sizeStocks:
+                        normalizedSizeStocks &&
+                        Object.keys(normalizedSizeStocks).length > 0
+                            ? normalizedSizeStocks
+                            : undefined, // Normalized size-specific stock quantities
                     color: raw.color,
                     gender: raw.gender || 'unisex',
                     categories: raw.category ? [raw.category] : [],

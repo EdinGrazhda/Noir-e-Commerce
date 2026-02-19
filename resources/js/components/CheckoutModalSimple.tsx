@@ -37,6 +37,13 @@ export const CheckoutModal = memo(({ isOpen, onClose }: CheckoutModalProps) => {
         country: '',
     });
 
+    // Anti-spam: honeypot field (should remain empty)
+    const [honeypot, setHoneypot] = useState('');
+    // Anti-spam: track when the form was opened
+    const [formOpenedAt, setFormOpenedAt] = useState(0);
+    // Validation errors
+    const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
+
     // Reset state when modal opens
     useEffect(() => {
         if (isOpen) {
@@ -50,6 +57,9 @@ export const CheckoutModal = memo(({ isOpen, onClose }: CheckoutModalProps) => {
                 country: '',
             });
             setOrderProgress({ current: 0, total: 0 });
+            setHoneypot('');
+            setFormOpenedAt(Date.now());
+            setValidationErrors({});
         }
     }, [isOpen]);
 
@@ -75,17 +85,70 @@ export const CheckoutModal = memo(({ isOpen, onClose }: CheckoutModalProps) => {
     const shippingFee = calculateShipping(customerInfo.country, subtotal);
     const totalAmount = subtotal + shippingFee;
 
+    // Validate customer info fields
+    const validateCustomerInfo = (): boolean => {
+        const errors: Record<string, string> = {};
+
+        // Full name: at least 3 chars, must contain a space (first + last)
+        const trimmedName = customerInfo.full_name.trim();
+        if (!trimmedName) {
+            errors.full_name = 'Full name is required';
+        } else if (trimmedName.length < 3) {
+            errors.full_name = 'Name must be at least 3 characters';
+        } else if (!/^[a-zA-ZÀ-ÿ\s'-]+$/.test(trimmedName)) {
+            errors.full_name = 'Name contains invalid characters';
+        }
+
+        // Email: basic format check
+        const trimmedEmail = customerInfo.email.trim();
+        if (!trimmedEmail) {
+            errors.email = 'Email is required';
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(trimmedEmail)) {
+            errors.email = 'Please enter a valid email address';
+        }
+
+        // Phone: at least 6 digits, allow +, spaces, dashes
+        const trimmedPhone = customerInfo.phone.trim();
+        const phoneDigits = trimmedPhone.replace(/[^0-9]/g, '');
+        if (!trimmedPhone) {
+            errors.phone = 'Phone number is required';
+        } else if (phoneDigits.length < 6) {
+            errors.phone = 'Phone must have at least 6 digits';
+        } else if (!/^[+]?[\d\s\-()]{6,20}$/.test(trimmedPhone)) {
+            errors.phone = 'Please enter a valid phone number';
+        }
+
+        // Country
+        if (!customerInfo.country) {
+            errors.country = 'Country is required';
+        }
+
+        // Address: at least 5 characters
+        const trimmedAddress = customerInfo.address.trim();
+        if (!trimmedAddress) {
+            errors.address = 'Address is required';
+        } else if (trimmedAddress.length < 5) {
+            errors.address = 'Address must be at least 5 characters';
+        }
+
+        // City: at least 2 characters, letters only
+        const trimmedCity = customerInfo.city.trim();
+        if (!trimmedCity) {
+            errors.city = 'City is required';
+        } else if (trimmedCity.length < 2) {
+            errors.city = 'City must be at least 2 characters';
+        } else if (!/^[a-zA-ZÀ-ÿ\s'-]+$/.test(trimmedCity)) {
+            errors.city = 'City contains invalid characters';
+        }
+
+        setValidationErrors(errors);
+        return Object.keys(errors).length === 0;
+    };
+
     const handleNextStep = () => {
         if (currentStep === 1) {
-            if (
-                !customerInfo.full_name ||
-                !customerInfo.email ||
-                !customerInfo.phone ||
-                !customerInfo.address ||
-                !customerInfo.city ||
-                !customerInfo.country
-            ) {
-                toast.error('Please fill in all customer information fields');
+            if (!validateCustomerInfo()) {
+                toast.error('Please correct the highlighted fields');
                 return;
             }
         }
@@ -97,6 +160,20 @@ export const CheckoutModal = memo(({ isOpen, onClose }: CheckoutModalProps) => {
     };
 
     const handleSubmitOrder = async () => {
+        // Anti-spam: honeypot check
+        if (honeypot) {
+            toast.success('Order placed successfully!');
+            onClose();
+            return;
+        }
+
+        // Anti-spam: form must be open for at least 5 seconds
+        const timeSpent = Date.now() - formOpenedAt;
+        if (timeSpent < 5000) {
+            toast.error('Please take a moment to review your order');
+            return;
+        }
+
         setIsLoading(true);
         setOrderProgress({ current: 0, total: items.length });
 
@@ -170,6 +247,9 @@ export const CheckoutModal = memo(({ isOpen, onClose }: CheckoutModalProps) => {
                         'notes',
                         batchId ? `Part of ${items.length} item order` : '',
                     );
+                    // Anti-spam: include honeypot and timing
+                    formData.append('website', honeypot);
+                    formData.append('_form_token', formOpenedAt.toString());
 
                     // Convert base64 data URL to File
                     const res = await fetch(item.customLogoDataUrl);
@@ -230,6 +310,9 @@ export const CheckoutModal = memo(({ isOpen, onClose }: CheckoutModalProps) => {
                     notes: batchId
                         ? `Part of ${items.length} item order`
                         : null,
+                    // Anti-spam fields
+                    website: honeypot,
+                    _form_token: formOpenedAt.toString(),
                 };
 
                 const response = await fetch('/api/orders', {
@@ -320,8 +403,8 @@ export const CheckoutModal = memo(({ isOpen, onClose }: CheckoutModalProps) => {
             <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm transition-all duration-500" />
 
             {/* Modal */}
-            <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-4">
-                <div className="shadow-premium transition-noir relative flex w-full max-w-3xl flex-col bg-white max-h-[100dvh] sm:max-h-[90dvh] sm:rounded-none">
+            <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center sm:p-4">
+                <div className="shadow-premium transition-noir relative flex max-h-[100dvh] w-full max-w-3xl flex-col bg-white sm:max-h-[90dvh] sm:rounded-none">
                     {/* Header */}
                     <div className="flex items-center justify-between border-b border-gray-200 bg-gradient-to-b from-gray-50 to-white px-6 py-4">
                         <h2 className="font-sans text-xl font-bold tracking-wide text-black uppercase">

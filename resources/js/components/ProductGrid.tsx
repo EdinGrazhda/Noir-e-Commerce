@@ -75,7 +75,7 @@ export const ProductGrid = memo(
                         <div className="relative mx-auto mb-8 flex h-40 w-40 items-center justify-center">
                             <div className="absolute inset-0 animate-pulse rounded-full border-4 border-black opacity-20" />
                             <div className="animation-delay-150 absolute inset-4 animate-pulse rounded-full border-2 border-black opacity-40" />
-                            <div className="relative flex h-24 w-24 items-center justify-center rounded-full border-4 border-black bg-white shadow-2xl transition-transform duration-500 group-hover:rotate-12 group-hover:scale-110">
+                            <div className="relative flex h-24 w-24 items-center justify-center rounded-full border-4 border-black bg-white shadow-2xl transition-transform duration-500 group-hover:scale-110 group-hover:rotate-12">
                                 <svg
                                     className="h-12 w-12 text-black transition-transform duration-300 group-hover:scale-110"
                                     fill="none"
@@ -94,7 +94,7 @@ export const ProductGrid = memo(
                         </div>
 
                         {/* Text Content */}
-                        <h2 className="mb-3 text-4xl font-black uppercase tracking-tight text-black">
+                        <h2 className="mb-3 text-4xl font-black tracking-tight text-black uppercase">
                             NO PRODUCTS FOUND
                         </h2>
                         <div className="mx-auto mb-6 h-1 w-24 bg-black" />
@@ -108,7 +108,7 @@ export const ProductGrid = memo(
                         {/* Action Button */}
                         <button
                             onClick={() => (window.location.href = '/')}
-                            className="group inline-flex items-center gap-3 border-2 border-black bg-black px-8 py-4 font-bold uppercase tracking-wide text-white shadow-lg transition-all duration-300 hover:scale-105 hover:bg-white hover:text-black hover:shadow-2xl active:scale-95"
+                            className="group inline-flex items-center gap-3 border-2 border-black bg-black px-8 py-4 font-bold tracking-wide text-white uppercase shadow-lg transition-all duration-300 hover:scale-105 hover:bg-white hover:text-black hover:shadow-2xl active:scale-95"
                         >
                             <span>Explore All Products</span>
                             <svg
@@ -133,12 +133,12 @@ export const ProductGrid = memo(
         return (
             <div
                 id="products"
-                className="bg-white px-4 pb-12 pt-20 sm:px-6 lg:px-16 xl:px-24"
+                className="bg-white px-4 pt-20 pb-12 sm:px-6 lg:px-16 xl:px-24"
             >
                 <div className="mx-auto max-w-[1920px]">
                     {/* Results Count - Refined Typography */}
                     <div className="mb-8 border-b border-gray-200 pb-6">
-                        <p className="text-sm font-medium uppercase tracking-wide text-gray-600">
+                        <p className="text-sm font-medium tracking-wide text-gray-600 uppercase">
                             Showing{' '}
                             <span className="font-bold text-black">
                                 {products.length}
@@ -180,7 +180,7 @@ export const ProductGrid = memo(
                             {isFetchingNextPage ? (
                                 <div className="flex items-center gap-3 text-gray-900">
                                     <div className="h-5 w-5 animate-spin rounded-full border-2 border-black border-t-transparent" />
-                                    <span className="text-sm font-medium uppercase tracking-wide">
+                                    <span className="text-sm font-medium tracking-wide uppercase">
                                         Loading more products
                                     </span>
                                 </div>
@@ -193,7 +193,7 @@ export const ProductGrid = memo(
                     {/* End of Catalog - Subtle */}
                     {!hasNextPage && products.length > 0 && (
                         <div className="mt-16 border-t border-gray-200 pt-8 text-center">
-                            <p className="text-xs font-medium uppercase tracking-wider text-gray-400">
+                            <p className="text-xs font-medium tracking-wider text-gray-400 uppercase">
                                 End of Catalog
                             </p>
                         </div>

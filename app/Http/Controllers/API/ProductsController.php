@@ -31,11 +31,11 @@ class ProductsController extends Controller
             $productData['stock'],           // raw DB column
         );
 
-        // Simplify sizeStocks: expose availability per size, not exact quantities
+        // Keep sizeStocks with quantity for frontend size display
         if (isset($productData['sizeStocks']) && is_array($productData['sizeStocks'])) {
             $productData['sizeStocks'] = array_map(function ($info) {
                 return [
-                    'available' => ($info['quantity'] ?? 0) > 0,
+                    'quantity' => $info['quantity'] ?? 0,
                     'stock_status' => $info['stock_status'] ?? 'out of stock',
                 ];
             }, $productData['sizeStocks']);
@@ -75,12 +75,19 @@ class ProductsController extends Controller
             }
 
             if ($request->has('search') && ! empty($request->search)) {
-                $query->where('name', 'like', '%'.$request->search.'%')
-                    ->orWhere('description', 'like', '%'.$request->search.'%');
+                $search = $request->search;
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'like', '%'.$search.'%')
+                        ->orWhere('description', 'like', '%'.$search.'%');
+                });
             }
 
             if ($request->has('category') && ! empty($request->category)) {
-                $query->where('category_id', $request->category);
+                if (is_array($request->category)) {
+                    $query->whereIn('category_id', $request->category);
+                } else {
+                    $query->where('category_id', $request->category);
+                }
             }
 
             if ($request->has('price_min') && is_numeric($request->price_min)) {
@@ -137,59 +144,78 @@ class ProductsController extends Controller
                 $query->orderBy('created_at', 'desc');
             }
 
-            // Handle multiple categories filter
-            if ($request->has('category') && is_array($request->category)) {
-                $query->whereIn('category_id', $request->category);
-            }
-
             // Pagination
             $perPage = min($request->get('per_page', 20), 100); // Max 100 items per page
             $products = $query->paginate($perPage);
 
-            // Add campaign prices to products and format sizeStocks
-            $products->getCollection()->transform(function ($product) {
+            // Add campaign prices to products and format response
+            $products->getCollection()->transform(function ($product) use ($isAdmin) {
                 $activeCampaign = \App\Models\Campaign::where('product_id', $product->id)
                     ->where('is_active', true)
                     ->where('start_date', '<=', today())
                     ->where('end_date', '>=', today())
                     ->first();
 
-                if ($activeCampaign) {
-                    $product->campaign_price = $activeCampaign->price;
-                    $product->campaign_id = $activeCampaign->id;
-                    $product->campaign_name = $activeCampaign->name;
-                    $product->campaign_end_date = $activeCampaign->end_date;
-                }
-
-                // Add media library image URL and all images
-                $product->image_url = $product->image_url; // Uses accessor from model
-                $product->all_images = $product->all_images; // Get all images array
-
-                // Ensure allows_custom_logo is included in response
-                $product->allows_custom_logo = (bool) $product->allows_custom_logo;
-
                 // Format sizeStocks as key-value object for frontend
+                $formattedSizeStocks = null;
                 if ($product->relationLoaded('sizeStocks') && $product->sizeStocks->count() > 0) {
                     $formattedSizeStocks = $product->sizeStocks->mapWithKeys(function ($sizeStock) {
                         return [$sizeStock->size => [
                             'quantity' => $sizeStock->quantity,
                             'stock_status' => $sizeStock->stock_status,
                         ]];
-                    })->toArray();
-                    $product->sizeStocks = $formattedSizeStocks;
-                } else {
-                    $product->sizeStocks = null; // No size-specific stock
+                    })->toArray() ?: null;
                 }
 
-                return $product;
-            });
+                // Build response array explicitly to ensure all fields are present
+                $data = [
+                    'id' => $product->id,
+                    'name' => $product->name,
+                    'description' => $product->description,
+                    'price' => $product->price,
+                    'image' => $product->image,
+                    'image_url' => $product->image_url,
+                    'all_images' => $product->all_images,
+                    'stock_status' => $product->stock_status,
+                    'foot_numbers' => $product->foot_numbers,
+                    'sizeStocks' => $formattedSizeStocks,
+                    'color' => $product->color,
+                    'gender' => $product->gender,
+                    'category' => $product->category?->toArray(),
+                    'created_at' => $product->created_at,
+                    'allows_custom_logo' => (bool) $product->allows_custom_logo,
+                ];
 
-            // Filter fields for public (non-admin) users
-            if (! $isAdmin) {
-                $products->getCollection()->transform(function ($product) {
-                    return $this->filterForPublic($product->toArray());
-                });
-            }
+                // Add campaign data if applicable
+                if ($activeCampaign) {
+                    $data['campaign_price'] = $activeCampaign->price;
+                    $data['campaign_id'] = $activeCampaign->id;
+                    $data['campaign_name'] = $activeCampaign->name;
+                    $data['campaign_end_date'] = $activeCampaign->end_date;
+                }
+
+                // For admin users, include additional internal fields
+                if ($isAdmin) {
+                    $data['product_id'] = $product->product_id;
+                    $data['stock'] = $product->stock;
+                    $data['stock_quantity'] = $product->total_stock;
+                    $data['updated_at'] = $product->updated_at;
+                    $data['media'] = $product->media?->toArray();
+                } else {
+                    // Strip internal data from all_images for public users
+                    if (isset($data['all_images']) && is_array($data['all_images'])) {
+                        $data['all_images'] = array_map(function ($img) {
+                            return [
+                                'url' => $img['url'] ?? '',
+                                'preview' => $img['preview'] ?? '',
+                                'thumb' => $img['thumb'] ?? '',
+                            ];
+                        }, $data['all_images']);
+                    }
+                }
+
+                return $data;
+            });
 
             // Return paginated data in the format expected by frontend
             return response()->json($products, 200);

@@ -12,7 +12,7 @@ import {
     Trash2,
     X,
 } from 'lucide-react';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -115,9 +115,6 @@ export default function Products({
     );
     const [isLoading, setIsLoading] = useState(false);
 
-    // Track whether user has changed filters (skip initial mount)
-    const isInitialMount = useRef(true);
-
     // Real-time filtering with debounce
     const getCurrentFilters = useCallback(() => {
         const filterParams: any = {};
@@ -144,11 +141,25 @@ export default function Products({
         });
     }, [getCurrentFilters]);
 
-    // Debounced filtering effect — skip the initial mount to avoid
-    // resetting pagination when the page first loads with a page param.
+    // Debounced filtering effect — only fire when user actually changed
+    // a filter value (compare local state vs server-provided filters prop).
+    // This prevents pagination from being reset to page 1 on navigation.
     useEffect(() => {
-        if (isInitialMount.current) {
-            isInitialMount.current = false;
+        // Build normalised server-side filter object (same shape as getCurrentFilters)
+        const serverFilters: Record<string, string> = {};
+        if (filters.search) serverFilters.search = String(filters.search);
+        if (filters.category) serverFilters.category = String(filters.category);
+        if (filters.stock) serverFilters.stock = String(filters.stock);
+        if (filters.color) serverFilters.color = String(filters.color);
+        if (filters.id) serverFilters.id = String(filters.id);
+        if (filters.product_id)
+            serverFilters.product_id = String(filters.product_id);
+
+        const currentFilters = getCurrentFilters();
+
+        // If local filter state matches what the server already applied, do nothing.
+        // This prevents re-navigation on mount and after pagination clicks.
+        if (JSON.stringify(currentFilters) === JSON.stringify(serverFilters)) {
             return;
         }
 
@@ -157,7 +168,7 @@ export default function Products({
         }, 300); // 300ms debounce
 
         return () => clearTimeout(timeoutId);
-    }, [applyFilters]);
+    }, [applyFilters, getCurrentFilters, filters]);
 
     const clearFilters = () => {
         setSearchTerm('');
